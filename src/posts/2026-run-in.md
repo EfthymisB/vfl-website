@@ -9,7 +9,7 @@ Eleven teams, ten games each, and after all that the top of Division 1 came down
 
 **FC One Of Us** and **FC Black Kite** both closed out on 23 points. Both on a goal difference
 of +17. One Of Us sit top on the tightest of margins; Black Kite, who conceded just eight goals
-all season — fewer than anyone — sit second.
+all season, fewer than anyone, sit second.
 
 A point behind them, **FC Escape** finished on 22 with a goal difference of +30, comfortably the
 best attacking record in the division and the sort of season that would have won most other years.
@@ -24,7 +24,7 @@ Owen McGonigle (6), Giovan Battista Izzo (5) and Ethan Tsangaris (4) rounded out
 ## At the other end
 
 **FC ILM**, champions in both 2024 and 2025 and Charity Shield winners back in February, had a
-harder time of it in an expanded division — eighth on 8 points. Which is either a cautionary tale
+harder time of it in an expanded division. Eighth on 8 points! Which is either a cautionary tale
 about squad rotation or simply what happens when the league grows from seven teams to eleven.
 
 Full table and player stats are on the [standings page](/table/).

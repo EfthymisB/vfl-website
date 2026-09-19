@@ -2,7 +2,7 @@
   "name": "VFX Football League",
   "shortName": "VFL",
   "tagline": "The league where post-production clocks off and kicks off.",
-  "description": "The VFX Football League is a short-season 6-a-side league for people who work in the visual effects industry. Studio teams, eight to eleven games, one trophy. Currently running in London.",
+  "description": "The VFX Football League is a short-season 8-a-side league for people who work in the visual effects industry. Studio teams, eight to eleven games, one trophy. Currently running in London.",
   "url": "https://vfx-football-league.co.uk",
   "locale": "en_GB",
   "email": "vflorganiser@gmail.com",
@@ -17,7 +17,7 @@
     "sofascore": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london/21938#id:87096"
   },
 
-  "comment_sofascore": "Widget IDs verified against widgets.sofascore.com. To roll the site over to a new season, update seasonId (and tournamentId/group if Sofascore renames the group) here — nothing else needs touching.",
+  "comment_sofascore": "Widget IDs verified against widgets.sofascore.com. To roll the site over to a new season, update seasonId (and tournamentId/group if Sofascore renames the group) here, nothing else needs touching.",
   "sofascore": {
     "widgetBase": "https://widgets.sofascore.com/embed",
     "theme": "dark",
