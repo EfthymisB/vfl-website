@@ -5,133 +5,161 @@ title: Honours & history
 eyebrow: Roll of honour
 lede: Every champion, every final table, and whoever's currently allowed to be smug about it.
 ---
+
 <section class="section">
   <div class="wrap">
     <div class="trophy-card" data-reveal>
-      <div class="trophy-card__label">Title holder · {{ honours.titleHolder.competition }} {{ honours.titleHolder.season }}</div>
-      <div class="trophy-card__team">{{ honours.titleHolder.team }}</div>
-      <p class="trophy-card__meta">
-        Champions in {{ honours.competitions[0].seasons[2].season }} and {{ honours.competitions[0].seasons[1].season }},
-        and current Charity Shield holders after beating {{ honours.knockouts[1].editions[0].runnerUp }}
-        {{ honours.knockouts[1].editions[0].score }} to open the {{ honours.knockouts[1].editions[0].season }} season.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <div>
-        <div class="eyebrow">Champions</div>
-        <h2>Season by season</h2>
-        <p>{{ honours.note }}</p>
-      </div>
-    </div>
-
-    {% for comp in honours.competitions %}
-    <div class="stack" style="margin-bottom:3rem" data-reveal>
-      <h3 style="margin-bottom:.2rem">{{ comp.name }}</h3>
-      <p class="muted" style="margin-bottom:1rem">{{ comp.blurb }}</p>
-
-      {% for s in comp.seasons %}
-      <div class="honour">
-        <div class="honour__season">{{ s.season }}</div>
-        <div>
-          {% if s.champion %}
-          <div class="honour__winner"><span>{{ s.champion }}</span></div>
-          <p class="honour__meta">
-            Runner-up {{ s.runnerUp }}{% if s.third %} · Third {{ s.third }}{% endif %} ·
-            {{ s.teams }} teams, {{ s.played }} games each{% if s.note %} · {{ s.note }}{% endif %}
-          </p>
-          {% else %}
-          <div class="honour__winner" style="color:var(--muted)">To be confirmed</div>
-          <p class="honour__meta">{{ s.teams }} teams, {{ s.played }} games each{% if s.note %} · {{ s.note }}{% endif %}</p>
-          {% endif %}
+      {% set title_holder_team = teams.all[honours.titleHolder.team_id] %}
+      <div class="trophy-card__label">First time champions · {{ honours.titleHolder.competition }}
+        {{ honours.titleHolder.season }}</div>
+      <div class="trophy-card__team_and_logo">
+        <img src="{{ title_holder_team.logo }}" alt="" class="trophy-card__logo" width="60" height="60" loading="lazy">
+          <div class="trophy-card__team">{{ title_holder_team.short }}</div>
         </div>
-        <span class="honour__tag{% if s.status == 'in-progress' %} honour__tag--live{% endif %}">
-          {%- if s.status == 'in-progress' %}Current season{% else %}Complete{% endif -%}
-        </span>
-      </div>
-      {% endfor %}
-    </div>
-    {% endfor %}
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <div>
-        <div class="eyebrow">Knockouts</div>
-        <h2>Cup &amp; Shield</h2>
-      </div>
-    </div>
-
-    <div class="card-grid">
-      {% for k in honours.knockouts %}
-      <div class="card" data-reveal>
-        <span class="card__num">{{ k.name }}</span>
-        {% for e in k.editions %}
-        <h3 style="margin-bottom:.35rem">{{ e.season }} · <span style="color:var(--acid)">{{ e.winner }}</span></h3>
-        <p style="margin-bottom:.6rem">
-          Beat {{ e.runnerUp }} {{ e.score }} in the final, {{ e.date | readableDate }}.
+        <p class="trophy-card__meta">{{ honours.titleHolder.desc }}
         </p>
-        {% if e.note %}<p class="dim" style="font-size:.88rem">{{ e.note }}</p>{% endif %}
-        {% endfor %}
-        <p class="muted" style="margin-top:1rem;font-size:.9rem">{{ k.blurb }}</p>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <div>
-        <div class="eyebrow">Archive</div>
-        <h2>Final tables</h2>
-        <p>Completed seasons, as they finished. Current standings live on the <a href="/table/">Standings</a> page.</p>
       </div>
     </div>
-
-    {% for comp in honours.competitions %}
-      {% for s in comp.seasons %}
-      <div class="panel" style="margin-bottom:1.25rem" data-reveal>
-        <div class="table-scroll">
-          <table class="data">
-            <caption>{{ comp.name }} · {{ s.season }}{% if s.status == 'in-progress' %} (in progress){% endif %}</caption>
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Team</th>
-                <th scope="col">P</th>
-                <th scope="col">W</th>
-                <th scope="col">D</th>
-                <th scope="col">L</th>
-                {% if s.table[0].gf %}<th scope="col">GF</th><th scope="col">GA</th>{% endif %}
-                <th scope="col">Pts</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for r in s.table %}
-              <tr{% if r.pos == 1 and s.status == 'complete' %} class="is-champion"{% endif %}>
-                <td>{{ r.pos }}</td>
-                <td>{{ r.team }}</td>
-                <td>{{ r.p }}</td>
-                <td>{{ r.w }}</td>
-                <td>{{ r.d }}</td>
-                <td>{{ r.l }}</td>
-                {% if s.table[0].gf %}<td>{{ r.gf }}</td><td>{{ r.ga }}</td>{% endif %}
-                <td>{{ r.pts }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <div>
+          <div class="eyebrow">Champions</div>
+          <h2>Season by season</h2>
+          <p>{{ honours.note }}</p>
         </div>
       </div>
-      {% endfor %}
-    {% endfor %}
-  </div>
-</section>
+      {% for comp in honours.competitions %}
+        <div class="stack" style="margin-bottom:3rem" data-reveal>
+          <h3 style="margin-bottom:.2rem">{{ comp.name }}</h3>
+          <p class="muted" style="margin-bottom:1rem">{{ comp.blurb }}</p>
+          {% for season in comp.seasons %}
+            <div class="honour">
+              <div class="honour__season">{{ season.season }}</div>
+              <div>
+                {% if season.champion %}
+                  <div class="honour__team_and_logo">
+                    <img src="{{ teams.all[season.champion].logo }}" alt="" class="honour__logo" width="40" height="40" loading="lazy">
+                      <div class="honour__winner">
+                        <span>{{ teams.all[season.champion].name }}</span>
+                      </div>
+                    </div>
+                    <p class="honour__meta">
+                      Runner-up {{ teams.all[season.runnerUp].name }}
+                      {% if season.third %}
+                        · Third {{ teams.all[season.third].name }}
+                      {% endif %}
+                      · {{ season.teams }} teams, {{ season.played }} games each{% if season.note %}
+                        · {{ season.note }}
+                      {% endif %}
+                    </p>
+                  {% else %}
+                    <div class="honour__winner" style="color:var(--muted)">To be confirmed</div>
+                    <p class="honour__meta">{{ season.teams }} teams, {{ season.played }} games each{% if season.note %}
+                        · {{ season.note }}
+                      {% endif %}
+                    </p>
+                  {% endif %}
+                </div>
+                <span class="honour__tag{% if season.status == 'in-progress' %} honour__tag--live{% endif %}">
+                  {%- if season.status == 'in-progress' %}Current season{% else %}Complete{% endif -%}
+                </span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <div>
+            <div class="eyebrow">Knockouts</div>
+            <h2>Cup &amp; Shield</h2>
+          </div>
+        </div>
+        <div class="card-grid">
+          {% for knockout in honours.knockouts %}
+            <div class="card" data-reveal>
+              <span class="card__num">{{ knockout.name }}</span>
+              {% for edition in knockout.editions %}
+                <h3 style="margin-bottom:.35rem">{{ edition.season }} ·
+                  <span style="color:var(--acid)">{{ teams.all[edition.winner].name }}</span>
+                </h3>
+                <p style="margin-bottom:.6rem">
+                  Beat {{ teams.all[edition.runnerUp].name }}
+                  {{ edition.score }} in the final,
+                  {{ edition.date | readableDate }}.
+                </p>
+                {% if edition.note %}
+                  <p class="dim" style="font-size:.88rem">{{ edition.note }}</p>
+                {% endif %}
+              {% endfor %}
+              <p class="muted" style="margin-top:1rem;font-size:.9rem">{{ knockout.blurb }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <div>
+            <div class="eyebrow">Archive</div>
+            <h2>Final tables</h2>
+            <p>Completed seasons, as they finished. Current standings live on the
+              <a href="/table/">Standings</a>
+              page.</p>
+          </div>
+        </div>
+        {% for competition in honours.competitions %}
+          {% for s in competition.seasons %}
+            <div class="panel" style="margin-bottom:1.25rem" data-reveal>
+              <div class="table-scroll">
+                <table class="data">
+                  <caption>{{ competition.name }} · {{ s.season }}
+                    {% if s.status == 'in-progress' %}
+                      (in progress){% endif %}
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Team</th>
+                      <th scope="col">P</th>
+                      <th scope="col">W</th>
+                      <th scope="col">D</th>
+                      <th scope="col">L</th>
+                      {% if s.table[0].gf %}
+                        <th scope="col">GF</th>
+                        <th scope="col">GA</th>
+                      {% endif %}
+                      <th scope="col">Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for r in s.table %}
+                      <tr {% if r.pos == 1 and s.status == 'complete' %} class="is-champion" {% endif %}>
+                        <td>{{ r.pos }}</td>
+                        <td>
+                          <img src="{{ teams.all[r.team].logo }}" alt="{{ teams.all[r.team].name }}" class="team-logo" width="30" height="30"></td>
+                          <td>{{ teams.all[r.team].name }}</td>
+                          <td>{{ r.p }}</td>
+                          <td>{{ r.w }}</td>
+                          <td>{{ r.d }}</td>
+                          <td>{{ r.l }}</td>
+                          {% if s.table[0].gf %}
+                            <td>{{ r.gf }}</td>
+                            <td>{{ r.ga }}</td>
+                          {% endif %}
+                          <td>{{ r.pts }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </section>

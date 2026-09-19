@@ -1,8 +1,9 @@
 {
   "titleHolder": {
-    "team": "FC One Of Us London",
+    "team_id": "0001",
     "competition": "Division 1",
-    "season": "2026"
+    "season": "2026",
+    "desc": "From batling relegation in 2025 to championship glory in 2026."
   },
   "note": "Records sourced from the league's Sofascore pages. Current-season standings are live; completed seasons are archived below.",
   "competitions": [
@@ -14,65 +15,345 @@
         {
           "season": "2026",
           "status": "complete",
-          "champion": "FC One Of Us London",
-          "runnerUp": "FC Black Kite London",
-          "third": "FC DNEG London",
+          "champion": "0001",
+          "runnerUp": "0002",
+          "third": "0003",
           "played": 10,
           "teams": 11,
           "note": "Final placings to be confirmed.",
           "table": [
-            { "pos": 1, "team": "FC One Of Us London", "p": 10, "w": 7, "d": 2, "l": 1, "gf": 30, "ga": 13, "pts": 23 },
-            { "pos": 2, "team": "FC Black Kite London", "p": 10, "w": 7, "d": 2, "l": 1, "gf": 25, "ga": 8, "pts": 23 },
-            { "pos": 3, "team": "FC Escape London", "p": 10, "w": 7, "d": 1, "l": 2, "gf": 46, "ga": 16, "pts": 22 },
-            { "pos": 4, "team": "FC DNEG London", "p": 10, "w": 6, "d": 3, "l": 1, "gf": 21, "ga": 11, "pts": 21 },
-            { "pos": 5, "team": "FC Framestore London", "p": 10, "w": 6, "d": 2, "l": 2, "gf": 23, "ga": 12, "pts": 20 },
-            { "pos": 6, "team": "FC Control Chaos London", "p": 10, "w": 5, "d": 0, "l": 5, "gf": 19, "ga": 28, "pts": 15 },
-            { "pos": 7, "team": "FC Absolute London", "p": 10, "w": 4, "d": 1, "l": 5, "gf": 30, "ga": 22, "pts": 13 },
-            { "pos": 8, "team": "FC ILM London", "p": 10, "w": 2, "d": 2, "l": 6, "gf": 12, "ga": 27, "pts": 8 },
-            { "pos": 9, "team": "FC ETC London", "p": 10, "w": 2, "d": 0, "l": 8, "gf": 6, "ga": 22, "pts": 6 },
-            { "pos": 10, "team": "FC Coffee & TV London", "p": 10, "w": 1, "d": 1, "l": 8, "gf": 5, "ga": 27, "pts": 4 },
-            { "pos": 11, "team": "FC CS London", "p": 10, "w": 1, "d": 0, "l": 9, "gf": 5, "ga": 36, "pts": 3 }
+            {
+              "pos": 1,
+              "team": "0001",
+              "p": 10,
+              "w": 7,
+              "d": 2,
+              "l": 1,
+              "gf": 30,
+              "ga": 13,
+              "pts": 23
+            },
+            {
+              "pos": 2,
+              "team": "0002",
+              "p": 10,
+              "w": 7,
+              "d": 2,
+              "l": 1,
+              "gf": 25,
+              "ga": 8,
+              "pts": 23
+            },
+            {
+              "pos": 3,
+              "team": "0003",
+              "p": 10,
+              "w": 7,
+              "d": 1,
+              "l": 2,
+              "gf": 46,
+              "ga": 16,
+              "pts": 22
+            },
+            {
+              "pos": 4,
+              "team": "0004",
+              "p": 10,
+              "w": 6,
+              "d": 3,
+              "l": 1,
+              "gf": 21,
+              "ga": 11,
+              "pts": 21
+            },
+            {
+              "pos": 5,
+              "team": "0005",
+              "p": 10,
+              "w": 6,
+              "d": 2,
+              "l": 2,
+              "gf": 23,
+              "ga": 12,
+              "pts": 20
+            },
+            {
+              "pos": 6,
+              "team": "0006",
+              "p": 10,
+              "w": 5,
+              "d": 0,
+              "l": 5,
+              "gf": 19,
+              "ga": 28,
+              "pts": 15
+            },
+            {
+              "pos": 7,
+              "team": "0007",
+              "p": 10,
+              "w": 4,
+              "d": 1,
+              "l": 5,
+              "gf": 30,
+              "ga": 22,
+              "pts": 13
+            },
+            {
+              "pos": 8,
+              "team": "0008",
+              "p": 10,
+              "w": 2,
+              "d": 2,
+              "l": 6,
+              "gf": 12,
+              "ga": 27,
+              "pts": 8
+            },
+            {
+              "pos": 9,
+              "team": "0009",
+              "p": 10,
+              "w": 2,
+              "d": 0,
+              "l": 8,
+              "gf": 6,
+              "ga": 22,
+              "pts": 6
+            },
+            {
+              "pos": 10,
+              "team": "0010",
+              "p": 10,
+              "w": 1,
+              "d": 1,
+              "l": 8,
+              "gf": 5,
+              "ga": 27,
+              "pts": 4
+            },
+            {
+              "pos": 11,
+              "team": "0011",
+              "p": 10,
+              "w": 1,
+              "d": 0,
+              "l": 9,
+              "gf": 5,
+              "ga": 36,
+              "pts": 3
+            }
           ]
         },
         {
           "season": "2025",
           "status": "complete",
-          "champion": "FC ILM London",
-          "runnerUp": "FC Black Kite London",
-          "third": "FC DNEG London",
+          "champion": "0008",
+          "runnerUp": "0009",
+          "third": "0004",
           "played": 6,
           "teams": 7,
           "note": "",
           "table": [
-            { "pos": 1, "team": "FC ILM London", "p": 6, "w": 5, "d": 0, "l": 1, "gf": 17, "ga": 9, "pts": 15 },
-            { "pos": 2, "team": "FC Black Kite London", "p": 6, "w": 4, "d": 0, "l": 2, "gf": 15, "ga": 9, "pts": 12 },
-            { "pos": 3, "team": "FC DNEG London", "p": 6, "w": 3, "d": 1, "l": 2, "gf": 13, "ga": 10, "pts": 10 },
-            { "pos": 4, "team": "FC ETC London", "p": 6, "w": 3, "d": 1, "l": 2, "gf": 14, "ga": 12, "pts": 10 },
-            { "pos": 5, "team": "FC Union London", "p": 6, "w": 2, "d": 1, "l": 3, "gf": 6, "ga": 11, "pts": 7 },
-            { "pos": 6, "team": "FC One Of Us London", "p": 6, "w": 2, "d": 0, "l": 4, "gf": 4, "ga": 6, "pts": 6 },
-            { "pos": 7, "team": "FC MILK London", "p": 6, "w": 0, "d": 1, "l": 5, "gf": 10, "ga": 22, "pts": 1 }
+            {
+              "pos": 1,
+              "team": "0008",
+              "p": 6,
+              "w": 5,
+              "d": 0,
+              "l": 1,
+              "gf": 17,
+              "ga": 9,
+              "pts": 15
+            },
+            {
+              "pos": 2,
+              "team": "0002",
+              "p": 6,
+              "w": 4,
+              "d": 0,
+              "l": 2,
+              "gf": 15,
+              "ga": 9,
+              "pts": 12
+            },
+            {
+              "pos": 3,
+              "team": "0004",
+              "p": 6,
+              "w": 3,
+              "d": 1,
+              "l": 2,
+              "gf": 13,
+              "ga": 10,
+              "pts": 10
+            },
+            {
+              "pos": 4,
+              "team": "0009",
+              "p": 6,
+              "w": 3,
+              "d": 1,
+              "l": 2,
+              "gf": 14,
+              "ga": 12,
+              "pts": 10
+            },
+            {
+              "pos": 5,
+              "team": "0012",
+              "p": 6,
+              "w": 2,
+              "d": 1,
+              "l": 3,
+              "gf": 6,
+              "ga": 11,
+              "pts": 7
+            },
+            {
+              "pos": 6,
+              "team": "0001",
+              "p": 6,
+              "w": 2,
+              "d": 0,
+              "l": 4,
+              "gf": 4,
+              "ga": 6,
+              "pts": 6
+            },
+            {
+              "pos": 7,
+              "team": "0014",
+              "p": 6,
+              "w": 0,
+              "d": 1,
+              "l": 5,
+              "gf": 10,
+              "ga": 22,
+              "pts": 1
+            }
           ]
         },
         {
           "season": "2024",
           "status": "complete",
-          "champion": "FC ILM London",
-          "runnerUp": "FC Black Kite London",
-          "third": "FC One Of Us London",
+          "champion": "0008",
+          "runnerUp": "0009",
+          "third": "0001",
           "played": 9,
           "teams": 10,
           "note": "The inaugural season.",
           "table": [
-            { "pos": 1, "team": "FC ILM London", "p": 9, "w": 7, "d": 0, "l": 2, "gf": 25, "ga": 11, "pts": 21 },
-            { "pos": 2, "team": "FC Black Kite London", "p": 9, "w": 6, "d": 1, "l": 2, "gf": 26, "ga": 13, "pts": 19 },
-            { "pos": 3, "team": "FC One Of Us London", "p": 9, "w": 5, "d": 2, "l": 2, "gf": 23, "ga": 13, "pts": 17 },
-            { "pos": 4, "team": "FC ETC London", "p": 9, "w": 5, "d": 1, "l": 3, "gf": 29, "ga": 19, "pts": 16 },
-            { "pos": 5, "team": "FC Union London", "p": 9, "w": 5, "d": 1, "l": 3, "gf": 18, "ga": 8, "pts": 16 },
-            { "pos": 6, "team": "FC Jellyfish Pictures London", "p": 9, "w": 4, "d": 1, "l": 4, "gf": 20, "ga": 25, "pts": 13 },
-            { "pos": 7, "team": "FC DNEG London", "p": 9, "w": 3, "d": 1, "l": 5, "gf": 17, "ga": 22, "pts": 10 },
-            { "pos": 8, "team": "FC MILK London", "p": 9, "w": 3, "d": 0, "l": 6, "gf": 15, "ga": 23, "pts": 9 },
-            { "pos": 9, "team": "FC CS London", "p": 9, "w": 2, "d": 0, "l": 7, "gf": 6, "ga": 24, "pts": 6 },
-            { "pos": 10, "team": "FC Framestore London", "p": 9, "w": 1, "d": 1, "l": 7, "gf": 7, "ga": 28, "pts": 4 }
+            {
+              "pos": 1,
+              "team": "0008",
+              "p": 9,
+              "w": 7,
+              "d": 0,
+              "l": 2,
+              "gf": 25,
+              "ga": 11,
+              "pts": 21
+            },
+            {
+              "pos": 2,
+              "team": "0002",
+              "p": 9,
+              "w": 6,
+              "d": 1,
+              "l": 2,
+              "gf": 26,
+              "ga": 13,
+              "pts": 19
+            },
+            {
+              "pos": 3,
+              "team": "0001",
+              "p": 9,
+              "w": 5,
+              "d": 2,
+              "l": 2,
+              "gf": 23,
+              "ga": 13,
+              "pts": 17
+            },
+            {
+              "pos": 4,
+              "team": "0009",
+              "p": 9,
+              "w": 5,
+              "d": 1,
+              "l": 3,
+              "gf": 29,
+              "ga": 19,
+              "pts": 16
+            },
+            {
+              "pos": 5,
+              "team": "0012",
+              "p": 9,
+              "w": 5,
+              "d": 1,
+              "l": 3,
+              "gf": 18,
+              "ga": 8,
+              "pts": 16
+            },
+            {
+              "pos": 6,
+              "team": "0013",
+              "p": 9,
+              "w": 4,
+              "d": 1,
+              "l": 4,
+              "gf": 20,
+              "ga": 25,
+              "pts": 13
+            },
+            {
+              "pos": 7,
+              "team": "0004",
+              "p": 9,
+              "w": 3,
+              "d": 1,
+              "l": 5,
+              "gf": 17,
+              "ga": 22,
+              "pts": 10
+            },
+            {
+              "pos": 8,
+              "team": "0014",
+              "p": 9,
+              "w": 3,
+              "d": 0,
+              "l": 6,
+              "gf": 15,
+              "ga": 23,
+              "pts": 9
+            },
+            {
+              "pos": 9,
+              "team": "0011",
+              "p": 9,
+              "w": 2,
+              "d": 0,
+              "l": 7,
+              "gf": 6,
+              "ga": 24,
+              "pts": 6
+            },
+            {
+              "pos": 10,
+              "team": "0005",
+              "p": 9,
+              "w": 1,
+              "d": 1,
+              "l": 7,
+              "gf": 7,
+              "ga": 28,
+              "pts": 4
+            }
           ]
         }
       ]
@@ -85,20 +366,90 @@
         {
           "season": "2025",
           "status": "complete",
-          "champion": "FC Coffee & TV London",
-          "runnerUp": "FC Framestore London",
-          "third": "FC Sohonet London",
+          "champion": "0010",
+          "runnerUp": "0005",
+          "third": "0015",
           "played": 6,
           "teams": 7,
           "note": "",
           "table": [
-            { "pos": 1, "team": "FC Coffee & TV London", "p": 6, "w": 6, "d": 0, "l": 0, "gf": 0, "ga": 0, "pts": 18 },
-            { "pos": 2, "team": "FC Framestore London", "p": 6, "w": 5, "d": 0, "l": 1, "gf": 0, "ga": 0, "pts": 15 },
-            { "pos": 3, "team": "FC Sohonet London", "p": 6, "w": 3, "d": 1, "l": 2, "gf": 0, "ga": 0, "pts": 10 },
-            { "pos": 4, "team": "FC CS London", "p": 6, "w": 2, "d": 0, "l": 4, "gf": 0, "ga": 0, "pts": 6 },
-            { "pos": 5, "team": "FC ILM Rebels London", "p": 6, "w": 2, "d": 0, "l": 4, "gf": 0, "ga": 0, "pts": 6 },
-            { "pos": 6, "team": "FC Absolute London", "p": 6, "w": 1, "d": 1, "l": 4, "gf": 0, "ga": 0, "pts": 4 },
-            { "pos": 7, "team": "FC Control Chaos London", "p": 6, "w": 1, "d": 0, "l": 5, "gf": 0, "ga": 0, "pts": 3 }
+            {
+              "pos": 1,
+              "team": "0010",
+              "p": 6,
+              "w": 6,
+              "d": 0,
+              "l": 0,
+              "gf": 0,
+              "ga": 0,
+              "pts": 18
+            },
+            {
+              "pos": 2,
+              "team": "0005",
+              "p": 6,
+              "w": 5,
+              "d": 0,
+              "l": 1,
+              "gf": 0,
+              "ga": 0,
+              "pts": 15
+            },
+            {
+              "pos": 3,
+              "team": "0015",
+              "p": 6,
+              "w": 3,
+              "d": 1,
+              "l": 2,
+              "gf": 0,
+              "ga": 0,
+              "pts": 10
+            },
+            {
+              "pos": 4,
+              "team": "0011",
+              "p": 6,
+              "w": 2,
+              "d": 0,
+              "l": 4,
+              "gf": 0,
+              "ga": 0,
+              "pts": 6
+            },
+            {
+              "pos": 5,
+              "team": "0016",
+              "p": 6,
+              "w": 2,
+              "d": 0,
+              "l": 4,
+              "gf": 0,
+              "ga": 0,
+              "pts": 6
+            },
+            {
+              "pos": 6,
+              "team": "0007",
+              "p": 6,
+              "w": 1,
+              "d": 1,
+              "l": 4,
+              "gf": 0,
+              "ga": 0,
+              "pts": 4
+            },
+            {
+              "pos": 7,
+              "team": "0006",
+              "p": 6,
+              "w": 1,
+              "d": 0,
+              "l": 5,
+              "gf": 0,
+              "ga": 0,
+              "pts": 3
+            }
           ]
         }
       ]
@@ -112,11 +463,11 @@
       "editions": [
         {
           "season": "2025",
-          "winner": "FC ETC London",
-          "runnerUp": "FC Escape London",
-          "score": "2 – 1",
+          "winner": "0009",
+          "runnerUp": "0003",
+          "score": "2 - 1",
           "date": "2025-08-12",
-          "note": "ETC came through a 6–0 semi-final against 1920 to lift the first VFL Cup."
+          "note": "ETC came through a 6-0 semi-final against 1920 to lift the first VFL Cup."
         }
       ]
     },
@@ -127,9 +478,9 @@
       "editions": [
         {
           "season": "2026",
-          "winner": "FC ILM London",
-          "runnerUp": "FC ETC London",
-          "score": "3 – 0",
+          "winner": "0008",
+          "runnerUp": "0009",
+          "score": "3 - 0",
           "date": "2026-02-26",
           "note": "Champions beat cup holders to open the 2026 season."
         }

@@ -14,7 +14,7 @@
     "instagram": "https://www.instagram.com/vfxleague.london/",
     "instagramHandle": "@vfxleague.london",
     "linkedin": "https://www.linkedin.com/company/100575459/",
-    "sofascore": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london/21938#id:87096"
+    "sofascore": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london/21938#id:87096,tab:standings"
   },
 
   "comment_sofascore": "Widget IDs verified against widgets.sofascore.com. To roll the site over to a new season, update seasonId (and tournamentId/group if Sofascore renames the group) here, nothing else needs touching.",
@@ -29,7 +29,7 @@
       "group": "VFX League London 2026",
       "rounds": 11,
       "currentRound": 9,
-      "pageUrl": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london/21938#id:87096"
+      "pageUrl": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london/21938#id:87096,tab:standings"
     },
     "division2": {
       "label": "Division 2",
@@ -39,7 +39,7 @@
       "group": "",
       "rounds": 7,
       "currentRound": 7,
-      "pageUrl": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london-2/24570"
+      "pageUrl": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london-2/24570,tab:standings"
     },
     "cup": {
       "label": "VFL Cup",
