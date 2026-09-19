@@ -32,7 +32,10 @@ eleventyNavigation: Home
           {% for r in thisSeason.table | limit(5) %}
             <li>
               <span class="mini-table__pos">{{ r.pos }}</span>
-              <span class="mini-table__team">{{ r.team | replace("FC ", "") | replace(" London", "") }}</span>
+              <div class="mini-table__team_and_logo">
+                <img src="{{ teams.all[r.team].logo }}" alt="" class="trophy-card__logo" width="24" height="24" loading="lazy"></>
+                <span class="mini-table__team">{{ teams.all[r.team].name | replace("FC ", "") | replace(" London", "") }}</span>
+              </div>
               <span class="mini-table__played">{{ r.p }}</span>
               <span class="mini-table__pts">{{ r.pts }}</span>
             </li>
