@@ -58,7 +58,7 @@
   "comment_instagram": "Create a free feed at https://behold.so, connect @vfxleague.london, then paste the feed ID here. Leave blank and the Media page shows a tidy fallback card instead of a broken embed.",
   "instagram": {
     "provider": "behold",
-    "beholdFeedId": "",
+    "beholdFeedId": "FaCy0t9OZiUs2Rmut9Rs",
     "lightwidgetUrl": ""
   },
 
