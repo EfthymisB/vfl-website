@@ -1460,13 +1460,13 @@ table.data td:nth-child(2) {
 .site-footer {
   border-top: 1px solid var(--line);
   background: var(--bg-2);
-  margin-top: clamp(3rem, 8vw, 6rem);
+  margin-top: clamp(1.5rem, 4vw, 2rem);
 }
 .site-footer__grid {
   display: grid;
   gap: 2.5rem;
   grid-template-columns: 1fr;
-  padding-block: clamp(2.5rem, 6vw, 4rem);
+  padding-block: clamp(1.5rem, 4vw, 2rem);
 }
 @media (min-width: 46rem) {
   .site-footer__grid {
@@ -1476,7 +1476,7 @@ table.data td:nth-child(2) {
 }
 .site-footer h4 {
   font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -1487,7 +1487,7 @@ table.data td:nth-child(2) {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
+  columns: 2;
   gap: 0.55rem;
 }
 .site-footer a {
