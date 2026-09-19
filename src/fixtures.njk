@@ -2,8 +2,9 @@
 layout: layouts/page.njk
 permalink: /fixtures/
 title: Fixtures & results
-eyebrow: Season {{ site.currentSeason }}
 lede: Every Division 1 match this season. Pick a round to jump through the calendar.
+eleventyComputed:
+  eyebrow: "Season {{ site.currentSeason }}"
 ---
 {% import "macros.njk" as w %}
 {% set d1 = site.sofascore.division1 %}

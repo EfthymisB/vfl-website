@@ -107,7 +107,7 @@
             form.reset();
             if (status) {
               status.className = "form-status form-status--ok is-visible";
-              status.textContent = "Thanks — message sent. We'll come back to you by email.";
+              status.textContent = "Thanks, message sent. We'll come back to you by email.";
             }
           } else {
             throw new Error(data.message || "Send failed");
