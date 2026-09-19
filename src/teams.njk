@@ -17,16 +17,16 @@ lede: Sides that have taken part in a VFL competition. Team pages, squads and pl
       <a class="btn btn--ghost btn--sm" href="{{ site.sofascore.division1.pageUrl }}" target="_blank" rel="noopener">Squads on Sofascore ↗</a>
     </div>
     <ul class="team-list" data-reveal>
-      {% for t in teams.current %}
-        <li class="team" style="--team-colour: {{ t.colour }}">
-          {% if t.logo %}
-            <img src="{{ t.logo }}" alt="" class="team__logo" width="40" height="40" loading="lazy">
+      {% for tid in teams.current %}
+        <li class="team" style="--team-colour: {{ teams.all[tid].colour }}">
+          {% if true %}
+            <img src="{{ teams.all[tid].logo }}" alt="" class="team__logo" width="40" height="40" loading="lazy">
             {% else %}
-              <span class="team__badge" aria-hidden="true">{{ t.initials }}</span>
+              <span class="team__badge" aria-hidden="true">{{ teams.all[tid].initials }}</span>
             {% endif %}
             <span>
-              <span class="team__name">{{ t.short }}</span>
-              <span class="team__seasons">{{ t.seasons | join("·") }}</span>
+              <span class="team__name">{{ teams.all[tid].short }}</span>
+              <span class="team__seasons">{{ teams.all[tid].seasons | join("·") }}</span>
             </span>
           </li>
         {% endfor %}
@@ -43,16 +43,16 @@ lede: Sides that have taken part in a VFL competition. Team pages, squads and pl
         </div>
       </div>
       <ul class="team-list" data-reveal>
-        {% for t in teams.alumni %}
+        {% for tid in teams.alumni %}
           <li class="team team--alumni">
-            {% if t.logo %}
-              <img src="{{ t.logo }}" alt="" class="team__logo" width="40" height="40" loading="lazy">
+            {% if teams.all[tid].logo %}
+              <img src="{{ teams.all[tid].logo }}" alt="" class="team__logo" width="40" height="40" loading="lazy">
               {% else %}
-                <span class="team__badge" aria-hidden="true">{{ t.initials }}</span>
+                <span class="team__badge" aria-hidden="true">{{ teams.all[tid].initials }}</span>
               {% endif %}
               <span>
-                <span class="team__name">{{ t.short }}</span>
-                <span class="team__seasons">{{ t.seasons | join("·") }}</span>
+                <span class="team__name">{{ teams.all[tid].short }}</span>
+                <span class="team__seasons">{{ teams.all[tid].seasons | join("·") }}</span>
               </span>
             </li>
           {% endfor %}

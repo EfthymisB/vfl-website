@@ -162,15 +162,14 @@ eleventyNavigation: Home
         <a class="btn btn--ghost btn--sm" href="/honours/">Full record</a>
       </div>
       <div class="trophy-card" data-reveal>
+        {% set title_holder_team = teams.all[honours.titleHolder.team_id] %}
         <div class="trophy-card__label">First time champions · {{ honours.titleHolder.competition }}
           {{ honours.titleHolder.season }}</div>
         <div class="trophy-card__team_and_logo">
-          <img src="{{ honours.titleHolder.logo }}" alt="" class="trophy-card__logo" width="60" height="60" loading="lazy">
-            <div class="trophy-card__team">{{ honours.titleHolder.team }}</div>
+          <img src="{{ title_holder_team.logo }}" alt="" class="trophy-card__logo" width="60" height="60" loading="lazy">
+            <div class="trophy-card__team">{{ title_holder_team.short }}</div>
           </div>
-          <p class="trophy-card__meta">From batling relegation in
-            {{ honours.competitions[0].seasons[1].season }} to championship glory in {{ honours.competitions[0].seasons[0].season }}
-          .</p>
+          <p class="trophy-card__meta">{{ honours.titleHolder.desc }}</p>
         </div>
       </div>
     </section>

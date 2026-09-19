@@ -939,8 +939,8 @@ table.data th {
   font-weight: 500;
   white-space: nowrap;
 }
-table.data th:nth-child(2),
-table.data td:nth-child(2) {
+table.data th:nth-child(3),
+table.data td:nth-child(3) {
   text-align: left;
   width: 99%;
 }
@@ -962,7 +962,7 @@ table.data tbody tr:hover {
 table.data tbody tr.is-champion td {
   background: rgba(167, 139, 255, 0.1);
 }
-table.data tbody tr.is-champion td:first-child {
+table.data tbody tr.is-champion td {
   color: var(--accent);
 }
 table.data td {
@@ -1059,6 +1059,12 @@ table.data td:nth-child(2) {
   font-size: 1.1rem;
   color: var(--dim);
   letter-spacing: 0.04em;
+}
+.honour__team_and_logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.2rem;
 }
 .honour__winner {
   font-family: var(--font-display);
