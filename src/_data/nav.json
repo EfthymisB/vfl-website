@@ -1,0 +1,10 @@
+[
+  { "text": "About",   "url": "/about/",   "code": "01" },
+  { "text": "Table",   "url": "/table/",   "code": "02" },
+  { "text": "Fixtures","url": "/fixtures/","code": "03" },
+  { "text": "Honours", "url": "/honours/", "code": "04" },
+  { "text": "Teams",   "url": "/teams/",   "code": "05" },
+  { "text": "News",    "url": "/news/",    "code": "06" },
+  { "text": "Media",   "url": "/media/",   "code": "07" },
+  { "text": "Contact", "url": "/contact/", "code": "08" }
+]

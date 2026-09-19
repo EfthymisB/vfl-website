@@ -1,0 +1,78 @@
+---
+layout: layouts/page.njk
+permalink: /table/
+title: Standings
+eyebrow: Live from Sofascore
+lede: Division tables and top scorers, updated live. Tap a division to switch the table.
+---
+{% import "macros.njk" as w %}
+{% set d1 = site.sofascore.division1 %}
+{% set d2 = site.sofascore.division2 %}
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <div>
+        <div class="eyebrow">League table</div>
+        <h2>Division tables</h2>
+        <p>Live data, straight from the league's Sofascore pages. Nothing here is typed by hand.</p>
+      </div>
+      <div class="segmented" data-widget-switch data-target="standings-frame" role="group" aria-label="Choose division">
+        <button type="button" aria-pressed="true"
+                data-label="{{ d1.label }} · {{ site.currentSeason }}"
+                data-src="{{ w.standingsUrl(site, d1, d1.label + ' ' + site.currentSeason) }}">{{ d1.label }}</button>
+        <button type="button" aria-pressed="false"
+                data-label="{{ d2.label }}"
+                data-src="{{ w.standingsUrl(site, d2, d2.label) }}">{{ d2.label }}</button>
+      </div>
+    </div>
+
+    <div data-reveal>
+      {{ w.frame("standings-frame", d1.label + " · " + site.currentSeason, w.standingsUrl(site, d1, d1.label + " " + site.currentSeason), 640, d1.pageUrl) }}
+    </div>
+
+    <p class="form-note" style="margin-top:1rem">
+      Widget not loading? Some browsers and privacy extensions block third-party frames.
+      You can always read the table directly on
+      <a href="{{ d1.pageUrl }}" target="_blank" rel="noopener">Sofascore</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <div>
+        <div class="eyebrow">Golden boot</div>
+        <h2>Top scorers</h2>
+        <p>Division 1, {{ site.currentSeason }} season, ranked by goals.</p>
+      </div>
+    </div>
+
+    <div data-reveal>
+      {{ w.frame("scorers-frame", "Top scorers · " + d1.label, w.topPlayersUrl(site, d1, "goals", 20), 700, d1.pageUrl, "All player stats") }}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="card-grid card-grid--3">
+      <a class="card" href="/fixtures/" data-reveal>
+        <span class="card__num">→ Fixtures</span>
+        <h3>Results, round by round</h3>
+        <p>Every match in the current season, with scores as they land.</p>
+      </a>
+      <a class="card" href="/honours/" data-reveal>
+        <span class="card__num">→ Honours</span>
+        <h3>Previous winners</h3>
+        <p>Final tables from every completed season, plus cup and shield winners.</p>
+      </a>
+      <a class="card" href="{{ site.sofascore.cup.pageUrl }}" target="_blank" rel="noopener" data-reveal>
+        <span class="card__num">→ Sofascore</span>
+        <h3>VFL Cup bracket</h3>
+        <p>The knockout draw, live on Sofascore. ↗</p>
+      </a>
+    </div>
+  </div>
+</section>

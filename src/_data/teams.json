@@ -1,0 +1,24 @@
+{
+  "note": "Teams are studio sides. Seasons listed are the seasons in which the side appeared in a VFL competition.",
+  "current": [
+    { "name": "FC One Of Us London",     "short": "One Of Us",     "initials": "OOU", "colour": "#C8FF2E", "seasons": ["2024", "2025", "2026"] },
+    { "name": "FC Black Kite London",    "short": "Black Kite",    "initials": "BK",  "colour": "#3DE8FF", "seasons": ["2024", "2025", "2026"] },
+    { "name": "FC Escape London",        "short": "Escape",        "initials": "ESC", "colour": "#FF6B3D", "seasons": ["2025", "2026"] },
+    { "name": "FC DNEG London",          "short": "DNEG",          "initials": "DNG", "colour": "#7C6BFF", "seasons": ["2024", "2025", "2026"] },
+    { "name": "FC Framestore London",    "short": "Framestore",    "initials": "FRM", "colour": "#FFD23D", "seasons": ["2024", "2025", "2026"] },
+    { "name": "FC Control Chaos London", "short": "Control Chaos", "initials": "CC",  "colour": "#FF3D8A", "seasons": ["2025", "2026"] },
+    { "name": "FC Absolute London",      "short": "Absolute",      "initials": "ABS", "colour": "#3DFFB0", "seasons": ["2025", "2026"] },
+    { "name": "FC ILM London",           "short": "ILM",           "initials": "ILM", "colour": "#C8FF2E", "seasons": ["2024", "2025", "2026"] },
+    { "name": "FC ETC London",           "short": "ETC",           "initials": "ETC", "colour": "#3DE8FF", "seasons": ["2024", "2025", "2026"] },
+    { "name": "FC Coffee & TV London",   "short": "Coffee & TV",   "initials": "CTV", "colour": "#FF6B3D", "seasons": ["2025", "2026"] },
+    { "name": "FC CS London",            "short": "CS",            "initials": "CS",  "colour": "#7C6BFF", "seasons": ["2024", "2025", "2026"] }
+  ],
+  "alumni": [
+    { "name": "FC Union London",             "short": "Union",            "initials": "UNI", "seasons": ["2024", "2025"] },
+    { "name": "FC Jellyfish Pictures London","short": "Jellyfish",        "initials": "JFP", "seasons": ["2024"] },
+    { "name": "FC MILK London",              "short": "MILK",             "initials": "MLK", "seasons": ["2024", "2025"] },
+    { "name": "FC Sohonet London",           "short": "Sohonet",          "initials": "SOH", "seasons": ["2025"] },
+    { "name": "FC ILM Rebels London",        "short": "ILM Rebels",       "initials": "REB", "seasons": ["2025"] },
+    { "name": "FC 1920 London",              "short": "1920",             "initials": "192", "seasons": ["2025"] }
+  ]
+}

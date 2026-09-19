@@ -1,0 +1,130 @@
+---
+layout: layouts/page.njk
+permalink: /about/
+title: About the VFL
+eyebrow: What this is
+lede: A short-season football league for people who work in visual effects — built around the reality of the job, not despite it.
+---
+<section class="section">
+  <div class="wrap">
+    <div class="grid" style="gap:clamp(2rem,5vw,4rem); grid-template-columns:1fr">
+      <div class="prose" data-reveal>
+        <h2>The idea</h2>
+        <p>
+          VFX runs on long hours, moving deadlines and contracts that end when the show does.
+          Most amateur football leagues assume the opposite: a fixed squad, a nine-month season,
+          and a Tuesday that never moves. That combination doesn't survive a client note at 6pm.
+        </p>
+        <p>
+          The VFX Football League is the version that does survive it. A season is
+          <strong>eight to eleven games</strong>, roughly one match a week, played on weekday evenings
+          between teams from studios across the industry. Short enough that a freelancer can commit to
+          the whole thing. Long enough that the table actually means something by the end.
+        </p>
+
+        <h2>Who plays</h2>
+        <p>
+          Anyone working in visual effects, animation or post. Artists and production, yes — but also
+          pipeline, R&amp;D, IT, systems, facilities, recruitment, the front desk. Teams are built around
+          studios, and the standard is deliberately mixed: some sides are genuinely good, some are
+          there for the walk to the pub afterwards, and both get a full season of football.
+        </p>
+        <p>
+          It's open to everyone in the industry regardless of gender, age or ability. If your studio is
+          short on numbers, say so — most seasons somebody needs a keeper.
+        </p>
+
+        <h2>How it's run</h2>
+        <p>
+          The league is organised by people who work in the industry, in their own time, and kept as
+          cheap as it can be — costs cover pitches and referees, split between the teams.
+        </p>
+        <p>
+          Everything competitive lives on <a href="{{ site.social.sofascore }}" target="_blank" rel="noopener">Sofascore</a>:
+          fixtures, results, live standings, form guides and top-scorer charts. That's a deliberate choice.
+          It means no one is maintaining a spreadsheet at midnight, results are verifiable, and players get
+          a proper profile with their goals on it. This site reads that data live rather than duplicating it.
+        </p>
+
+        <h2>The competitions</h2>
+      </div>
+
+      <div class="card-grid card-grid--3" data-reveal>
+        <div class="card">
+          <span class="card__num">Division 1</span>
+          <h3>The league</h3>
+          <p>{{ honours.competitions[0].blurb }}</p>
+        </div>
+        <div class="card">
+          <span class="card__num">Division 2</span>
+          <h3>The second tier</h3>
+          <p>{{ honours.competitions[1].blurb }}</p>
+        </div>
+        <div class="card">
+          <span class="card__num">VFL Cup</span>
+          <h3>The knockout</h3>
+          <p>{{ honours.knockouts[0].blurb }}</p>
+        </div>
+        <div class="card">
+          <span class="card__num">Charity Shield</span>
+          <h3>The curtain-raiser</h3>
+          <p>{{ honours.knockouts[1].blurb }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <div>
+        <div class="eyebrow">Joining</div>
+        <h2>How to get a team in</h2>
+      </div>
+    </div>
+
+    <div class="card-grid card-grid--3">
+      <div class="card" data-reveal>
+        <span class="card__num">Step 01</span>
+        <h3>Find your people</h3>
+        <p>Post in your studio's social channel. You need a core of seven or eight who'll turn up most weeks — the rest sorts itself out.</p>
+      </div>
+      <div class="card" data-reveal>
+        <span class="card__num">Step 02</span>
+        <h3>Message us</h3>
+        <p>Send your studio name, a rough headcount and one contact person. We'll tell you when the next season starts and what it costs.</p>
+      </div>
+      <div class="card" data-reveal>
+        <span class="card__num">Step 03</span>
+        <h3>Turn up</h3>
+        <p>You get a fixture list, a spot in the table and a Sofascore page. Everything after that is between you and a 5-a-side pitch.</p>
+      </div>
+    </div>
+
+    <div class="btn-row" style="margin-top:2rem" data-reveal>
+      <a class="btn" href="/contact/">Enter a team</a>
+      <a class="btn btn--ghost" href="/teams/">See who's already playing</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap wrap--narrow">
+    <div class="section-head" data-reveal>
+      <div>
+        <div class="eyebrow">Questions</div>
+        <h2>The usual ones</h2>
+      </div>
+    </div>
+
+    <div class="faq" data-reveal>
+      {% for item in faqs %}
+      <details{% if loop.first %} open{% endif %}>
+        <summary>{{ item.q }}</summary>
+        <div>{{ item.a }}</div>
+      </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>

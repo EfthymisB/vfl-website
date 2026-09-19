@@ -1,0 +1,71 @@
+---
+layout: layouts/page.njk
+permalink: /media/
+title: Media
+eyebrow: From the pitch
+lede: Photos, clips and highlights, pulled straight from the league's Instagram.
+---
+<section class="section">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <div>
+        <div class="eyebrow">{{ site.social.instagramHandle }}</div>
+        <h2>Latest on Instagram</h2>
+        <p>Match photos, goal clips and season announcements. Post updates automatically — nothing to upload here.</p>
+      </div>
+      <a class="btn btn--ghost btn--sm" href="{{ site.social.instagram }}" target="_blank" rel="noopener">Follow ↗</a>
+    </div>
+
+    <div data-reveal>
+      {%- if site.instagram.provider == "behold" and site.instagram.beholdFeedId %}
+      <div data-behold-id="{{ site.instagram.beholdFeedId }}"></div>
+      <script type="module" src="https://w.behold.so/widget.js"></script>
+
+      {%- elif site.instagram.provider == "lightwidget" and site.instagram.lightwidgetUrl %}
+      <div class="widget-frame">
+        <div class="widget-frame__body">
+          <iframe src="{{ site.instagram.lightwidgetUrl }}"
+                  scrolling="no"
+                  allowtransparency="true"
+                  style="width:100%;border:0;overflow:hidden;min-height:620px"
+                  title="Instagram feed for {{ site.social.instagramHandle }}"></iframe>
+        </div>
+      </div>
+
+      {%- else %}
+      <div class="ig-fallback">
+        <div class="eyebrow eyebrow--plain">Feed not connected yet</div>
+        <h3>Set up the Instagram feed</h3>
+        <p>
+          Create a free feed at <a href="https://behold.so" target="_blank" rel="noopener">behold.so</a>,
+          connect <strong>{{ site.social.instagramHandle }}</strong>, then paste the feed ID into
+          <code>src/_data/site.json</code> under <code>instagram.beholdFeedId</code>. The grid appears here automatically.
+        </p>
+        <a class="btn" href="{{ site.social.instagram }}" target="_blank" rel="noopener">View Instagram directly ↗</a>
+      </div>
+      {%- endif %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="card-grid card-grid--3">
+      <a class="card" href="{{ site.social.instagram }}" target="_blank" rel="noopener" data-reveal>
+        <span class="card__num">Instagram</span>
+        <h3>{{ site.social.instagramHandle }} ↗</h3>
+        <p>Photos, clips and everything match-day.</p>
+      </a>
+      <a class="card" href="{{ site.social.linkedin }}" target="_blank" rel="noopener" data-reveal>
+        <span class="card__num">LinkedIn</span>
+        <h3>VFX Football League ↗</h3>
+        <p>Season news for the industry side of things.</p>
+      </a>
+      <a class="card" href="/contact/" data-reveal>
+        <span class="card__num">Submit</span>
+        <h3>Got a good shot?</h3>
+        <p>Send us photos or clips from your game and we'll get them posted.</p>
+      </a>
+    </div>
+  </div>
+</section>

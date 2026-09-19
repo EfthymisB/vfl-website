@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% if title %}{{ title }} — {{ site.shortName }}{% else %}{{ site.name }} — {{ site.tagline }}{% endif %}</title>
+<meta name="description" content="{{ description or site.description }}">
+<meta name="theme-color" content="#08090b">
+<link rel="canonical" href="{{ site.url }}{{ page.url }}">
+
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:type" content="{% if layout == 'layouts/post.njk' %}article{% else %}website{% endif %}">
+<meta property="og:title" content="{% if title %}{{ title }} — {{ site.shortName }}{% else %}{{ site.name }}{% endif %}">
+<meta property="og:description" content="{{ description or site.description }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta property="og:image" content="{{ site.url }}/assets/img/og-image.png">
+<meta property="og:locale" content="{{ site.locale }}">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/favicon.svg">
+
+<link rel="preload" href="/assets/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="alternate" type="application/rss+xml" title="{{ site.shortName }} news" href="{{ site.url }}/feed.xml">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SportsOrganization",
+  "name": "{{ site.name }}",
+  "alternateName": "{{ site.shortName }}",
+  "sport": "Football",
+  "url": "{{ site.url }}",
+  "email": "{{ site.email }}",
+  "areaServed": "{{ site.city }}",
+  "description": "{{ site.description }}",
+  "sameAs": ["{{ site.social.instagram }}", "{{ site.social.linkedin }}", "{{ site.social.sofascore }}"]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+{% include "partials/header.njk" %}
+
+<main id="main">
+  {{ content | safe }}
+</main>
+
+{% include "partials/footer.njk" %}
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

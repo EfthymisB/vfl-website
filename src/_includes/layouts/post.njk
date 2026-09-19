@@ -1,0 +1,36 @@
+---
+layout: layouts/base.njk
+---
+<article>
+  <section class="page-hero">
+    <div class="wrap wrap--narrow">
+      <div class="eyebrow"><a href="/news/" style="color:inherit;text-decoration:none">News</a> · <time datetime="{{ page.date | htmlDate }}">{{ page.date | readableDate }}</time></div>
+      <h1>{{ title }}</h1>
+      {% if summary %}<p>{{ summary }}</p>{% endif %}
+      {% if tags %}
+      <div class="tag-row">{% for t in tags %}<span class="tag">{{ t }}</span>{% endfor %}</div>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      {% if hero %}
+      <figure style="margin:0 0 2.5rem">
+        <img src="{{ hero }}" alt="{{ heroAlt or title }}" loading="eager">
+        {% if heroCaption %}<figcaption>{{ heroCaption }}</figcaption>{% endif %}
+      </figure>
+      {% endif %}
+
+      <div class="prose">
+        {{ content | safe }}
+      </div>
+
+      <hr>
+      <div class="btn-row">
+        <a class="btn btn--ghost btn--sm" href="/news/">← All news</a>
+        <a class="btn btn--sm" href="/contact/">Get in touch</a>
+      </div>
+    </div>
+  </section>
+</article>

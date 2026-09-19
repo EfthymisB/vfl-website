@@ -1,0 +1,122 @@
+---
+layout: layouts/page.njk
+permalink: /contact/
+title: Get in touch
+eyebrow: Contact
+lede: Entering a team, joining an existing one, sponsoring, or starting a league in your city — it all comes to the same inbox.
+---
+{% set key = site.contact.web3formsAccessKey %}
+
+<section class="section">
+  <div class="wrap">
+    <div class="grid" style="grid-template-columns:1fr;gap:clamp(2rem,5vw,3.5rem)">
+
+      <div class="panel" data-reveal>
+        {%- if key %}
+        <form class="form"
+              action="https://api.web3forms.com/submit"
+              method="POST"
+              data-ajax-form
+              data-fallback-email="{{ site.email }}">
+          <input type="hidden" name="access_key" value="{{ key }}">
+          <input type="hidden" name="subject" value="New enquiry from the VFL website">
+          <input type="hidden" name="from_name" value="{{ site.name }} website">
+          <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
+
+          <div class="field--2">
+            <div class="field">
+              <label for="name">Your name</label>
+              <input id="name" name="name" type="text" required autocomplete="name" placeholder="Alex Rivers">
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@studio.com">
+            </div>
+          </div>
+
+          <div class="field--2">
+            <div class="field">
+              <label for="studio">Studio / company</label>
+              <input id="studio" name="studio" type="text" placeholder="Optional">
+            </div>
+            <div class="field">
+              <label for="topic">What's it about?</label>
+              <select id="topic" name="topic">
+                <option>Entering a team</option>
+                <option>Joining an existing team</option>
+                <option>Player looking for a side</option>
+                <option>Sponsorship</option>
+                <option>Starting a league in another city</option>
+                <option>Photos / media</option>
+                <option>Something else</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required placeholder="Roughly how many of you are up for it, and anything else we should know."></textarea>
+          </div>
+
+          <div class="form-status" data-form-status role="status" aria-live="polite"></div>
+
+          <div class="btn-row" style="align-items:center;gap:1rem">
+            <button class="btn" type="submit">Send message</button>
+            <span class="form-note">Goes straight to {{ site.email }}.</span>
+          </div>
+        </form>
+
+        {%- else %}
+        <div class="stack">
+          <div class="eyebrow eyebrow--plain">Form not connected yet</div>
+          <h3 style="margin-bottom:.4rem">Email us directly</h3>
+          <p class="muted">
+            Drop us a line at <a href="mailto:{{ site.email }}">{{ site.email }}</a> with your studio,
+            a rough headcount and a contact person.
+          </p>
+          <div class="btn-row"><a class="btn" href="mailto:{{ site.email }}?subject=VFX%20Football%20League%20enquiry">Email {{ site.email }}</a></div>
+          <hr>
+          <p class="form-note">
+            <strong>To switch on the contact form:</strong> get a free access key at
+            <a href="https://web3forms.com" target="_blank" rel="noopener">web3forms.com</a>
+            (enter {{ site.email }} — the key is emailed instantly, no account needed), then paste it into
+            <code>src/_data/site.json</code> under <code>contact.web3formsAccessKey</code>.
+          </p>
+        </div>
+        {%- endif %}
+      </div>
+
+      <div class="card-grid card-grid--3">
+        <div class="card" data-reveal>
+          <span class="card__num">Teams</span>
+          <h3>Want to enter a side?</h3>
+          <p>Tell us your studio and rough numbers. We'll confirm the next season's dates and costs.</p>
+        </div>
+        <div class="card" data-reveal>
+          <span class="card__num">Players</span>
+          <h3>No team at your studio?</h3>
+          <p>Say so — sides are often short, especially in goal, and we'll put you in touch.</p>
+        </div>
+        <div class="card" data-reveal>
+          <span class="card__num">Expansion</span>
+          <h3>Outside {{ site.city }}?</h3>
+          <p>We'd like the format to travel. If you want to run a division elsewhere, we'll share everything.</p>
+        </div>
+      </div>
+
+      <div class="card-grid" data-reveal>
+        <a class="card" href="{{ site.social.instagram }}" target="_blank" rel="noopener">
+          <span class="card__num">Instagram</span>
+          <h3>{{ site.social.instagramHandle }} ↗</h3>
+          <p>DMs are open and usually answered quickest.</p>
+        </a>
+        <a class="card" href="{{ site.social.linkedin }}" target="_blank" rel="noopener">
+          <span class="card__num">LinkedIn</span>
+          <h3>VFX Football League ↗</h3>
+          <p>For studio and sponsorship enquiries.</p>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>

@@ -1,0 +1,59 @@
+# ---------------------------------------------------------------------------
+# Line endings
+# ---------------------------------------------------------------------------
+# Normalise every text file to LF in the repository AND in the working copy,
+# on every platform. This is what stops the "LF will be replaced by CRLF"
+# warnings on Windows, and it keeps the files byte-identical to what the
+# Linux GitHub Actions runner builds from.
+#
+# Git, Node, Eleventy, VS Code and every modern Windows editor are all happy
+# with LF. Only legacy Notepad is not, and that stopped being true in 2018.
+* text=auto eol=lf
+
+# Files that MUST be LF or they break on the Linux build runner.
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.sh        text eol=lf
+.gitignore  text eol=lf
+.editorconfig text eol=lf
+
+# Windows-only files that should keep CRLF, in case any ever get added.
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+*.ps1       text eol=crlf
+
+# ---------------------------------------------------------------------------
+# Binary files — never touch these, never try to diff them as text
+# ---------------------------------------------------------------------------
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.webp      binary
+*.avif      binary
+*.ico       binary
+*.mp4       binary
+*.mov       binary
+*.webm      binary
+*.pdf       binary
+*.woff      binary
+*.woff2     binary
+*.ttf       binary
+*.otf       binary
+*.eot       binary
+*.zip       binary
+
+# SVG is text (it is XML) — diff it, but do not let it count as source code
+# in GitHub's language stats.
+*.svg       text eol=lf linguist-language=SVG -linguist-detectable
+
+# ---------------------------------------------------------------------------
+# Housekeeping
+# ---------------------------------------------------------------------------
+# Keep the lockfile out of diffs and merge conflicts noise.
+package-lock.json  text eol=lf -diff linguist-generated
+
+# Don't ship repo plumbing in a `git archive` tarball.
+.gitattributes  export-ignore
+.gitignore      export-ignore
+.github         export-ignore

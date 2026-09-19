@@ -1,0 +1,65 @@
+---
+layout: layouts/page.njk
+permalink: /teams/
+title: Teams
+eyebrow: The studios
+lede: Sides that have taken part in a VFL competition. Team pages, squads and player stats all live on Sofascore.
+---
+<section class="section">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <div>
+        <div class="eyebrow">Season {{ site.currentSeason }}</div>
+        <h2>Currently playing</h2>
+        <p>{{ teams.current | length }} studio sides in Division 1 this season.</p>
+      </div>
+      <a class="btn btn--ghost btn--sm" href="{{ site.sofascore.division1.pageUrl }}" target="_blank" rel="noopener">Squads on Sofascore ↗</a>
+    </div>
+
+    <ul class="team-list" data-reveal>
+      {% for t in teams.current %}
+      <li class="team" style="--team-colour: {{ t.colour }}">
+        <span class="team__badge" aria-hidden="true">{{ t.initials }}</span>
+        <span>
+          <span class="team__name">{{ t.short }}</span>
+          <span class="team__seasons">{{ t.seasons | join(" · ") }}</span>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <div>
+        <div class="eyebrow">Alumni</div>
+        <h2>Previously in the league</h2>
+        <p>Sides that have played a VFL season at some point. Doors are always open.</p>
+      </div>
+    </div>
+
+    <ul class="team-list" data-reveal>
+      {% for t in teams.alumni %}
+      <li class="team team--alumni">
+        <span class="team__badge" aria-hidden="true">{{ t.initials }}</span>
+        <span>
+          <span class="team__name">{{ t.short }}</span>
+          <span class="team__seasons">{{ t.seasons | join(" · ") }}</span>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="cta" data-reveal>
+      <h2>Missing a badge?</h2>
+      <p>If your studio wants in — or you're a few players short of a side — that's the whole reason the contact page exists.</p>
+      <div class="btn-row"><a class="btn" href="/contact/">Enter a team</a></div>
+    </div>
+  </div>
+</section>

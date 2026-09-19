@@ -1,0 +1,39 @@
+---
+layout: layouts/page.njk
+permalink: /news/
+title: News & announcements
+eyebrow: The feed
+lede: Season announcements, match reports, rule changes and whatever else needs saying.
+---
+<section class="section">
+  <div class="wrap">
+    {% if collections.posts | length %}
+    <ul class="post-list" data-reveal>
+      {% for post in collections.posts %}
+      <li class="post-item">
+        <a href="{{ post.url }}">
+          <div class="post-item__date"><time datetime="{{ post.date | htmlDate }}">{{ post.date | readableDate }}</time></div>
+          <div>
+            <div class="post-item__title">{{ post.data.title }}</div>
+            <p class="post-item__summary">{{ post | excerpt }}</p>
+            {% if post.data.tags %}
+            <div class="tag-row">{% for t in post.data.tags %}<span class="tag">{{ t }}</span>{% endfor %}</div>
+            {% endif %}
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <p class="form-note" style="margin-top:2rem">
+      Prefer a reader? <a href="/feed.xml">Subscribe to the RSS feed</a>.
+    </p>
+    {% else %}
+    <div class="ig-fallback">
+      <h3>Nothing posted yet</h3>
+      <p>First announcement lands here. In the meantime, everything competitive is on the standings page.</p>
+      <a class="btn btn--ghost" href="/table/">See the table</a>
+    </div>
+    {% endif %}
+  </div>
+</section>

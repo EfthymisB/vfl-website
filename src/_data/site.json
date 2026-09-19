@@ -1,0 +1,71 @@
+{
+  "name": "VFX Football League",
+  "shortName": "VFL",
+  "tagline": "The league where post-production clocks off and kicks off.",
+  "description": "The VFX Football League is a short-season 6-a-side league for people who work in the visual effects industry. Studio teams, eight to eleven games, one trophy. Currently running in London.",
+  "url": "https://vfx-football-league.co.uk",
+  "locale": "en_GB",
+  "email": "vflorganiser@gmail.com",
+  "currentSeason": "2026",
+  "foundedYear": "2024",
+  "city": "London",
+
+  "social": {
+    "instagram": "https://www.instagram.com/vfxleague.london/",
+    "instagramHandle": "@vfxleague.london",
+    "linkedin": "https://www.linkedin.com/company/100575459/",
+    "sofascore": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london/21938#id:87096"
+  },
+
+  "comment_sofascore": "Widget IDs verified against widgets.sofascore.com. To roll the site over to a new season, update seasonId (and tournamentId/group if Sofascore renames the group) here — nothing else needs touching.",
+  "sofascore": {
+    "widgetBase": "https://widgets.sofascore.com/embed",
+    "theme": "dark",
+    "division1": {
+      "label": "Division 1",
+      "uniqueTournamentId": 21938,
+      "tournamentId": 126383,
+      "seasonId": 87096,
+      "group": "VFX League London 2026",
+      "rounds": 11,
+      "currentRound": 9,
+      "pageUrl": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london/21938#id:87096"
+    },
+    "division2": {
+      "label": "Division 2",
+      "uniqueTournamentId": 24570,
+      "tournamentId": 143977,
+      "seasonId": 70546,
+      "group": "",
+      "rounds": 7,
+      "currentRound": 7,
+      "pageUrl": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london-2/24570"
+    },
+    "cup": {
+      "label": "VFL Cup",
+      "uniqueTournamentId": 24730,
+      "seasonId": 71168,
+      "pageUrl": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfl-cup/24730"
+    },
+    "charityShield": {
+      "label": "Charity Shield",
+      "uniqueTournamentId": 31352,
+      "seasonId": 87098,
+      "pageUrl": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-football-league-charity-shield/31352"
+    }
+  },
+
+  "comment_instagram": "Create a free feed at https://behold.so, connect @vfxleague.london, then paste the feed ID here. Leave blank and the Media page shows a tidy fallback card instead of a broken embed.",
+  "instagram": {
+    "provider": "behold",
+    "beholdFeedId": "",
+    "lightwidgetUrl": ""
+  },
+
+  "comment_contact": "Get a free access key at https://web3forms.com (enter vflorganiser@gmail.com, it is emailed to you instantly - no account needed). Paste it here. Leave blank and the contact page falls back to a mailto link.",
+  "contact": {
+    "provider": "web3forms",
+    "web3formsAccessKey": "41f4b2a3-2737-4236-aaed-b331b3a30144",
+    "formspreeEndpoint": ""
+  }
+}

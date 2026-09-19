@@ -1,0 +1,63 @@
+---
+layout: layouts/page.njk
+permalink: /fixtures/
+title: Fixtures & results
+eyebrow: Season {{ site.currentSeason }}
+lede: Every Division 1 match this season. Pick a round to jump through the calendar.
+---
+{% import "macros.njk" as w %}
+{% set d1 = site.sofascore.division1 %}
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <div>
+        <div class="eyebrow">{{ d1.label }}</div>
+        <h2>Round by round</h2>
+        <p>Kick-off times, scores and postponements, live from Sofascore.</p>
+      </div>
+      <div class="round-picker">
+        <label for="round-select">Round</label>
+        <select id="round-select"
+                data-round-select
+                data-target="fixtures-frame"
+                data-src-template="{{ w.fixturesUrl(site, d1, '__ROUND__', d1.label + ' · Round __ROUND__') }}">
+          {% for n in range(1, d1.rounds + 1) %}
+          <option value="{{ n }}" data-label="{{ d1.label }} · Round {{ n }}"{% if n == d1.currentRound %} selected{% endif %}>Round {{ n }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div data-reveal>
+      {{ w.frame("fixtures-frame", d1.label + " · Round " + d1.currentRound, w.fixturesUrl(site, d1, d1.currentRound), 760, d1.pageUrl, "All fixtures") }}
+    </div>
+
+    <p class="form-note" style="margin-top:1rem">
+      Fixtures move — pitches get double-booked, shows get delivered. Sofascore is always the source of truth,
+      and anything major gets posted to <a href="/news/">News</a> and Instagram.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="card-grid card-grid--3">
+      <a class="card" href="{{ site.sofascore.cup.pageUrl }}" target="_blank" rel="noopener" data-reveal>
+        <span class="card__num">Cup</span>
+        <h3>VFL Cup ↗</h3>
+        <p>Straight knockout. Draw, ties and extra time, on Sofascore.</p>
+      </a>
+      <a class="card" href="{{ site.sofascore.charityShield.pageUrl }}" target="_blank" rel="noopener" data-reveal>
+        <span class="card__num">Shield</span>
+        <h3>Charity Shield ↗</h3>
+        <p>Champions vs cup holders, played to open the season.</p>
+      </a>
+      <a class="card" href="{{ site.sofascore.division2.pageUrl }}" target="_blank" rel="noopener" data-reveal>
+        <span class="card__num">Div 2</span>
+        <h3>Division 2 ↗</h3>
+        <p>Second-tier fixtures and results.</p>
+      </a>
+    </div>
+  </div>
+</section>

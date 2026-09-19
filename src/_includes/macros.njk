@@ -1,0 +1,26 @@
+{#- Sofascore widget URL builders. Single source of truth for every embed. -#}
+
+{%- macro standingsUrl(site, d, title) -%}
+{{ site.sofascore.widgetBase }}/tournament/{{ d.tournamentId }}/season/{{ d.seasonId }}/standings{% if d.group %}/{{ d.group | urlencode }}{% endif %}?widgetTitle={{ (title or d.label) | urlencode }}&showCompetitionLogo=true&widgetTheme={{ site.sofascore.theme }}
+{%- endmacro -%}
+
+{%- macro fixturesUrl(site, d, round, title) -%}
+{{ site.sofascore.widgetBase }}/unique-tournament/{{ d.uniqueTournamentId }}/season/{{ d.seasonId }}/editorFixtures?showCompetitionLogo=true&widgetTitle={{ (title or (d.label + " · Round " + round)) | urlencode }}&widgetTheme={{ site.sofascore.theme }}&round={{ round }}
+{%- endmacro -%}
+
+{%- macro topPlayersUrl(site, d, sortBy, count) -%}
+{{ site.sofascore.widgetBase }}/unique-tournament/{{ d.uniqueTournamentId }}/season/{{ d.seasonId }}/topPlayers?numberOfTopPlayers={{ count or 20 }}&showCompetitionLogo=true&widgetTitle={{ ("Top scorers · " + d.label) | urlencode }}&widgetTheme={{ site.sofascore.theme }}&sortBy={{ sortBy or "goals" }}&seasonPeriodType=overall
+{%- endmacro -%}
+
+{#- A framed widget with a header bar. -#}
+{%- macro frame(id, label, src, height, link, linkText) -%}
+<div class="widget-frame">
+  <div class="widget-frame__head">
+    <span class="widget-frame__title"><span class="live-dot" aria-hidden="true"></span><span data-widget-label="{{ id }}">{{ label }}</span></span>
+    {% if link %}<a class="btn btn--ghost btn--sm" href="{{ link }}" target="_blank" rel="noopener">{{ linkText or "View on Sofascore" }} ↗</a>{% endif %}
+  </div>
+  <div class="widget-frame__body">
+    <iframe id="{{ id }}" src="{{ src }}" style="height:{{ height or 640 }}px" loading="lazy" title="{{ label }}"></iframe>
+  </div>
+</div>
+{%- endmacro -%}
