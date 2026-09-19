@@ -2,7 +2,8 @@
   "titleHolder": {
     "team": "FC One Of Us London",
     "competition": "Division 1",
-    "season": "2026"
+    "season": "2026",
+    "logo": "/assets/img/team_logos/oou.png"
   },
   "note": "Records sourced from the league's Sofascore pages. Current-season standings are live; completed seasons are archived below.",
   "competitions": [

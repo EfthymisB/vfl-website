@@ -3,182 +3,188 @@ layout: layouts/base.njk
 permalink: /index.html
 eleventyNavigation: Home
 ---
+
 {% import "macros.njk" as w %}
 {% set d1 = site.sofascore.division1 %}
-
 {% set thisSeason = honours.competitions[0].seasons[0] %}
 <section class="hero">
   <div class="wrap hero__grid">
     <div>
       <div class="eyebrow">{{ site.city }} · Season {{ site.currentSeason }} · Small-sided football</div>
-      <h1>Same crunch.<br><em>Different pitch.</em></h1>
-      <p class="hero__lede">
-        The VFX Football League is a short-season league for the people who make the shots.
-        Artists, production, pipeline, IT, the lot. Studio against studio, eight to eleven games,
-        one table, no season that outlives your contract.
-      </p>
-      <div class="btn-row">
-        <a class="btn" href="/contact/">Enter a team</a>
-        <a class="btn btn--ghost" href="/table/">See the table</a>
+      <h1>Same crunch.<br>
+          <em>Different pitch.</em>
+        </h1>
+        <p class="hero__lede">
+          The VFX Football League is a short-season league for the people who make the shots. Artists, production, pipeline, IT,
+          the lot. Studio against studio, eight to eleven games, one table, no season that outlives your contract.
+        </p>
+        <div class="btn-row">
+          <a class="btn" href="/contact/">Enter a team</a>
+          <a class="btn btn--ghost" href="/table/">See the table</a>
+        </div>
+      </div>
+      <aside class="hero__panel" aria-label="Season snapshot">
+        <div class="hero__panel-head">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span>{{ honours.competitions[0].name }} · {{ thisSeason.season }}</span>
+        </div>
+        <ol class="mini-table">
+          {% for r in thisSeason.table | limit(5) %}
+            <li>
+              <span class="mini-table__pos">{{ r.pos }}</span>
+              <span class="mini-table__team">{{ r.team | replace("FC ", "") | replace(" London", "") }}</span>
+              <span class="mini-table__played">{{ r.p }}</span>
+              <span class="mini-table__pts">{{ r.pts }}</span>
+            </li>
+          {% endfor %}
+        </ol>
+        <a class="hero__panel-link" href="/table/">Full live table →</a>
+      </aside>
+    </div>
+    <div class="wrap">
+      <div class="hero__meta">
+        <span>
+          <b>{{ site.foundedYear }}</b>
+          founded</span>
+        <span>
+          <b>{{ teams.current | length }}</b>
+          studio sides</span>
+        <span>
+          <b>8–11</b>
+          games a season</span>
+        <span>
+          <b>{{ site.city }}</b>
+          and counting</span>
       </div>
     </div>
-
-    <aside class="hero__panel" aria-label="Season snapshot">
-      <div class="hero__panel-head">
-        <span class="live-dot" aria-hidden="true"></span>
-        <span>{{ honours.competitions[0].name }} · {{ thisSeason.season }}</span>
-      </div>
-      <ol class="mini-table">
-        {% for r in thisSeason.table | limit(5) %}
-        <li>
-          <span class="mini-table__pos">{{ r.pos }}</span>
-          <span class="mini-table__team">{{ r.team | replace("FC ", "") | replace(" London", "") }}</span>
-          <span class="mini-table__played">{{ r.p }}</span>
-          <span class="mini-table__pts">{{ r.pts }}</span>
-        </li>
-        {% endfor %}
-      </ol>
-      <a class="hero__panel-link" href="/table/">Full live table →</a>
-    </aside>
-  </div>
-
-  <div class="wrap">
-    <div class="hero__meta">
-      <span><b>{{ site.foundedYear }}</b> founded</span>
-      <span><b>{{ teams.current | length }}</b> studio sides</span>
-      <span><b>8–11</b> games a season</span>
-      <span><b>{{ site.city }}</b> and counting</span>
-    </div>
-  </div>
-</section>
-
-<section class="section--tight">
-  <div class="wrap">
-    <div class="stat-strip">
-      <div class="stat">
-        <div class="stat__num">{{ teams.current | length }}</div>
-        <div class="stat__label">Teams this season</div>
-      </div>
-      <div class="stat">
-        <div class="stat__num">{{ d1.rounds }}</div>
-        <div class="stat__label">Rounds, Division 1</div>
-      </div>
-      <div class="stat">
-        <div class="stat__num">{{ (teams.current | length) + (teams.alumni | length) }}</div>
-        <div class="stat__label">Studios all-time</div>
-      </div>
-      <div class="stat">
-        <div class="stat__num">4</div>
-        <div class="stat__label">Competitions</div>
+  </section>
+  <section class="section--tight">
+    <div class="wrap">
+      <div class="stat-strip">
+        <div class="stat">
+          <div class="stat__num">{{ teams.current | length }}</div>
+          <div class="stat__label">Teams this season</div>
+        </div>
+        <div class="stat">
+          <div class="stat__num">{{ d1.rounds }}</div>
+          <div class="stat__label">Rounds, Division 1</div>
+        </div>
+        <div class="stat">
+          <div class="stat__num">{{ (teams.current | length) + (teams.alumni | length) }}</div>
+          <div class="stat__label">Studios all-time</div>
+        </div>
+        <div class="stat">
+          <div class="stat__num">4</div>
+          <div class="stat__label">Competitions</div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <div>
-        <div class="eyebrow">Live standings</div>
-        <h2>The table, right now</h2>
-        <p>Pulled live from Sofascore, the same data the app shows, so results update the moment a referee files them.</p>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <div>
+          <div class="eyebrow">Live standings</div>
+          <h2>The table, right now</h2>
+          <p>Pulled live from Sofascore, the same data the app shows, so results update the moment a referee files them.</p>
+        </div>
+        <a class="btn btn--ghost btn--sm" href="/table/">Full standings &amp; scorers</a>
       </div>
-      <a class="btn btn--ghost btn--sm" href="/table/">Full standings &amp; scorers</a>
-    </div>
-
-    <div data-reveal>
-      {{ w.frame("home-standings", d1.label + " · " + site.currentSeason, w.standingsUrl(site, d1, d1.label + " " + site.currentSeason), 600, d1.pageUrl) }}
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <div>
-        <div class="eyebrow">What it is</div>
-        <h2>A league built around a VFX calendar</h2>
-      </div>
-      <a class="btn btn--ghost btn--sm" href="/about/">More about the VFL</a>
-    </div>
-
-    <div class="card-grid card-grid--3">
-      <div class="card" data-reveal>
-        <span class="card__num">01 / Short</span>
-        <h3>Eight to eleven games</h3>
-        <p>A season runs a few months, not all year. It fits between deliveries instead of competing with them.</p>
-      </div>
-      <div class="card" data-reveal>
-        <span class="card__num">02 / Open</span>
-        <h3>Everyone in the industry</h3>
-        <p>Comp, roto, animation, lighting, production, pipeline, IT, facilities. Any studio, any department, any ability.</p>
-      </div>
-      <div class="card" data-reveal>
-        <span class="card__num">03 / Tracked</span>
-        <h3>Proper stats, zero admin</h3>
-        <p>Fixtures, results, form guides and top scorers all live on Sofascore. Nobody maintains a spreadsheet.</p>
+      <div data-reveal>
+        {{ w.frame("home-standings", d1.label + " · " + site.currentSeason, w.standingsUrl(site, d1, d1.label + " " + site.currentSeason), 600, d1.pageUrl) }}
       </div>
     </div>
-  </div>
-</section>
-
-{% set latest = collections.posts | limit(3) %}
-{% if latest | length %}
-<section class="section">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <div>
-        <div class="eyebrow">Latest</div>
-        <h2>News &amp; announcements</h2>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <div>
+          <div class="eyebrow">What it is</div>
+          <h2>A league built around a VFX calendar</h2>
+        </div>
+        <a class="btn btn--ghost btn--sm" href="/about/">More about the VFL</a>
       </div>
-      <a class="btn btn--ghost btn--sm" href="/news/">All posts</a>
+      <div class="card-grid card-grid--3">
+        <div class="card" data-reveal>
+          <span class="card__num">01 / Short</span>
+          <h3>Eight to eleven games</h3>
+          <p>A season runs a few months, not all year. It fits between deliveries instead of competing with them.</p>
+        </div>
+        <div class="card" data-reveal>
+          <span class="card__num">02 / Open</span>
+          <h3>Everyone in the industry</h3>
+          <p>Comp, roto, animation, lighting, production, pipeline, IT, facilities. Any studio, any department, any ability.</p>
+        </div>
+        <div class="card" data-reveal>
+          <span class="card__num">03 / Tracked</span>
+          <h3>Proper stats, zero admin</h3>
+          <p>Fixtures, results, form guides and top scorers all live on Sofascore. Nobody maintains a spreadsheet.</p>
+        </div>
+      </div>
     </div>
-
-    <ul class="post-list" data-reveal>
-      {% for post in latest %}
-      <li class="post-item">
-        <a href="{{ post.url }}">
-          <div class="post-item__date"><time datetime="{{ post.date | htmlDate }}">{{ post.date | readableDate }}</time></div>
+  </section>
+  {% set latest = collections.posts | limit(3) %}
+  {% if latest | length %}
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
           <div>
-            <div class="post-item__title">{{ post.data.title }}</div>
-            <p class="post-item__summary">{{ post | excerpt }}</p>
+            <div class="eyebrow">Latest</div>
+            <h2>News &amp; announcements</h2>
           </div>
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-</section>
-{% endif %}
-
-<section class="section">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <div>
-        <div class="eyebrow">Honours</div>
-        <h2>Who's holding what</h2>
+          <a class="btn btn--ghost btn--sm" href="/news/">All posts</a>
+        </div>
+        <ul class="post-list" data-reveal>
+          {% for post in latest %}
+            <li class="post-item">
+              <a href="{{ post.url }}">
+                <div class="post-item__date">
+                  <time datetime="{{ post.date | htmlDate }}">{{ post.date | readableDate }}</time>
+                </div>
+                <div>
+                  <div class="post-item__title">{{ post.data.title }}</div>
+                  <p class="post-item__summary">{{ post | excerpt }}</p>
+                </div>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
       </div>
-      <a class="btn btn--ghost btn--sm" href="/honours/">Full record</a>
-    </div>
-
-    <div class="trophy-card" data-reveal>
-      <div class="trophy-card__label">First time champions · {{ honours.titleHolder.competition }} {{ honours.titleHolder.season }}</div>
-      <div class="trophy-card__team">{{ honours.titleHolder.team }}</div>
-      <p class="trophy-card__meta">From batling relegation in {{ honours.competitions[0].seasons[1].season }} to championship glory in {{ honours.competitions[0].seasons[0].season }}.</p>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
-    <div class="cta" data-reveal>
-      <div class="eyebrow eyebrow--plain center" style="justify-content:center">Next season</div>
-      <h2>Get your studio on the pitch</h2>
-      <p>If your studio hasn't got a side yet, this is the easy bit. Tell us who you are and roughly how many of you fancy it — we'll take it from there.</p>
-      <div class="btn-row">
-        <a class="btn" href="/contact/">Enter a team</a>
-        <a class="btn btn--ghost" href="{{ site.social.instagram }}" target="_blank" rel="noopener">Follow on Instagram</a>
+    </section>
+  {% endif %}
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <div>
+          <div class="eyebrow">Honours</div>
+          <h2>Who's holding what</h2>
+        </div>
+        <a class="btn btn--ghost btn--sm" href="/honours/">Full record</a>
       </div>
-    </div>
-  </div>
-</section>
+      <div class="trophy-card" data-reveal>
+        <div class="trophy-card__label">First time champions · {{ honours.titleHolder.competition }}
+          {{ honours.titleHolder.season }}</div>
+        <div class="trophy-card__team_and_logo">
+          <img src="{{ honours.titleHolder.logo }}" alt="" class="trophy-card__logo" width="60" height="60" loading="lazy">
+            <div class="trophy-card__team">{{ honours.titleHolder.team }}</div>
+          </div>
+          <p class="trophy-card__meta">From batling relegation in
+            {{ honours.competitions[0].seasons[1].season }} to championship glory in {{ honours.competitions[0].seasons[0].season }}
+          .</p>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="wrap">
+        <div class="cta" data-reveal>
+          <div class="eyebrow eyebrow--plain center" style="justify-content:center">Next season</div>
+          <h2>Get your studio on the pitch</h2>
+          <p>If your studio hasn't got a side yet, this is the easy bit. Tell us who you are and roughly how many of you fancy it
+            — we'll take it from there.</p>
+          <div class="btn-row">
+            <a class="btn" href="/contact/">Enter a team</a>
+            <a class="btn btn--ghost" href="{{ site.social.instagram }}" target="_blank" rel="noopener">Follow on Instagram</a>
+          </div>
+        </div>
+      </div>
+    </section>
