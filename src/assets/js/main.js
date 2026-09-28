@@ -89,7 +89,8 @@
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      if (form.querySelector(".hp") && form.querySelector(".hp").value) return; // honeypot
+      var hp = form.querySelector(".hp");
+      if (hp && (hp.type === "checkbox" ? hp.checked : hp.value)) return;
 
       var originalLabel = submit ? submit.textContent : "";
       if (submit) { submit.disabled = true; submit.textContent = "Sending…"; }
