@@ -2,7 +2,14 @@
 layout: layouts/base.njk
 ---
 <article>
-  <section class="page-hero">
+  {% if isVisibleDraft %}
+  <div class="draft-bar" role="status">
+    <strong>Draft</strong>
+    <span>Visible on localhost only — it is excluded from <code>npm run build</code>, so it will not deploy.</span>
+  </div>
+  {% endif %}
+
+  <section class="page-hero{% if isVisibleDraft %} page-hero--draft{% endif %}">
     <div class="wrap wrap--narrow">
       <div class="eyebrow"><a href="/news/" style="color:inherit;text-decoration:none">News</a> · <time datetime="{{ page.date | htmlDate }}">{{ page.date | readableDate }}</time></div>
       <h1>{{ title }}</h1>

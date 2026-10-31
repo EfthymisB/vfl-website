@@ -7,10 +7,11 @@
   "scripts": {
     "start": "eleventy --serve --quiet",
     "dev": "eleventy --serve --quiet",
-    "build": "eleventy"
+    "build": "node clean.js && eleventy"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
-    "luxon": "^3.5.0"
+    "luxon": "^3.5.0",
+    "markdown-it-attrs": "^5.0.1"
   }
 }
