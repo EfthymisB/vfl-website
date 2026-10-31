@@ -1,6 +1,6 @@
 ---
 title: A home for the league that isn't a group chat
-date: 2026-09-18
+date: 2025-01-01
 summary: The VFL now has a proper website! Live tables, fixtures, a full honours record and an easy way for new studios to get in touch.
 tags: ["Announcement"]
 ---

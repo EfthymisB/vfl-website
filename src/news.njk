@@ -14,7 +14,7 @@ lede: Season announcements, match reports, rule changes and whatever else needs 
         <a href="{{ post.url }}">
           <div class="post-item__date"><time datetime="{{ post.date | htmlDate }}">{{ post.date | readableDate }}</time></div>
           <div>
-            <div class="post-item__title">{{ post.data.title }}</div>
+            <div class="post-item__title">{% if post.data.isVisibleDraft %}<span class="draft-pill">Draft</span>{% endif %}{{ post.data.title }}</div>
             <p class="post-item__summary">{{ post | excerpt }}</p>
             {% if post.data.tags %}
             <div class="tag-row">{% for t in post.data.tags %}<span class="tag">{{ t }}</span>{% endfor %}</div>

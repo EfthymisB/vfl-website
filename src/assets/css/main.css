@@ -1,5 +1,5 @@
 /* ==========================================================================
-   VFX Football League — design system
+   VFX Football League - design system
    Dark cinematic base, brand purple accent, mono numerics.
    ========================================================================== */
 
@@ -63,7 +63,7 @@
   --muted: #99a0ac;
   --dim: #656c78;
 
-  /* brand — taken from the logo
+  /* brand - taken from the logo
      #330098 is the logo's purple. It is only 1.4:1 against the page
      background, so it is used for fills, glows and gradients (where white
      sits on top of it) and never for text or hairlines. --accent is the same
@@ -78,7 +78,7 @@
   --paper: #f1f1f1; /* the logo's white */
   --on-accent: #120a26; /* text on an --accent fill, 5.7:1 */
 
-  /* secondary — decorative only */
+  /* secondary - decorative only */
   --cyan: #3de8ff;
   --orange: #ff6b3d;
   --magenta: #ff3d8a;
@@ -1226,6 +1226,10 @@ table.data td:nth-child(2) {
 .prose video {
   border-radius: var(--radius-lg);
   border: 1px solid var(--line);
+}
+/* Fill the column by default - but leave an explicit width="320" alone. */
+.prose img:not([width]),
+.prose video {
   width: 100%;
 }
 .prose figure {
@@ -1691,4 +1695,364 @@ table.data td:nth-child(2) {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
+}
+
+/* ===========================================================================
+   POST IMAGES - size and placement
+   ---------------------------------------------------------------------------
+   Put a class on a <figure>, or straight on an image with the Markdown
+   shorthand:  ![alt](/img.png){.w-50 .align-center}
+   See src/posts/_template.md for worked examples.
+
+   Everything here collapses to full width on phones, so you never need to
+   write a mobile version of anything.
+
+   ORDER MATTERS in this section: the width classes come last so that
+   `.float-right.w-33` is 33% wide, not the float's 42% default.
+   =========================================================================== */
+
+/* --- text wraps around the image ---------------------------------------- */
+@media (min-width: 42rem) {
+  .prose .float-left,
+  .prose .float-right {
+    max-width: 42%; /* default; any w-* class below overrides it */
+    margin-block: 0.35rem 1.25rem;
+  }
+  .prose .float-left {
+    float: left;
+    margin-right: 1.75rem;
+  }
+  .prose .float-right {
+    float: right;
+    margin-left: 1.75rem;
+  }
+}
+/* Keep a float inside its article, and out of the next section. */
+.prose::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.prose h2,
+.prose h3,
+.prose hr {
+  clear: both;
+}
+
+/* --- image and text side by side, no wrapping --------------------------- */
+.prose .side-by-side {
+  display: grid;
+  gap: 1.25rem;
+  margin: 2rem 0;
+  align-items: center;
+}
+.prose .side-by-side > *,
+.prose .side-by-side figure {
+  margin: 0;
+}
+@media (min-width: 42rem) {
+  .prose .side-by-side {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .prose .side-by-side.img-small {
+    grid-template-columns: 1fr 1.7fr;
+  }
+  .prose .side-by-side.img-big {
+    grid-template-columns: 1.7fr 1fr;
+  }
+  .prose .side-by-side.top {
+    align-items: start;
+  }
+}
+
+/* --- a row of images ----------------------------------------------------- */
+.prose .gallery {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  margin: 2rem 0;
+}
+.prose .gallery > *,
+.prose .gallery figure {
+  margin: 0;
+}
+
+/* --- opt out of the frame (logos, cut-outs, transparent PNGs) ------------ */
+.prose .plain img,
+.prose img.plain {
+  border: 0;
+  border-radius: 0;
+}
+
+/* --- width (last, so it wins over the float default) --------------------- */
+@media (min-width: 42rem) {
+  .prose .w-75 {
+    max-width: 75%;
+  }
+  .prose .w-60 {
+    max-width: 60%;
+  }
+  .prose .w-50 {
+    max-width: 50%;
+  }
+  .prose .w-33 {
+    max-width: 33%;
+  }
+  .prose .w-25 {
+    max-width: 25%;
+  }
+}
+
+/* --- where a narrowed image sits in the column --------------------------- */
+.prose .align-center {
+  margin-inline: auto;
+}
+.prose .align-left {
+  margin-inline: 0 auto;
+}
+.prose .align-right {
+  margin-inline: auto 0;
+}
+
+/* --- wider than the text column, for a hero still (desktop only) --------- */
+@media (min-width: 64rem) {
+  .prose .w-bleed {
+    width: calc(100% + 8rem);
+    max-width: none;
+    margin-inline: -4rem;
+  }
+}
+
+/* ===========================================================================
+   TEAM BADGES - inline logos and scorelines
+   ---------------------------------------------------------------------------
+   Written by the {% team %}, {% logo %} and {% score %} shortcodes.
+   Logos sit on a light tile because the set is mixed: some are white-on-
+   transparent and some are black-on-transparent, so neither background alone
+   keeps them all legible on a dark page.
+   =========================================================================== */
+
+.team-logo {
+  /* The global reset makes every img display:block; these must stay in the
+     line of text, so put them back to inline-block. */
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  object-fit: contain;
+  background: var(--paper);
+  border: 0;
+  border-radius: 4px;
+  padding: 2px;
+  vertical-align: -0.4em;
+  flex: none;
+}
+/* Beat the generic .prose img frame and full-width rule. */
+.prose .team-logo {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  border: 0;
+  border-radius: 4px;
+}
+
+/* Fallback tile for a team with no logo file yet. */
+.team-logo--text {
+  display: inline-grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.6em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #0d0f13;
+  padding: 0;
+}
+
+/* --- inline chip: {% team "ilm" %} --------------------------------------- */
+.team-chip {
+  white-space: nowrap;
+}
+.team-chip__name {
+  margin-left: 0.35em;
+  font-weight: 600;
+}
+
+/* --- scoreline: {% score "ilm", 3, 0, "etc" %} ---------------------------- */
+.scoreline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  vertical-align: middle;
+  padding: 0.3em 0.6em;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  line-height: 1.2;
+}
+.scoreline__side {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  min-width: 0;
+  color: var(--muted);
+}
+.scoreline__side--away {
+  flex-direction: row;
+}
+.scoreline__side.is-win {
+  color: var(--text);
+}
+.scoreline__side.is-win .scoreline__name {
+  font-weight: 700;
+}
+.scoreline__name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.scoreline .team-logo {
+  vertical-align: baseline;
+}
+.scoreline__score {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text);
+}
+.scoreline__score i {
+  font-style: normal;
+  color: var(--dim);
+  margin: 0 0.3em;
+}
+
+/* A column of results: put the scorelines in a list and they line up. */
+.prose .results {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.prose .results li {
+  margin: 0;
+}
+.prose .results .scoreline {
+  display: flex;
+  width: 100%;
+}
+.prose .results .scoreline__side {
+  flex: 1 1 0;
+}
+.prose .results .scoreline__side--away {
+  justify-content: flex-end;
+}
+
+/* Teams page badges use the same tile. */
+.team__logo {
+  width: 2.6rem;
+  height: 2.6rem;
+  object-fit: contain;
+  background: var(--paper);
+  border-radius: 7px;
+  padding: 3px;
+  flex: none;
+}
+
+/* --- code blocks and tables inside a post -------------------------------- */
+.prose pre {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  max-width: 100%;
+}
+.prose pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+  white-space: pre;
+}
+
+/* A wide table scrolls sideways rather than blowing the page out. */
+.prose table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.prose table th,
+.prose table td {
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.prose table th {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  white-space: nowrap;
+}
+.prose table td code {
+  white-space: nowrap;
+}
+
+/* --- draft posts (localhost only) --------------------------------------- */
+.draft-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+  padding: 0.7rem var(--gutter);
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 107, 61, 0.14) 0 12px,
+    rgba(255, 107, 61, 0.07) 12px 24px
+  );
+  border-bottom: 1px solid rgba(255, 107, 61, 0.4);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+.draft-bar strong {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+.draft-bar code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  color: var(--text);
+}
+.page-hero--draft {
+  border-top: 0;
+}
+
+.draft-pill {
+  display: inline-block;
+  margin-right: 0.55rem;
+  padding: 0.12em 0.5em;
+  border: 1px solid rgba(255, 107, 61, 0.45);
+  border-radius: 100px;
+  background: rgba(255, 107, 61, 0.12);
+  color: var(--orange);
+  font-family: var(--font-mono);
+  font-size: 0.56em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  vertical-align: 0.22em;
 }
