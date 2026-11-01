@@ -1712,21 +1712,21 @@ table.data td:nth-child(2) {
    =========================================================================== */
 
 /* --- text wraps around the image ---------------------------------------- */
-@media (min-width: 42rem) {
-  .prose .float-left,
-  .prose .float-right {
-    max-width: 42%; /* default; any w-* class below overrides it */
-    margin-block: 0.35rem 1.25rem;
-  }
-  .prose .float-left {
-    float: left;
-    margin-right: 1.75rem;
-  }
-  .prose .float-right {
-    float: right;
-    margin-left: 1.75rem;
-  }
+
+.prose .float-left,
+.prose .float-right {
+  max-width: 42%; /* default; any w-* class below overrides it */
+  margin-block: 0.35rem 1.25rem;
 }
+.prose .float-left {
+  float: left;
+  margin-right: 1.75rem;
+}
+.prose .float-right {
+  float: right;
+  margin-left: 1.75rem;
+}
+
 /* Keep a float inside its article, and out of the next section. */
 .prose::after {
   content: "";
@@ -1750,20 +1750,19 @@ table.data td:nth-child(2) {
 .prose .side-by-side figure {
   margin: 0;
 }
-@media (min-width: 42rem) {
-  .prose .side-by-side {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-  .prose .side-by-side.img-small {
-    grid-template-columns: 1fr 1.7fr;
-  }
-  .prose .side-by-side.img-big {
-    grid-template-columns: 1.7fr 1fr;
-  }
-  .prose .side-by-side.top {
-    align-items: start;
-  }
+
+.prose .side-by-side {
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.prose .side-by-side.img-small {
+  grid-template-columns: 1fr 1.7fr;
+}
+.prose .side-by-side.img-big {
+  grid-template-columns: 1.7fr 1fr;
+}
+.prose .side-by-side.top {
+  align-items: start;
 }
 
 /* --- a row of images ----------------------------------------------------- */

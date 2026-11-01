@@ -1,12 +1,12 @@
 ---
 title: ILM open 2026 with the Charity Shield
 date: 2026-02-27
-summary: A 3–0 win over cup holders ETC gave the reigning champions the first Charity Shield and got the 2026 season under way.
+summary: A 3-0 win over cup holders ETC gave the reigning champions the first Charity Shield and got the 2026 season under way.
 tags: ["Charity Shield", "Season 2026"]
 ---
 
 The season curtain-raiser finally happened on 26 February, seven weeks after it was originally
-meant to — and **FC ILM** made short work of it, beating **FC ETC** 3–0 to take the first
+meant to - and {% team "ilm" %} made short work of it, beating {% team "etc" %} 3-0 to take the first
 VFX Football League Charity Shield.
 
 The fixture pits the reigning league champions against the cup holders. ILM arrived as back-to-back
