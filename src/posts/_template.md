@@ -4,6 +4,8 @@ date: 2100-01-01
 summary: One or two sentences that show up in the news list, the RSS feed and link previews.
 tags: ["Announcement"]
 draft: true
+hero: /assets/img/placeholder_h.png
+heroCaption: Optional caption under the image
 
 # Optional header image. Put the file in src/assets/img/ and reference it like this:
 # hero: /assets/img/my-photo.jpg
