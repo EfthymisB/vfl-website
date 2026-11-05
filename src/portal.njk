@@ -1,0 +1,26 @@
+---
+layout: layouts/base.njk
+permalink: /portal/
+title: Team portal
+description: Register your team's details, logo and squad for the new season.
+noindex: true
+eleventyExcludeFromCollections: true
+---
+<section class="page-hero page-hero--compact">
+  <div class="wrap">
+    <div class="eyebrow">Season registration</div>
+    <h1>Team portal</h1>
+    <p>Your team's details, logo and squad, in one place. Editable until the organisers lock the season.</p>
+  </div>
+</section>
+
+<section class="section section--portal">
+  <div class="wrap">
+    <div id="portal" class="portal">
+      <noscript><div class="panel"><p>The team portal needs JavaScript switched on.</p></div></noscript>
+    </div>
+  </div>
+</section>
+
+{% include "partials/portal-config.njk" %}
+<script type="module" src="/assets/js/portal/portal.js"></script>

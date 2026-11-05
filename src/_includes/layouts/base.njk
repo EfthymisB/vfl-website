@@ -12,6 +12,7 @@
     </title>
     <meta name="description" content="{{ description or site.description }}">
     <meta name="theme-color" content="#08090b">
+    {% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
     <link rel="canonical" href="{{ site.url }}{{ page.url }}">
     <meta property="og:site_name" content="{{ site.name }}">
     <meta property="og:type" content="{% if layout == 'layouts/post.njk' %}article{% else %}website{% endif %}">
@@ -27,17 +28,21 @@
     <link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="alternate" type="application/rss+xml" title="{{ site.shortName }} news" href="{{ site.url }}/feed.xml">
-    <script type="application/ld+json">
-      { "@context": "https://schema.org", "@type": "SportsOrganization", "name": "{{ site.name }}",
-              "alternateName": "{{ site.shortName }}",
-              "sport": "Football",
-              "url": "{{ site.url }}
-      ", "email": "{{ site.email }}",
-              "areaServed": "{{ site.city }}",
-              "description": "{{ site.description }}",
-              "sameAs": ["{{ site.social.instagram }}", "{{ site.social.linkedin }}", "{{ site.social.sofascore }}"]
-            }
-    </script>
+    {#- Built as an object and serialised with `dump`, so a code formatter can't
+        break it by wrapping a line inside a JSON string. -#}
+    {%- set structuredData = {
+      "@context": "https://schema.org",
+      "@type": "SportsOrganization",
+      "name": site.name,
+      "alternateName": site.shortName,
+      "sport": "Football",
+      "url": site.url,
+      "email": site.email,
+      "areaServed": site.city,
+      "description": site.description,
+      "sameAs": [site.social.instagram, site.social.linkedin, site.social.sofascore]
+    } %}
+    <script type="application/ld+json">{{ structuredData | dump | safe }}</script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

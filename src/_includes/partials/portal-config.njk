@@ -1,0 +1,10 @@
+{#- Public settings for the portal scripts. Nothing secret lives here. -#}
+{%- set portalConfig = {
+  "supabaseUrl": site.portal.supabaseUrl,
+  "supabaseKey": site.portal.supabaseKey,
+  "positions": site.portal.positions,
+  "feet": site.portal.feet,
+  "turnstileSiteKey": site.portal.turnstileSiteKey,
+  "siteUrl": site.url
+} -%}
+<script type="application/json" id="portal-config">{{ portalConfig | dump | safe }}</script>
