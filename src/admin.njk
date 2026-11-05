@@ -1,0 +1,26 @@
+---
+layout: layouts/base.njk
+permalink: /admin/
+title: Organiser board
+description: Season registration board for VFL organisers.
+noindex: true
+eleventyExcludeFromCollections: true
+---
+<section class="page-hero page-hero--compact">
+  <div class="wrap">
+    <div class="eyebrow">Organisers</div>
+    <h1>Registration board</h1>
+    <p>Invite teams, track fees and sign-offs, lock the season and export for Sofascore.</p>
+  </div>
+</section>
+
+<section class="section section--portal">
+  <div class="wrap">
+    <div id="admin" class="portal portal--admin">
+      <noscript><div class="panel"><p>The organiser board needs JavaScript switched on.</p></div></noscript>
+    </div>
+  </div>
+</section>
+
+{% include "partials/portal-config.njk" %}
+<script type="module" src="/assets/js/portal/admin.js"></script>

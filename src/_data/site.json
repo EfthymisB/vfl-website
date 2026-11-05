@@ -9,15 +9,12 @@
   "currentSeason": "2026",
   "foundedYear": "2024",
   "city": "London",
-
   "social": {
     "instagram": "https://www.instagram.com/vfxleague.london/",
     "instagramHandle": "@vfxleague.london",
     "linkedin": "https://www.linkedin.com/company/100575459/",
     "sofascore": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london/21938#id:87096,tab:standings"
   },
-
-  "comment_sofascore": "Widget IDs verified against widgets.sofascore.com. To roll the site over to a new season, update seasonId (and tournamentId/group if Sofascore renames the group) here, nothing else needs touching.",
   "sofascore": {
     "widgetBase": "https://widgets.sofascore.com/embed",
     "theme": "dark",
@@ -54,18 +51,29 @@
       "pageUrl": "https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-football-league-charity-shield/31352"
     }
   },
-
-  "comment_instagram": "Create a free feed at https://behold.so, connect @vfxleague.london, then paste the feed ID here. Leave blank and the Media page shows a tidy fallback card instead of a broken embed.",
   "instagram": {
     "provider": "behold",
     "beholdFeedId": "FaCy0t9OZiUs2Rmut9Rs",
     "lightwidgetUrl": ""
   },
-
-  "comment_contact": "Get a free access key at https://web3forms.com (enter vflorganiser@gmail.com, it is emailed to you instantly - no account needed). Paste it here. Leave blank and the contact page falls back to a mailto link.",
   "contact": {
     "provider": "web3forms",
     "web3formsAccessKey": "41f4b2a3-2737-4236-aaed-b331b3a30144",
     "formspreeEndpoint": ""
+  },
+  "portal": {
+    "supabaseUrl": "https://onrwanxpwqganudzpwzi.supabase.co",
+    "supabaseKey": "sb_publishable_hKQeW4q78247MfmOS8hpCg_z5CiOMhH",
+    "turnstileSiteKey": "0x4AAAAAAF1QIU6aeH8UdkQX",
+    "positions": [
+      {
+        "value": "forward",
+        "label": "Forward"
+      },
+      {
+        "value": "goalkeeper",
+        "label": "Goalkeeper"
+      }
+    ]
   }
 }
