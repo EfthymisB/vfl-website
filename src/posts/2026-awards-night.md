@@ -91,6 +91,6 @@ And last but certainly not least, our 2026 league winners: {% team "oou" %}!
 
 After relegation from Division 1 last season, The Owls reinvented themselves, with brand-new kits and the kind of understanding that only comes from playing together for three seasons.
 
-The title was anything but simple. It came down to the final day, when {% logo "oou" %} pipped {% team "bk" %} on goals scored.
+The title was anything but simple. It came down to the final day, when {% logo "oou" %} pipped {% team "bk" %} on Goals For.
 
 Congratulations, {% team "oou" %}, on a fantastic 2026. We can't wait to see The Owls defend their title in 2027!
