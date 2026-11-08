@@ -7,6 +7,7 @@ noindex: true
 noAnalytics: true
 eleventyExcludeFromCollections: true
 ---
+
 <section class="page-hero page-hero--compact">
   <div class="wrap">
     <div class="eyebrow">Season registration</div>
@@ -14,14 +15,47 @@ eleventyExcludeFromCollections: true
     <p>Your team's details, logo and squad, in one place. Editable until the organisers lock the season.</p>
   </div>
 </section>
-
 <section class="section section--portal">
-  <div class="wrap">
+  <div
+    class="wrap">
+    {#- Key dates and fee: edit site.json -> registration. -#}
+    {% set reg = site.registration %}
+    {% if reg and reg.show %}
+      <div class="panel panel--accent reg-info">
+        <h2 class="reg-info__title">Season {{ reg.season }}: what you need to know</h2>
+        <ol class="reg-dates">
+          <li>
+            <span class="reg-dates__when">{{ reg.signUpDeadline | readableDate("d LLLL yyyy") }}</span>
+            <span>
+              <strong>Sign-up deadline.</strong>
+              Your team details and a full squad of minimum {{ reg.minSquadSize }} players, entered here. Invoices go out the same
+              day. Teams that sign up later are invoiced straight away.</span>
+          </li>
+          <li>
+            <span class="reg-dates__when">{{ reg.paymentDeadline | readableDate("d LLLL yyyy") }}</span>
+            <span>
+              <strong>Payment deadline.</strong>
+              We book the season's pitches in December, so we need every team paid by then.</span>
+          </li>
+        </ol>
+        <p class="reg-info__fee">
+          <strong>Fee: £{{ reg.fee.toLocaleString("en-GB") }} per team.</strong>
+          {{ reg.feeNote }} It covers pitches and referees, plus trophies and the end-of-season do.</p>
+        <p class="muted">Short of {{ reg.minSquadSize }} players? Tell us before the deadline, or try the
+          <a href="/free-agents/">free-agent pool</a>. New team?
+          <a href="/contact/?topic=Entering%20a%20team">Get in touch</a>
+          and we'll invite you. Before you sign off your squad, read the
+          <a href="/rules/">rules</a>.</p>
+      </div>
+    {% endif %}
     <div id="portal" class="portal">
-      <noscript><div class="panel"><p>The team portal needs JavaScript switched on.</p></div></noscript>
+      <noscript>
+        <div class="panel">
+          <p>The team portal needs JavaScript switched on.</p>
+        </div>
+      </noscript>
     </div>
   </div>
 </section>
-
 {% include "partials/portal-config.njk" %}
 <script type="module" src="/assets/js/portal/portal.js"></script>

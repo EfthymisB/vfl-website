@@ -3626,6 +3626,50 @@ fieldset.field legend {
   align-content: start;
 }
 
+/* ------------------------------------------- registration key dates (portal) */
+.reg-info {
+  margin-bottom: 2rem;
+  display: grid;
+  gap: 1rem;
+}
+.reg-info__title {
+  font-size: clamp(1.2rem, 2.6vw, 1.5rem);
+}
+.reg-dates {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+.reg-dates li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.2rem;
+  color: var(--muted);
+}
+.reg-dates strong,
+.reg-info__fee strong {
+  color: var(--text);
+}
+.reg-dates__when {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+@media (min-width: 40rem) {
+  .reg-dates li {
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+  }
+}
+.reg-info__fee {
+  color: var(--muted);
+}
+
 /* ------------------------------------------------------------ rules page */
 .venues {
   display: grid;
