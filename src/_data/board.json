@@ -1,0 +1,47 @@
+{
+  "comment": "The VFL board, shown on the About page in this order. Fields: name (required), role (leave blank for 'Board member'), photo (optional: a square image in src/assets/img/board/, about 400x400; without one, their initials show), studio (optional, where they work), linkedin (optional, full profile URL).",
+  "members": [
+    {
+      "name": "Ollie Holt",
+      "role": "President",
+      "photo": "/assets/img/board/ollie-holt.webp",
+      "studio": "Compositor @ HOST VFX",
+      "linkedin": "https://www.linkedin.com/in/oliver-holt-258853173/"
+    },
+    {
+      "name": "Akhil John",
+      "role": "Vice President",
+      "photo": "/assets/img/board/akhil-john.webp",
+      "studio": "On-set Compositor @ Union",
+      "linkedin": "https://www.linkedin.com/in/akhil-john-vfx/"
+    },
+    {
+      "name": "Kit Hartley",
+      "role": "Head of Socials",
+      "photo": "/assets/img/board/kit-hartley.webp",
+      "studio": "Producer @ Coffee & TV",
+      "linkedin": "https://www.linkedin.com/in/kit-hartley-586545196/"
+    },
+    {
+      "name": "Efthymios Bairaktaris",
+      "role": "Head of Technology",
+      "photo": "/assets/img/board/efthymios-bairaktaris.webp",
+      "studio": "Pipeline TD @ One Of Us",
+      "linkedin": "https://www.linkedin.com/in/efthymios-bairaktaris/"
+    },
+    {
+      "name": "Pasha Mustafa",
+      "role": "Scheduler",
+      "photo": "/assets/img/board/pasha-mustafa.webp",
+      "studio": "Line Producer @ ILM",
+      "linkedin": "https://www.linkedin.com/in/pasa-mustafa-ba04452a/"
+    },
+    {
+      "name": "Lewis Parker",
+      "role": "Organiser",
+      "photo": "/assets/img/board/lewis-parker.webp",
+      "studio": "Groom TD @ DNEG",
+      "linkedin": "https://www.linkedin.com/in/lewis-parker-79a59819a/"
+    }
+  ]
+}
