@@ -7,6 +7,18 @@ draft: true
 hero: /assets/img/placeholder_h.png
 heroCaption: Optional caption under the image
 
+# LinkedIn: new posts are shared on the VFL LinkedIn Page automatically (via Zapier,
+# within about 15 minutes of going live), with a link card using the hero image.
+# Write the message here in plain text (no Markdown, emojis are fine, max 3,000 characters):
+# linkedin: |
+#   Awards night is in the books 🏆
+#
+#   Who took the Golden Sieve? Full write-up below 👇
+# Leave it out and the message is "New on the VFL site: <title>" plus the summary.
+# Either way, "Read the full post: <link>" is added at the end for you.
+# Set "linkedin: false" to not share the post at all.
+# Don't rename a post's file once it's live: LinkedIn would get it again as a new post.
+
 # Optional header image. Put the file in src/assets/img/ and reference it like this:
 # hero: /assets/img/my-photo.jpg
 # heroAlt: Description of the photo for screen readers

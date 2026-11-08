@@ -5,6 +5,10 @@ summary: Last night was our end-of-season party, wrapping up 2026 with a bang Gu
 hero: /assets/img/awards_night_2026/vfl_awards_night_cover.jpg
 heroCaption: One of Us, 2026 Division 1 league winners
 tags: ["Season 2026", "Division 1", "Season Awards"]
+linkedin: |
+  Awards night is in the books 🏆
+
+  Who took the Golden Boot? Full write-up below 👇
 ---
 
 Hello everyone! Last night we wrapped up the 2026 season with our end-of-season awards night. Thanks to everyone who came along. Here's who went home with what.

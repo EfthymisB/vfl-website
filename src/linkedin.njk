@@ -1,0 +1,34 @@
+---
+permalink: /linkedin.xml
+eleventyExcludeFromCollections: true
+layout: null
+---
+{#- Feed for Zapier ("RSS by Zapier" → LinkedIn "Create Company Update").
+    Description = the LinkedIn message (front matter `linkedin:`, or a default),
+    ending with "Read the full post: <url>".
+    Posts with `linkedin: false` are left out. Zapier posts each NEW guid once,
+    so never change a post's filename after it's gone live. -#}
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>{{ site.name }} — LinkedIn posts</title>
+    <link>{{ site.url }}/news/</link>
+    <atom:link href="{{ site.url }}/linkedin.xml" rel="self" type="application/rss+xml" />
+    <description>New news posts, worded for LinkedIn. Used by the organisers' Zapier automation.</description>
+    <language>en-gb</language>
+    {%- for post in collections.linkedinPosts | limit(10) %}
+    {%- set image = (post.data.hero or "/assets/img/og-image.png") | absoluteUrl(site.url) %}
+    {%- set ext = image.split(".") | last | lower %}
+    {%- set type = "image/png" if ext == "png" else ("image/webp" if ext == "webp" else "image/jpeg") %}
+    <item>
+      <title>{{ post.data.title }}</title>
+      <link>{{ site.url }}{{ post.url }}</link>
+      <guid isPermaLink="true">{{ site.url }}{{ post.url }}</guid>
+      <pubDate>{{ post.date.toUTCString() }}</pubDate>
+      <description>{{ post | linkedinText(site.url) }}</description>
+      <enclosure url="{{ image }}" type="{{ type }}" length="0" />
+      <media:content url="{{ image }}" medium="image" type="{{ type }}" />
+    </item>
+    {%- endfor %}
+  </channel>
+</rss>

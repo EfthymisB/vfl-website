@@ -145,6 +145,32 @@ export default function (eleventyConfig) {
       .sort((a, b) => b.date - a.date)
   );
 
+  // Posts announced on LinkedIn (via /linkedin.xml and Zapier): every published
+  // post except those with `linkedin: false` in the front matter.
+  eleventyConfig.addCollection("linkedinPosts", (api) =>
+    api
+      .getFilteredByGlob("src/posts/*.md")
+      .filter(isPublished)
+      .filter((p) => p.data.linkedin !== false)
+      .sort((a, b) => b.date - a.date)
+  );
+
+  // The LinkedIn message for a post: its `linkedin:` text, or a default built
+  // from the title and summary, always ending with a link to the post.
+  // Plain text (LinkedIn shows Markdown literally). Too long fails the build,
+  // so it's caught before it reaches LinkedIn.
+  const LINKEDIN_MAX = 3000;
+  eleventyConfig.addFilter("linkedinText", (post, base) => {
+    const own = typeof post.data.linkedin === "string" ? post.data.linkedin.trim() : "";
+    const message = own ||
+      [`New on the VFL site: ${post.data.title}`, post.data.summary].filter(Boolean).join("\n\n");
+    const text = `${message}\n\nRead the full post: ${new URL(post.url, base).href}`;
+    if (text.length > LINKEDIN_MAX) {
+      throw new Error(`${post.inputPath}: the linkedin message is ${text.length} characters; LinkedIn allows ${LINKEDIN_MAX}.`);
+    }
+    return text;
+  });
+
   eleventyConfig.addCollection("postTags", (api) => {
     const tags = new Set();
     api
