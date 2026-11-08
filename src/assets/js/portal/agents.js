@@ -280,7 +280,7 @@ export async function agentPage(ctx) {
         ${isNew ? raw(html`
           <label class="check">
             <input type="checkbox" name="consent">
-            <span>Show my profile to the team captains in this season's league. My email and phone go only to teams that mark me as interested. <a href="/privacy/" target="_blank" rel="noopener">How we use this</a>.</span>
+            <span>I'm 18 or over. Show my profile to the team captains in this season's league. My email and phone go only to teams that mark me as interested. <a href="/privacy/" target="_blank" rel="noopener">How we use this</a>.</span>
           </label>
           <span class="field-err" data-err="consent"></span>`) : ""}
 

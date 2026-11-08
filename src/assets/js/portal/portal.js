@@ -1,7 +1,7 @@
 // VFL team portal — the page captains (team contacts) use.
 import {
   startPage, signOut, html, raw, esc, toast, friendly, config,
-  fmtDate, fmtDateTime, ageOn, countryOptions, countryName,
+  fmtDate, fmtDateTime, ageOn, adultMaxDob, countryOptions, countryName,
   positions, positionLabel, validatePlayer,
   logoUrl, LOGO_TYPES, LOGO_MAX, initials,
   KIT_COLOURS, KIT_MAX, KIT_ROLES, normHex, colourName, kitLabel, shirtSvg,
@@ -553,7 +553,7 @@ function openPlayer(player, fromAgent = null) {
       <div class="field--2">
         <div class="field">
           <label for="p-dob">Date of birth</label>
-          <input id="p-dob" name="date_of_birth" type="date" required value="${p.date_of_birth}" min="1920-01-01" max="${new Date().toISOString().slice(0, 10)}">
+          <input id="p-dob" name="date_of_birth" type="date" required value="${p.date_of_birth}" min="1920-01-01" max="${adultMaxDob()}">
           <span class="field-err" data-err="date_of_birth"></span>
         </div>
         <div class="field">
