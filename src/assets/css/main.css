@@ -1524,6 +1524,14 @@ table.data td:nth-child(2) {
   text-transform: uppercase;
   color: var(--dim);
 }
+.site-footer__note {
+  margin: 0;
+  padding-bottom: 1.3rem;
+  max-width: 70ch;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--dim);
+}
 
 /* ------------------------------------------------------------------- misc */
 .muted {

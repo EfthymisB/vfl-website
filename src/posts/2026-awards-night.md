@@ -1,10 +1,14 @@
 ---
-title: "2026 Awards Night: Sinners, Sieves and Silverwarenight"
+title: "2026 Awards Night: Sinners, Sieves and Silverware night"
 date: 2026-11-07
 summary: Last night was our end-of-season party, wrapping up 2026 with a bang Guy Fawkes would be proud of!
 hero: /assets/img/awards_night_2026/vfl_awards_night_cover.jpg
 heroCaption: One of Us, 2026 Division 1 league winners
 tags: ["Season 2026", "Division 1", "Season Awards"]
+linkedin: |
+  Awards night is in the books 🏆
+
+  Who took the Golden Boot? Full write-up below 👇
 ---
 
 Hello everyone! Last night we wrapped up the 2026 season with our end-of-season awards night. Thanks to everyone who came along. Here's who went home with what.
@@ -89,7 +93,7 @@ The third-year student graduates from Escape this summer, and if his off-the-fie
 
 And last but certainly not least, our 2026 league winners: {% team "oou" %}!
 
-After relegation from Division 1 last season, The Owls reinvented themselves, with brand-new kits and the kind of understanding that only comes from playing together for three seasons.
+After finishing at the bottom of the Division 1 league last season, The Owls reinvented themselves, with brand-new kits and the kind of understanding that only comes from playing together for three seasons.
 
 The title was anything but simple. It came down to the final day, when {% logo "oou" %} pipped {% team "bk" %} on Goals For.
 

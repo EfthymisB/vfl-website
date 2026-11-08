@@ -1,9 +1,9 @@
 # VFX Football League website
 
-Static site for the VFX Football League (VFL). Built with [Eleventy](https://www.11ty.dev/),
-deployed free on GitHub Pages, with live league data embedded from Sofascore.
+Static site for the [VFX Football League](https://vfx-football-league.co.uk/) (VFL). Built with [Eleventy](https://www.11ty.dev/),
+deployed free on GitHub Pages, with live league data embedded from [Sofascore](https://www.sofascore.com/minifootball/tournament/united-kingdom/vfx-league-london/21938).
 
-- **News posts are Markdown files** in `src/posts/` — write one, push it, it's live.
+- **News posts are Markdown files** in `src/posts/`.
 - **League data is never retyped.** Tables, fixtures and top scorers are live Sofascore widgets.
 - **No database, no server, no monthly bill.**
 
@@ -43,7 +43,7 @@ Node 20 or newer.
 video and Instagram embeds. It never appears on the site because it is marked `draft: true`.
 
 **Images and video** go in `src/assets/img/` and are referenced as `/assets/img/filename.jpg`.
-Keep photos under ~500 KB each — resize before committing, GitHub Pages has a soft 1 GB repo limit.
+Keep photos under ~500 KB each - resize before committing, GitHub Pages has a soft 1 GB repo limit.
 
 ---
 
@@ -76,25 +76,19 @@ https://widgets.sofascore.com/embed/unique-tournament/<uniqueTournamentId>/seaso
 
 Sofascore widgets are free with no limits and no account.
 
-Past seasons are archived in **`src/_data/honours.json`** — add the finished table there when a
+Past seasons are archived in **`src/_data/honours.json`** - add the finished table there when a
 season ends, and update `titleHolder`.
 
 Teams live in **`src/_data/teams.json`**, FAQs in **`src/_data/faqs.json`**.
 
 ---
 
+
+
+
 ## Branches
 
-- `dev` — working branch. Pushes here run a build check only, nothing deploys.
-- `main` — production. Pushing here deploys the live site.
-
-```bash
-git add -A
-git commit -m "Add season 2027 dates"
-git push origin dev
-# happy with it?
-git checkout main && git merge dev && git push origin main
-```
+- `main` - production. Pushing here deploys the live site.
 
 ---
 
@@ -106,7 +100,7 @@ src/
 ├── _includes/
 │   ├── layouts/      base, page, post
 │   ├── partials/     header, footer
-│   └── macros.njk    Sofascore widget URL builders — one place, no copy-paste
+│   └── macros.njk    Sofascore widget URL builders
 ├── assets/
 │   ├── css/main.css  the whole design system
 │   ├── js/main.js    nav, widget switchers, form submit

@@ -60,6 +60,7 @@ export function friendly(err) {
   if (/free_agents_one_per_season/.test(detail))    return "You already have a free-agent profile this season. Reload the page to see it.";
   if (/free_agents_phone_check/.test(detail))       return "That doesn't look like a phone number.";
   if (/players_one_place_per_free_agent/.test(detail)) return "That player is already in your squad.";
+  if (/must be 18 or over/.test(msg))                return "Players must be 18 or over.";
   if (/row-level security|permission denied/i.test(detail)) return "You can't change that. If the season is locked, contact the organisers.";
   if (/Failed to fetch|NetworkError/i.test(msg))   return "Can't reach the server. Check your connection and try again.";
   if (/rate limit|only request this after/i.test(msg)) return msg.replace(/^.*?(you can only)/i, "For security, you can only");
@@ -84,6 +85,11 @@ export function ageOn(dob, on = new Date()) {
   const m = on.getMonth() - d.getMonth();
   if (m < 0 || (m === 0 && on.getDate() < d.getDate())) a--;
   return a;
+}
+// Latest date of birth for an 18-year-old today, as YYYY-MM-DD (the league is 18+).
+export function adultMaxDob(on = new Date()) {
+  const p = (n) => String(n).padStart(2, "0");
+  return `${on.getFullYear() - 18}-${p(on.getMonth() + 1)}-${p(on.getDate())}`;
 }
 
 // ---------------------------------------------------------------- countries
@@ -143,7 +149,7 @@ export function validatePlayer(p) {
     const age = ageOn(p.date_of_birth);
     if (isNaN(d)) errs.date_of_birth = "That isn't a valid date.";
     else if (d.getFullYear() < 1920) errs.date_of_birth = "That date is too early.";
-    else if (age < 10) errs.date_of_birth = "That date is too recent.";
+    else if (age < 18) errs.date_of_birth = "Players must be 18 or over.";
   }
 
   if (p.shirt_number !== "" && p.shirt_number != null) {
