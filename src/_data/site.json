@@ -70,6 +70,16 @@
     "umamiWebsiteId": "a815b478-b2a1-4556-8583-f703ec4d222d",
     "umamiScript": "https://cloud.umami.is/script.js"
   },
+  "comment_registration": "Key dates and the fee shown at the top of /portal/. Dates are YYYY-MM-DD. fee is in pounds; feeNote is shown under it. minSquadSize is the number of players teams should register. Set show to false to hide the box (e.g. once the season is under way).",
+  "registration": {
+    "show": true,
+    "season": "2027",
+    "signUpDeadline": "2026-11-15",
+    "paymentDeadline": "2026-12-06",
+    "fee": 1200,
+    "feeNote": "An estimate. The final figure goes on your invoice once every team is confirmed.",
+    "minSquadSize": 13
+  },
   "comment_portal": "Team portal (/portal/ and /admin/). supabaseUrl is the Project URL and supabaseKey the PUBLISHABLE key from Supabase > Project Settings > API Keys. Both are public by design: what each person can do is enforced by the database rules in supabase/schema.sql. Leave both blank and the portal shows a 'not set up yet' card. turnstileSiteKey (optional) is the Cloudflare Turnstile site key for the spam check on sign-in; set it only after switching on CAPTCHA protection in Supabase (see supabase/README.md). positions lists what captains can pick; the database also accepts defender and midfielder if you add them.",
   "portal": {
     "supabaseUrl": "https://onrwanxpwqganudzpwzi.supabase.co",
