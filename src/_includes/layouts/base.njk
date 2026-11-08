@@ -43,6 +43,15 @@
       "sameAs": [site.social.instagram, site.social.linkedin, site.social.sofascore]
     } %}
     <script type="application/ld+json">{{ structuredData | dump | safe }}</script>
+    {#- Analytics (Umami, cookieless). Off until site.json has a website ID, and
+        never on pages that set noAnalytics (the portal and organiser board hold
+        personal data, so no third-party script runs there). Only the live
+        domain counts, and query strings are dropped (sign-in links carry tokens). -#}
+    {%- if site.analytics.umamiWebsiteId and not noAnalytics %}
+    <script defer src="{{ site.analytics.umamiScript }}" data-website-id="{{ site.analytics.umamiWebsiteId }}"
+            data-domains="{{ site.url | replace('https://', '') | replace('http://', '') }}"
+            data-exclude-search="true"></script>
+    {%- endif %}
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

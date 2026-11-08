@@ -85,6 +85,7 @@ provide their service:
 - **Resend** sends the sign-in emails.
 - **Cloudflare Turnstile** checks that sign-ins come from a person, not a bot.
 - **Web3Forms** passes contact-form messages to our inbox, which is a **Gmail** account.
+- **Umami** counts visits to the public pages (see [Cookies and the rest of the site](#cookies)).
 - **GitHub Pages** hosts this website and keeps short-lived server logs (such as IP addresses), as
   any web host does. The portal pages also load code from **jsDelivr**.
 
@@ -101,9 +102,15 @@ their standard data protection terms.
   asked.
 - What's on Sofascore stays there as the league's record, unless you ask us to have it removed.
 
-## Cookies and the rest of the site
+## Cookies and the rest of the site {id=cookies}
 
-- **This site itself** uses no analytics or tracking cookies. If you sign in to the team portal,
+- **Visitor statistics.** We use [Umami](https://umami.is) to count visits: which pages are read,
+  roughly where visitors come from (country, and the site that linked here), the type of device
+  and browser, and clicks on a few buttons and links (for example sponsor links, or "Join the
+  free-agent pool"). It sets no cookies, doesn't identify you or follow you across other sites,
+  and we only see totals. Nothing you type into a form is sent to it. It's switched off on the
+  team portal and organiser pages. If your browser blocks it, the site works exactly the same.
+- **Cookies.** This site sets no cookies of its own. If you sign in to the team portal,
   your browser stores the sign-in session so you stay signed in; signing out removes it.
 - **Tables and fixtures** are live widgets from Sofascore, and the **media page** shows our
   Instagram feed through Behold. These load from those services, which may set their own cookies

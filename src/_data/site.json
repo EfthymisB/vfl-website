@@ -7,7 +7,7 @@
   "locale": "en_GB",
   "email": "vflorganiser@gmail.com",
   "currentSeason": "2026",
-  "foundedYear": "2024",
+  "foundedYear": "2023",
   "city": "London",
   "social": {
     "instagram": "https://www.instagram.com/vfxleague.london/",
@@ -63,6 +63,12 @@
     "provider": "web3forms",
     "web3formsAccessKey": "41f4b2a3-2737-4236-aaed-b331b3a30144",
     "formspreeEndpoint": ""
+  },
+  "comment_analytics": "Visitor stats with Umami Cloud (free Hobby plan, cookieless, no banner needed). Sign up at https://cloud.umami.is, add the website vfx-football-league.co.uk, and paste its Website ID here. Leave blank and no analytics script loads. It only counts visits on the live domain (not localhost), drops query strings from URLs, and never loads on /portal/ or /admin/.",
+  "analytics": {
+    "provider": "umami",
+    "umamiWebsiteId": "a815b478-b2a1-4556-8583-f703ec4d222d",
+    "umamiScript": "https://cloud.umami.is/script.js"
   },
   "comment_portal": "Team portal (/portal/ and /admin/). supabaseUrl is the Project URL and supabaseKey the PUBLISHABLE key from Supabase > Project Settings > API Keys. Both are public by design: what each person can do is enforced by the database rules in supabase/schema.sql. Leave both blank and the portal shows a 'not set up yet' card. turnstileSiteKey (optional) is the Cloudflare Turnstile site key for the spam check on sign-in; set it only after switching on CAPTCHA protection in Supabase (see supabase/README.md). positions lists what captains can pick; the database also accepts defender and midfielder if you add them.",
   "portal": {

@@ -105,6 +105,8 @@
         .then(function (data) {
           var ok = data.success === true || data.ok === true || data.success === "true";
           if (ok) {
+            // Analytics: count it by topic only. Never send what was typed.
+            try { if (window.umami) window.umami.track("Contact form sent", { topic: topicSel ? topicSel.value : "" }); } catch (err) { /* analytics off or blocked */ }
             form.reset();
             if (status) {
               status.className = "form-status form-status--ok is-visible";
