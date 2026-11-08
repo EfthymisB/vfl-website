@@ -3625,3 +3625,60 @@ fieldset.field legend {
 .field--3 > .field {
   align-content: start;
 }
+
+/* ------------------------------------------------------------ rules page */
+.venues {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.venue h3 {
+  font-size: 1.15rem;
+  margin-top: 0.3rem;
+}
+.venue address {
+  font-style: normal;
+  color: var(--muted);
+  margin: 0.4rem 0 0.8rem;
+}
+/* Numbered rules: "4. League matches" -> 4.1, 4.2 ... with lettered sub-rules. */
+.rules {
+  counter-reset: rule-section;
+}
+/* counter-reset on the h2 reaches its following siblings, so numbering runs on
+   through a section even if a paragraph splits its list. */
+.rules h2 {
+  counter-increment: rule-section;
+  counter-reset: rule;
+}
+.rules h2::before {
+  content: counter(rule-section) ". ";
+  color: var(--accent);
+}
+.rules > ol {
+  list-style: none;
+  padding-left: 0;
+}
+.rules > ol > li {
+  counter-increment: rule;
+  position: relative;
+  padding-left: 2.9rem;
+}
+.rules > ol > li::before {
+  content: counter(rule-section) "." counter(rule);
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+.rules ol ol {
+  list-style: lower-alpha;
+  padding-left: 1.4rem;
+  margin-top: 0.5rem;
+}
+.rules li strong {
+  color: var(--text);
+}
