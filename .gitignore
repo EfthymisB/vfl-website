@@ -6,3 +6,4 @@ Thumbs.db
 *.log
 .cache/
 supabase/
+CLAUDE.md
