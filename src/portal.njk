@@ -28,34 +28,39 @@ eleventyExcludeFromCollections: true
             <span class="reg-dates__when">{{ reg.signUpDeadline | readableDate("d LLLL yyyy") }}</span>
             <span>
               <strong>Sign-up deadline.</strong>
-              Your team details and a full squad of minimum {{ reg.minSquadSize }} players, entered here. Invoices go out the same
-              day. Teams that sign up later are invoiced straight away.</span>
-          </li>
-          <li>
-            <span class="reg-dates__when">{{ reg.paymentDeadline | readableDate("d LLLL yyyy") }}</span>
-            <span>
-              <strong>Payment deadline.</strong>
-              We book the season's pitches in December, so we need every team paid by then.</span>
-          </li>
-        </ol>
-        <p class="reg-info__fee">
-          <strong>Fee: £{{ reg.fee.toLocaleString("en-GB") }} per team.</strong>
-          {{ reg.feeNote }} It covers pitches and referees, plus trophies and the end-of-season do.</p>
-        <p class="muted">Short of {{ reg.minSquadSize }} players? Tell us before the deadline, or try the
-          <a href="/free-agents/">free-agent pool</a>. New team?
-          <a href="/contact/?topic=Entering%20a%20team">Get in touch</a>
-          and we'll invite you. Before you sign off your squad, read the
-          <a href="/rules/">rules</a>.</p>
-      </div>
-    {% endif %}
-    <div id="portal" class="portal">
-      <noscript>
-        <div class="panel">
-          <p>The team portal needs JavaScript switched on.</p>
+              Complete your team registration, including a minimum squad of 13 players, by 15 November to guarantee your place.
+              Registrations received after this date will be accommodated where possible, subject to availability.</span>
+            <br>
+              <span>
+                <strong>Invoicing.</strong>
+                All teams registered by 15 November will receive their invoice on that day. Registrations received after 15 November
+                will be invoiced immediately.</span>
+            </li>
+            <li>
+              <span class="reg-dates__when">{{ reg.paymentDeadline | readableDate("d LLLL yyyy") }}</span>
+              <span>
+                <strong>Payment deadline.</strong>
+                We book the season's pitches in December, so we need every team paid by then.</span>
+            </li>
+          </ol>
+          <p class="reg-info__fee">
+            <strong>Fee: £{{ reg.fee.toLocaleString("en-GB") }} per team.</strong>
+            {{ reg.feeNote }} It covers pitches and referees, plus trophies and the end-of-season do.</p>
+          <p class="muted">Short of {{ reg.minSquadSize }} players? Tell us before the deadline, or try the
+            <a href="/free-agents/">free-agent pool</a>. New team?
+            <a href="/contact/?topic=Entering%20a%20team">Get in touch</a>
+            and we'll invite you. Before you sign off your squad, read the
+            <a href="/rules/">rules</a>.</p>
         </div>
-      </noscript>
+      {% endif %}
+      <div id="portal" class="portal">
+        <noscript>
+          <div class="panel">
+            <p>The team portal needs JavaScript switched on.</p>
+          </div>
+        </noscript>
+      </div>
     </div>
-  </div>
-</section>
-{% include "partials/portal-config.njk" %}
-<script type="module" src="/assets/js/portal/portal.js"></script>
+  </section>
+  {% include "partials/portal-config.njk" %}
+  <script type="module" src="/assets/js/portal/portal.js"></script>
