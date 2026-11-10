@@ -3726,3 +3726,39 @@ fieldset.field legend {
 .rules li strong {
   color: var(--text);
 }
+
+/* ------------------------------------------- organiser board: read-only access */
+.viewer-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+.viewer-list__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.viewer-list__row strong {
+  overflow-wrap: anywhere;
+}
+/* a viewer's read-only "Details" dialog */
+.team-facts {
+  display: grid;
+  gap: 0.9rem;
+  margin: 1rem 0 1.5rem;
+}
+.team-facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.team-facts dd {
+  margin: 0.2rem 0 0;
+  overflow-wrap: anywhere;
+}
