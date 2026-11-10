@@ -87,6 +87,15 @@
     var status = form.querySelector("[data-form-status]");
     var submit = form.querySelector("[type=submit]");
 
+    // /contact/?topic=Sponsorship picks that topic (only if it's one of the options).
+    var topicSel = form.querySelector("[name=topic]");
+    var wanted = new URLSearchParams(location.search).get("topic");
+    if (topicSel && wanted) {
+      Array.prototype.forEach.call(topicSel.options, function (o) {
+        if (o.text.toLowerCase() === wanted.toLowerCase()) topicSel.value = o.value || o.text;
+      });
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var hp = form.querySelector(".hp");
