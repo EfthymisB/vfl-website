@@ -56,6 +56,8 @@ any time until you've joined a team.
 
 - **Squads.** Only the organisers and your own team's contact. Teams can't see each other's
   squads or photos. Photos are kept in private storage: there's no public link to them.
+- **Organisers** includes a few people who help run the league and have read-only access to the
+  organiser pages. They can see the same details as the organisers, but can't change anything.
 - **Free-agent profiles.** As described under [Free agents](#free-agents) above.
 - **The public.** What's on Sofascore, this website and our social media (below).
 
@@ -123,7 +125,7 @@ we use it: email [{{ site.email }}](mailto:{{ site.email }}). If you're unhappy 
 handled it, you can complain to the Information Commissioner's Office at
 [ico.org.uk](https://ico.org.uk).
 
-<p class="dim">Last updated 8 November 2026.</p>
+<p class="dim">Last updated 10 November 2026.</p>
 
 </div>
 </section>

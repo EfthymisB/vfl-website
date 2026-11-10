@@ -1,0 +1,122 @@
+---
+layout: layouts/page.njk
+permalink: /sponsors/
+title: Sponsors
+eyebrow: Partners
+lede: The VFL is run by volunteers and kept as cheap as we can make it. Sponsors help us do more, and put your name in front of London's VFX, animation and post community.
+description: Sponsor the VFX Football League, a London 8-a-side league for people who work in visual effects, animation and post-production.
+---
+
+{%- set teamCount = 0 -%}
+{%- for id, t in teams.all -%}
+  {%- if site.currentSeason in t.seasons %}
+    {% set teamCount = teamCount + 1 %}
+  {% endif -%}
+{%- endfor -%}
+{%- set enquiry = "/contact/?topic=Sponsorship" -%}
+{% if sponsors.list | length %}
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <div>
+          <div class="eyebrow">Thank you</div>
+          <h2>Our sponsors</h2>
+        </div>
+      </div>
+      <div class="card-grid card-grid--3">
+        {% for s in sponsors.list %}
+          <div class="card sponsor-card" data-reveal>
+            {%- set tile -%}
+            {%- if s.logo %}
+              <img src="{{ s.logo }}" alt="{{ s.name }}" loading="lazy" decoding="async">
+              {%- else %}
+                <span class="sponsor-logo__name">{{ s.name }}</span>
+              {% endif -%}
+              {%- endset %}
+              {% if s.url %}
+                <a class="sponsor-logo sponsor-logo--large" href="{{ s.url }}" target="_blank" rel="sponsored noopener" data-umami-event="Sponsor click" data-umami-event-sponsor="{{ s.name }}" data-umami-event-where="sponsors page">{{ tile | safe }}</a>
+              {% else %}
+                <div class="sponsor-logo sponsor-logo--large">{{ tile | safe }}</div>
+              {% endif %}
+              {% if s.role %}
+                <span class="card__num">{{ s.role }}</span>
+              {% endif %}
+              <h3>{{ s.name }}</h3>
+              {% if s.blurb %}
+                <p>{{ s.blurb }}</p>
+              {% endif %}
+              {% if s.url %}
+                <p>
+                  <a href="{{ s.url }}" target="_blank" rel="sponsored noopener" data-umami-event="Sponsor click" data-umami-event-sponsor="{{ s.name }}" data-umami-event-where="sponsors page">Visit {{ s.name }} ↗</a>
+                </p>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  <section class="section">
+    <div class="wrap">
+      <div class="prose" data-reveal>
+        <h2>Why sponsor the VFL</h2>
+        <p>
+          The league brings together people from across London's visual effects, animation and post-production
+          studios{% if teamCount > 0 %}: {{ teamCount }} studio teams in {{ site.currentSeason }}
+          {% endif %}. Artists, production, pipeline, R&amp;D, IT, recruiters and the people who keep the lights on, playing every
+          week and following the results, the news and our socials.
+        </p>
+        <p>
+          If you want the industry to know who you are, whether you're hiring, selling to studios or just want to back grassroots
+          football in the community you work in, this is a friendly way to do it.
+        </p>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <div>
+          <div class="eyebrow">Ideas</div>
+          <h2>What we could do together</h2>
+        </div>
+      </div>
+      <div class="card-grid card-grid--3">
+        <div class="card" data-reveal>
+          <span class="card__num">Silverware</span>
+          <h3>A competition or award</h3>
+          <p>Put your name to a cup, the Charity Shield, or one of the season awards.</p>
+        </div>
+        <div class="card" data-reveal>
+          <span class="card__num">Off the pitch</span>
+          <h3>Awards night and socials</h3>
+          <p>Help host the end-of-season party or a get-together during the season.</p>
+        </div>
+        <div class="card" data-reveal>
+          <span class="card__num">Online</span>
+          <h3>Website and socials</h3>
+          <p>Your logo and link on this site, and a shout-out on Instagram and LinkedIn.</p>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:1.5rem" data-reveal>
+        Nothing's set in stone: tell us what you have in mind and we'll work out something that suits you.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <div class="cta" data-reveal>
+        <div class="eyebrow eyebrow--plain center" style="justify-content:center">Get in touch</div>
+        <h2>Interested?</h2>
+        <p>Send us a message with who you are and what you'd like to do, and we'll come back to you.</p>
+        <div class="btn-row">
+          <a class="btn" href="{{ enquiry }}" data-umami-event="Sponsor enquiry clicked">Talk to us about sponsorship</a>
+          <a
+            class="btn btn--ghost"
+            href="mailto:{{ site.email }}?subject=Sponsoring%20the%20VFL"
+            data-umami-event="Sponsor enquiry clicked"
+            data-umami-event-via="email">Email {{ site.email }}</a>
+        </div>
+      </div>
+    </div>
+  </section>

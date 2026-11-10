@@ -52,15 +52,16 @@ async function load(sb, user) {
     const email = (user.email || "").toLowerCase();
     const wanted = new URLSearchParams(location.search).get("team");
 
-    const [{ data: isAdmin, error: e1 }, { data: seasons, error: e2 }] = await Promise.all([
-      sb.rpc("am_i_admin"),
+    const [{ data: role, error: e1 }, { data: seasons, error: e2 }] = await Promise.all([
+      sb.rpc("my_board_role"),   // 'admin', 'viewer' (read-only organiser) or null
       sb.from("seasons").select("*").order("id", { ascending: false }),
     ]);
     if (e1) throw e1;
     if (e2) throw e2;
+    const isAdmin = role === "admin", isViewer = role === "viewer";
 
     let teams;
-    if (wanted && isAdmin) {
+    if (wanted && (isAdmin || isViewer)) {
       const { data, error } = await sb.from("teams").select("*").eq("id", wanted);
       if (error) throw error;
       teams = data;
@@ -70,7 +71,8 @@ async function load(sb, user) {
       teams = data;
     }
 
-    S = { sb, user, email, isAdmin: !!isAdmin, seasons, teams, team: null, players: [], asAdmin: !!(wanted && isAdmin),
+    S = { sb, user, email, isAdmin, isViewer, seasons, teams, team: null, players: [],
+          asAdmin: !!(wanted && isAdmin), asViewer: !!(wanted && isViewer),
           pool: [], loanedOut: [], faFilter: "", hasAgent: false };
 
     // A free-agent profile this season? (Organisers can read every profile, so filter to their own.)
@@ -128,7 +130,8 @@ const sortPlayers = (list) =>
     ((a.shirt_number ?? 999) - (b.shirt_number ?? 999)) ||
     a.full_name.localeCompare(b.full_name));
 
-const editable = () => S.isAdmin || !S.season.locked;
+// A viewer looking at another team's page never gets edit controls.
+const editable = () => !S.asViewer && (S.isAdmin || !S.season.locked);
 
 // ---------------------------------------------------------------- views
 function bar(where = "team") {
@@ -138,7 +141,7 @@ function bar(where = "team") {
       <span class="portal-bar__actions">
         ${where === "team" && S.hasAgent ? raw(`<a class="btn btn--ghost btn--sm" href="/portal/?view=agent">Your free-agent profile</a>`) : ""}
         ${where === "agent" && S.teams.length ? raw(`<a class="btn btn--ghost btn--sm" href="/portal/">Your team</a>`) : ""}
-        ${S.isAdmin ? raw(`<a class="btn btn--ghost btn--sm" href="/admin/">Organiser board</a>`) : ""}
+        ${S.isAdmin || S.isViewer ? raw(`<a class="btn btn--ghost btn--sm" href="/admin/">Organiser board</a>`) : ""}
         <button class="btn btn--ghost btn--sm" type="button" data-signout>Sign out</button>
       </span>
     </div>`;
@@ -160,14 +163,14 @@ function renderNoTeam() {
     ${raw(bar())}
     <div class="panel portal-auth">
       <div class="eyebrow eyebrow--plain">No team found</div>
-      <h2>${S.isAdmin ? "You're an organiser" : "This email isn't linked to a team"}</h2>
-      ${S.isAdmin
-        ? raw(`<p class="muted">Organisers manage teams from the board. To work on a team's squad, open it from there.</p>
+      <h2>${S.isAdmin ? "You're an organiser" : S.isViewer ? "You have read-only organiser access" : "This email isn't linked to a team"}</h2>
+      ${S.isAdmin || S.isViewer
+        ? raw(`<p class="muted">Teams are on the organiser board. To look at a team's squad, open it from there.</p>
                <div class="btn-row"><a class="btn" href="/admin/">Go to the organiser board</a></div>`)
         : raw(html`<p class="muted">The organisers invite each team by email. Ask them to add <strong>${S.email}</strong> as your team's contact, or sign in with the address they used.</p>
                <div class="btn-row"><a class="btn btn--ghost" href="/contact/">Contact the organisers</a></div>`)}
     </div>
-    ${S.isAdmin ? "" : raw(`
+    ${S.isAdmin || S.isViewer ? "" : raw(`
     <div class="panel panel--accent portal-auth">
       <div class="eyebrow">Looking for a team?</div>
       <h2>Join the free-agent pool</h2>
@@ -220,8 +223,9 @@ function render() {
     ${raw(bar())}
 
     ${S.asAdmin ? raw(html`<div class="portal-flag portal-flag--admin"><strong>Organiser view</strong> You're editing ${t.name} as an organiser. Your changes don't clear their sign-off.</div>`) : ""}
-    ${S.season.locked ? raw(html`<div class="portal-flag portal-flag--lock"><strong>Locked</strong> The ${S.season.name} squads are locked${S.isAdmin ? " for captains. You can still edit as an organiser." : ". Contact the organisers if something needs changing."}</div>`) : ""}
-    ${S.teams.length > 1 && !S.asAdmin ? raw(teamPicker()) : ""}
+    ${S.asViewer ? raw(html`<div class="portal-flag portal-flag--lock"><strong>Read-only</strong> You're looking at ${t.name} with read-only organiser access. Nothing here can be changed.</div>`) : ""}
+    ${S.season.locked && !S.asViewer ? raw(html`<div class="portal-flag portal-flag--lock"><strong>Locked</strong> The ${S.season.name} squads are locked${S.isAdmin ? " for captains. You can still edit as an organiser." : ". Contact the organisers if something needs changing."}</div>`) : ""}
+    ${S.teams.length > 1 && !S.asAdmin && !S.asViewer ? raw(teamPicker()) : ""}
 
     <section class="portal-hero">
       <div class="portal-hero__badge">
@@ -346,7 +350,7 @@ function render() {
 
 // ---------------------------------------------------------------- free agents
 function poolHtml() {
-  return poolSection({ pool: S.pool, filter: S.faFilter, players: S.players, locked: !editable() });
+  return poolSection({ pool: S.pool, filter: S.faFilter, players: S.players, locked: !editable(), readOnly: S.asViewer });
 }
 
 function signingsBanner() {
@@ -494,6 +498,9 @@ function signOffBlock() {
     return html`
       <p><span class="pill pill--ok">Signed off</span> by ${t.signed_off_by} on ${fmtDateTime(t.signed_off_at)}.</p>
       <p class="muted">If you change the squad, you'll need to sign it off again.</p>`;
+  }
+  if (S.asViewer) {
+    return html`<p class="muted">Not signed off yet. The team's contact signs off the squad.</p>`;
   }
   if (!editable()) {
     return html`<p class="muted">The season is locked, so the squad can't be signed off from here.</p>`;

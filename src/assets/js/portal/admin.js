@@ -21,15 +21,20 @@ async function load(sb, user, seasonId) {
   root.innerHTML = `<div class="portal-loading" aria-busy="true">Loading…</div>`;
   try {
     const email = (user.email || "").toLowerCase();
-    const { data: isAdmin, error } = await sb.rpc("am_i_admin");
+    // 'admin' (organiser), 'viewer' (read-only organiser) or null
+    const { data: role, error } = await sb.rpc("my_board_role");
     if (error) throw error;
-    if (!isAdmin) return renderNotAdmin(sb, email);
+    if (!role) return renderNotAdmin(sb, email);
 
-    const { data: seasons, error: e2 } = await sb.from("seasons").select("*").order("id", { ascending: false });
+    const [{ data: seasons, error: e2 }, { data: viewers, error: e3 }] = await Promise.all([
+      sb.from("seasons").select("*").order("id", { ascending: false }),
+      sb.from("vfl_viewers").select("email, created_at").order("email"),
+    ]);
     if (e2) throw e2;
-    S = { sb, user, email, seasons, season: null, teams: [], players: [], agents: [], interest: [] };
+    if (e3) throw e3;
+    S = { sb, user, email, role, ro: role !== "admin", viewers, seasons, season: null, teams: [], players: [], agents: [], interest: [] };
     const pick = seasonId || seasons.find((s) => s.is_current)?.id || seasons[0]?.id;
-    if (!pick) return renderNoSeason();
+    if (!pick) return S.ro ? renderNoSeasonReadOnly() : renderNoSeason();
     await openSeason(pick);
   } catch (err) {
     root.innerHTML = html`<div class="panel portal-auth"><h2>Couldn't load the board</h2><p class="muted">${friendly(err)}</p></div>`;
@@ -85,7 +90,7 @@ const squadOf = (teamId) => S.players.filter((p) => p.team_id === teamId);
 function bar() {
   return html`
     <div class="portal-bar">
-      <span class="portal-bar__who">Organiser · <strong>${S.email}</strong></span>
+      <span class="portal-bar__who">${S.ro ? "Viewer (read-only)" : "Organiser"} · <strong>${S.email}</strong></span>
       <span class="portal-bar__actions">
         <button class="btn btn--ghost btn--sm" type="button" data-signout>Sign out</button>
       </span>
@@ -108,6 +113,58 @@ function renderNotAdmin(sb, email) {
 function renderNoSeason() {
   root.innerHTML = html`${raw(bar())}<div class="panel">${raw(newSeasonForm(true))}</div>`;
   wire();
+}
+
+function renderNoSeasonReadOnly() {
+  root.innerHTML = html`${raw(bar())}<div class="panel"><p class="muted empty">There are no seasons yet. An organiser needs to create one.</p></div>`;
+  wire();
+}
+
+const readOnlyFlag = () =>
+  `<div class="portal-flag portal-flag--lock"><strong>Read-only</strong> You can see and export everything here, but not change it. Ask an organiser if something needs updating.</div>`;
+
+// Read-only organisers ("viewers"): organisers manage the list, viewers just see it.
+function viewersPanel() {
+  const list = S.viewers || [];
+  return html`
+    <details class="panel admin-more" id="board-viewers">
+      <summary>Read-only access <span class="count">${list.length}</span></summary>
+      <p class="muted">People on this list can sign in here and see everything on this board, including squads, photos and free agents, and download the exports. They can't change anything. They see players' personal details, so only add people who help run the league.</p>
+      ${list.length ? raw(html`
+        <ul class="viewer-list" role="list">
+          ${list.map((v) => raw(html`
+            <li class="viewer-list__row">
+              <span><strong>${v.email}</strong> <span class="dim nowrap">· added ${fmtDate(v.created_at)}</span></span>
+              ${S.ro ? "" : raw(html`<button class="btn btn--ghost btn--sm btn--danger" type="button" data-viewer-remove="${v.email}" aria-label="Remove read-only access for ${v.email}">Remove</button>`)}
+            </li>`))}
+        </ul>`) : raw(`<p class="muted empty">Nobody yet.</p>`)}
+      ${S.ro ? "" : raw(html`
+        <form class="form form--inline" data-form="viewer">
+          <div class="field--2">
+            <div class="field"><label for="v-email">Email address</label><input id="v-email" name="email" type="email" required placeholder="helper@studio.com" autocomplete="off"></div>
+            <div class="field field--end"><button class="btn btn--sm" type="submit">Give read-only access</button></div>
+          </div>
+          <p class="form-note">They sign in at <strong>/admin/</strong> with that address, using an emailed code. Adding them doesn't email them: tell them yourself.</p>
+        </form>`)}
+    </details>`;
+}
+
+// What a viewer gets instead of the Edit dialog: the same details, nothing to change.
+function viewTeam(t) {
+  const dlg = root.querySelector("[data-dialog]");
+  dlg.innerHTML = html`
+    <div class="form">
+      <div class="player-dialog__head"><h2>${t.name}</h2><button class="dialog-close" type="button" data-close aria-label="Close">×</button></div>
+      <dl class="team-facts">
+        <div><dt>Contact</dt><dd>${t.contact_name || "—"} · <a href="mailto:${t.contact_email}">${t.contact_email}</a></dd></div>
+        <div><dt>Fee</dt><dd>${t.paid ? `Paid${t.paid_at ? ` ${fmtDate(t.paid_at)}` : ""}` : "Not paid yet"}${t.paid_note ? ` · ${t.paid_note}` : ""}</dd></div>
+        <div><dt>Their notes</dt><dd>${t.team_notes ? raw(html`<span class="note-full">${t.team_notes}</span>`) : raw(`<span class="dim">None</span>`)}</dd></div>
+        <div><dt>Organiser notes</dt><dd>${t.admin_notes ? raw(html`<span class="note-full">${t.admin_notes}</span>`) : raw(`<span class="dim">None</span>`)}</dd></div>
+      </dl>
+      <div class="btn-row"><a class="btn btn--sm" href="/portal/?team=${t.id}">Open squad</a><button class="btn btn--ghost btn--sm" type="button" data-close>Close</button></div>
+    </div>`;
+  dlg.onclick = (e) => { if (e.target === dlg || e.target.closest("[data-close]")) dlg.close(); };
+  dlg.showModal();
 }
 
 function newSeasonForm(first) {
@@ -140,6 +197,7 @@ function render() {
   const s = S.season;
   root.innerHTML = html`
     ${raw(bar())}
+    ${S.ro ? raw(readOnlyFlag()) : ""}
 
     <section class="admin-season">
       <div>
@@ -151,10 +209,11 @@ function render() {
           ${s.locked ? raw(`<span class="pill pill--warn">Locked</span>`) : raw(`<span class="pill pill--ok">Open for edits</span>`)}
         </div>
       </div>
+      ${S.ro ? "" : raw(html`
       <div class="btn-row">
         ${!s.is_current ? raw(`<button class="btn btn--ghost btn--sm" type="button" data-make-current>Make current</button>`) : ""}
         <button class="btn btn--sm ${s.locked ? "" : "btn--ghost"}" type="button" data-lock>${s.locked ? "Unlock squads" : "Lock squads"}</button>
-      </div>
+      </div>`)}
     </section>
 
     <div class="stat-strip stat-strip--6">
@@ -184,6 +243,7 @@ function render() {
       ${S.agents.length ? raw(agentTable()) : raw(`<p class="muted empty">Nobody has signed up yet. Players join from the free agents page; share it in studio channels.</p>`)}
     </section>
 
+    ${S.ro ? "" : raw(html`
     <section class="panel">
       <form class="form" data-form="invite">
         <h2 class="portal-h">Add a team</h2>
@@ -196,9 +256,12 @@ function render() {
         <div class="btn-row"><button class="btn btn--sm" type="submit">Add team</button></div>
         <div data-invite-result></div>
       </form>
-    </section>
+    </section>`)}
 
-    <details class="panel admin-more">
+    ${raw(viewersPanel())}
+
+    ${S.ro ? "" : raw(html`
+    <details class="panel admin-more" id="board-seasons">
       <summary>Seasons and data retention</summary>
       ${raw(newSeasonForm(false))}
       <hr>
@@ -208,7 +271,7 @@ function render() {
         <div class="field"><label for="purge">Type <strong>${s.id}</strong> to confirm</label><input id="purge" name="confirm" autocomplete="off"></div>
         <div class="btn-row"><button class="btn btn--sm btn--danger" type="submit">Delete ${S.players.length} players${S.agents.length ? ` and ${S.agents.length} free agents` : ""}</button></div>
       </form>
-    </details>
+    </details>`)}
 
     <dialog class="player-dialog" data-dialog></dialog>`;
   wire();
@@ -256,9 +319,9 @@ function agentTable() {
                 <td><span class="pill ${st.kind ? `pill--${st.kind}` : ""}">${st.label}</span>${st.note ? raw(html`<br><span class="dim nowrap">${st.note}</span>`) : ""}</td>
                 <td class="nowrap">${int.length} interested${offers.length ? raw(html`<br><span class="dim">${offers.length} offer${offers.length === 1 ? "" : "s"} open</span>`) : ""}
                   ${int.length ? raw(html`<span class="team-note team-note--list">${int.map((i) => teamName(i.team_id)).join(", ")}</span>`) : ""}</td>
-                <td class="nowrap">
+                <td class="nowrap">${S.ro ? "" : raw(html`
                   ${a.status === "signed" && !st.inSquad ? raw(html`<button class="btn btn--ghost btn--sm" type="button" data-agent-release="${a.id}">Return to pool</button>`) : ""}
-                  <button class="btn btn--ghost btn--sm btn--danger" type="button" data-agent-remove="${a.id}" aria-label="Remove ${a.full_name}">Remove</button>
+                  <button class="btn btn--ghost btn--sm btn--danger" type="button" data-agent-remove="${a.id}" aria-label="Remove ${a.full_name}">Remove</button>`)}
                 </td>
               </tr>`);
           })}
@@ -317,7 +380,9 @@ function teamTable() {
                 <td><span class="admin-kits">${raw(shirtSvg(t.kit_primary, { size: 30, label: `Primary: ${kitLabel(t.kit_primary) || "not set"}` }))}${raw(shirtSvg(t.kit_secondary, { size: 30, label: `Secondary: ${kitLabel(t.kit_secondary) || "not set"}` }))}</span></td>
                 <td>${t.contact_name || raw(`<span class="dim">—</span>`)}<br><span class="dim mono-sm">${t.contact_email}</span></td>
                 <td>
-                  <label class="check check--sm"><input type="checkbox" data-paid="${t.id}" ${t.paid ? "checked" : ""}><span>${t.paid ? "Paid" : "Unpaid"}</span></label>
+                  ${S.ro
+                    ? raw(html`<span class="pill ${t.paid ? "pill--ok" : ""}">${t.paid ? "Paid" : "Unpaid"}</span>`)
+                    : raw(html`<label class="check check--sm"><input type="checkbox" data-paid="${t.id}" ${t.paid ? "checked" : ""}><span>${t.paid ? "Paid" : "Unpaid"}</span></label>`)}
                   ${t.paid && (t.paid_at || t.paid_note) ? raw(html`<br><span class="dim">${t.paid_at ? fmtDate(t.paid_at) : ""}${t.paid_note ? ` · ${t.paid_note}` : ""}</span>`) : ""}
                 </td>
                 <td>${sq.length} player${sq.length === 1 ? "" : "s"}<br>
@@ -326,7 +391,9 @@ function teamTable() {
                 <td>${t.signed_off_at ? raw(html`<span class="ok">✓ ${fmtDate(t.signed_off_at)}</span>`) : raw(`<span class="dim">Not yet</span>`)}</td>
                 <td class="admin-table__actions">
                   <a class="btn btn--ghost btn--sm" href="/portal/?team=${t.id}">Open</a>
-                  <button class="btn btn--ghost btn--sm" type="button" data-edit-team="${t.id}">Edit</button>
+                  ${S.ro
+                    ? raw(html`<button class="btn btn--ghost btn--sm" type="button" data-view-team="${t.id}">Details</button>`)
+                    : raw(html`<button class="btn btn--ghost btn--sm" type="button" data-edit-team="${t.id}">Edit</button>`)}
                 </td>
               </tr>`);
           })}
@@ -512,6 +579,14 @@ async function downloadPhotos(btn) {
   }
 }
 
+// Redraw just the viewer list, keeping it open.
+function redrawViewers() {
+  const el = root.querySelector("#board-viewers");
+  if (!el) return;
+  el.outerHTML = viewersPanel();
+  root.querySelector("#board-viewers").open = true;
+}
+
 // ---------------------------------------------------------------- events
 function wire() {
   root.onclick = async (e) => {
@@ -521,6 +596,20 @@ function wire() {
     if (zipBtn) return downloadPhotos(zipBtn);
     const exp = t.closest("[data-export]");
     if (exp) return exp.dataset.export === "players" ? exportPlayers() : exp.dataset.export === "agents" ? exportAgents() : exportTeams();
+    const view = t.closest("[data-view-team]");
+    if (view) return viewTeam(S.teams.find((x) => x.id === view.dataset.viewTeam));
+    // Everything below changes data: never for viewers (the database refuses anyway).
+    if (S.ro) return;
+    const vrm = t.closest("[data-viewer-remove]");
+    if (vrm) {
+      const email = vrm.dataset.viewerRemove;
+      if (!confirm(`Remove read-only access for ${email}?`)) return;
+      const { error } = await S.sb.from("vfl_viewers").delete().eq("email", email);
+      if (error) return toast(friendly(error), "err");
+      S.viewers = S.viewers.filter((v) => v.email !== email);
+      toast(`${email} no longer has access.`);
+      return redrawViewers();
+    }
     const rel = t.closest("[data-agent-release]");
     if (rel) {
       const a = S.agents.find((x) => x.id === rel.dataset.agentRelease);
@@ -570,6 +659,7 @@ function wire() {
 
   root.onchange = async (e) => {
     if (e.target.matches("[data-season]")) return openSeason(e.target.value);
+    if (S.ro) return;
     if (e.target.matches("[data-paid]")) {
       const team = S.teams.find((x) => x.id === e.target.dataset.paid);
       if (e.target.checked) return markPaid(team, e.target);
@@ -586,6 +676,7 @@ function wire() {
     const kind = form.dataset.form;
     if (!kind) return;
     e.preventDefault();
+    if (S.ro) return;
     const fd = new FormData(form);
     const btn = form.querySelector("[type=submit]");
     btn.disabled = true;
@@ -614,6 +705,18 @@ function wire() {
           </div>`;
         out.scrollIntoView({ block: "nearest" });
         return;
+      }
+      if (kind === "viewer") {
+        const email = String(fd.get("email") || "").trim().toLowerCase();
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Error("Enter a valid email address.");
+        if (email === S.email) throw new Error("That's you: you already have full access.");
+        if (S.viewers.some((v) => v.email === email)) throw new Error(`${email} already has read-only access.`);
+        const { data, error } = await S.sb.from("vfl_viewers").insert({ email }).select("email, created_at");
+        if (error) throw error;
+        S.viewers = [...S.viewers, ...(data || [{ email, created_at: new Date().toISOString() }])]
+          .sort((a, b) => a.email.localeCompare(b.email));
+        toast(`${email} can now see the board (read-only). Let them know.`);
+        return redrawViewers();
       }
       if (kind === "season") {
         const id = String(fd.get("id") || "").trim();

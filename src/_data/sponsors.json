@@ -1,0 +1,11 @@
+{
+  "comment": "The league's sponsors. Each one shows on /sponsors/, in the 'Supported by' strip on the home page and in the footer. Nothing shows while the list is empty. Put logos in src/assets/img/sponsors/ (PNG, WebP or SVG, ideally a dark logo on a transparent background: it sits on a white tile). Fields: name (required), url (their website), logo, role (short label, e.g. 'Kit sponsor' or 'Awards night partner'), blurb (one or two sentences for the sponsors page). Order = display order.",
+  "example": {
+    "name": "Example Studio",
+    "url": "https://example.com",
+    "logo": "/assets/img/sponsors/example.png",
+    "role": "Kit sponsor",
+    "blurb": "One or two sentences about who they are and what they do for the league."
+  },
+  "list": []
+}

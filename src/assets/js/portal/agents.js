@@ -397,7 +397,7 @@ export const pendingSignings = (pool, players) =>
   (pool || []).filter((a) => a.signed_here && !players.some((p) => p.free_agent_id === a.id));
 
 export function poolSection(P) {
-  // P: { pool, filter, players, locked, sb }
+  // P: { pool, filter, players, locked, readOnly, sb }
   const all = P.pool || [];
   const counts = Object.fromEntries(FA_POSITIONS.map((p) => [p.value, all.filter((a) => a.status === "available" && a.positions.includes(p.value)).length]));
   const available = all.filter((a) => a.status === "available").length;
@@ -432,7 +432,13 @@ function agentCard(a, P) {
   const wa = a.phone ? whatsappUrl(a.phone) : "";
 
   let actions;
-  if (a.signed_here) {
+  if (P.readOnly) {
+    // a viewer: where things stand, no buttons
+    actions = a.signed_here ? html`<span class="pill pill--ok">${inSquad ? "In the squad" : "Joined this team"}</span>`
+      : gone ? html`<span class="pill">Joined another team</span>`
+      : a.offered_at ? html`<span class="pill pill--accent">Offer sent</span>`
+      : a.interested ? html`<span class="pill">Interested</span>` : "";
+  } else if (a.signed_here) {
     actions = inSquad
       ? html`<span class="pill pill--ok">In your squad</span>`
       : html`<span class="pill pill--ok">Joined your team</span><button class="btn btn--sm" type="button" data-fa-add="${a.id}">Add to squad</button>`;
