@@ -283,7 +283,9 @@ const teamName = (id) => S.teams.find((t) => t.id === id)?.name || "";
 function agentStatus(a) {
   if (a.status === "signed") {
     const inSquad = S.players.some((p) => p.free_agent_id === a.id);
-    return { label: `Joined ${teamName(a.signed_team_id)}`, kind: "ok", inSquad,
+    // label: CSV and text; pill + team: the board (a long team name in a
+    // one-line pill would push the table wider than the panel)
+    return { label: `Joined ${teamName(a.signed_team_id)}`, pill: "Joined", team: teamName(a.signed_team_id), kind: "ok", inSquad,
       note: inSquad ? "In the squad" : "Not in the squad yet" };
   }
   if (a.status === "withdrawn") return { label: "On a break", kind: "warn" };
@@ -315,13 +317,14 @@ function agentTable() {
                 <td>${positionsLong(a.positions)}<br><span class="dim">${styleLabel(a.play_style)} · ${availabilityLabel(a.availability)}${a.availability_note ? ` · ${a.availability_note}` : ""}</span></td>
                 <td>${a.current_team_id ? raw(html`${teamName(a.current_team_id)} <span class="pill pill--loan">Loan</span>`) : a.current_team_other || raw(`<span class="dim">None</span>`)}
                   ${a.previous_teams ? raw(html`<br><span class="dim">Before: ${a.previous_teams}</span>`) : ""}</td>
-                <td><a href="mailto:${a.email}">${a.email}</a>${a.phone ? raw(html`<br><a href="tel:${a.phone}" class="nowrap">${a.phone}</a>`) : ""}</td>
-                <td><span class="pill ${st.kind ? `pill--${st.kind}` : ""}">${st.label}</span>${st.note ? raw(html`<br><span class="dim nowrap">${st.note}</span>`) : ""}</td>
+                <td><a href="mailto:${a.email}">${a.email}</a>${a.phone ? raw(html`<br><a href="tel:${a.phone}" class="nowrap">${a.phone}</a>`) : ""}
+                  ${S.ro ? "" : raw(html`<br><button class="text-btn" type="button" data-agent-email="${a.id}" aria-label="Change ${a.full_name}'s email">Change email</button>`)}</td>
+                <td><span class="pill ${st.kind ? `pill--${st.kind}` : ""}">${st.pill || st.label}</span>${st.team ? raw(html`<br><strong class="agent-joined">${st.team}</strong>`) : ""}${st.note ? raw(html`<br><span class="dim nowrap">${st.note}</span>`) : ""}</td>
                 <td class="nowrap">${int.length} interested${offers.length ? raw(html`<br><span class="dim">${offers.length} offer${offers.length === 1 ? "" : "s"} open</span>`) : ""}
                   ${int.length ? raw(html`<span class="team-note team-note--list">${int.map((i) => teamName(i.team_id)).join(", ")}</span>`) : ""}</td>
-                <td class="nowrap">${S.ro ? "" : raw(html`
+                <td class="nowrap">${S.ro ? "" : raw(html`<div class="admin-table__actions--stack">
                   ${a.status === "signed" && !st.inSquad ? raw(html`<button class="btn btn--ghost btn--sm" type="button" data-agent-release="${a.id}">Return to pool</button>`) : ""}
-                  <button class="btn btn--ghost btn--sm btn--danger" type="button" data-agent-remove="${a.id}" aria-label="Remove ${a.full_name}">Remove</button>`)}
+                  <button class="btn btn--ghost btn--sm btn--danger" type="button" data-agent-remove="${a.id}" aria-label="Remove ${a.full_name}">Remove</button></div>`)}
                 </td>
               </tr>`);
           })}
@@ -412,7 +415,9 @@ function dialog(inner, onSubmit) {
     e.preventDefault();
     const btn = form.querySelector("[type=submit]");
     btn.disabled = true;
-    try { await onSubmit(new FormData(form), e.submitter); dlg.close(); }
+    // onSubmit may return a function to run once this dialog has closed
+    // (e.g. to open the next one).
+    try { const next = await onSubmit(new FormData(form), e.submitter); dlg.close(); if (typeof next === "function") next(); }
     catch (err) {
       const st = form.querySelector("[data-status]");
       st.className = "form-status form-status--err is-visible";
@@ -429,7 +434,7 @@ function editTeam(t) {
       <div class="player-dialog__head"><h2>Edit ${t.name}</h2><button class="dialog-close" type="button" data-close aria-label="Close">×</button></div>
       <div class="field"><label for="e-name">Team name</label><input id="e-name" name="name" required maxlength="80" value="${t.name}"></div>
       <div class="field--2">
-        <div class="field"><label for="e-email">Contact email</label><input id="e-email" name="contact_email" type="email" required value="${t.contact_email}"></div>
+        <div class="field"><label for="e-email">Contact email <span class="opt">the address that signs in</span></label><input id="e-email" name="contact_email" type="email" required value="${t.contact_email}"></div>
         <div class="field"><label for="e-cname">Contact name</label><input id="e-cname" name="contact_name" maxlength="80" value="${t.contact_name || ""}"></div>
       </div>
       ${t.team_notes ? raw(html`<div class="field"><span class="mono dim">Their notes</span><p class="note-full">${t.team_notes}</p></div>`) : ""}
@@ -465,7 +470,87 @@ function editTeam(t) {
     if (error) throw error;
     toast("Team saved.");
     await openSeason(S.season.id);
+    if (email !== t.contact_email) {
+      const name = patch.name || t.name;
+      return () => emailChanged({
+        what: `${name}'s contact`,
+        oldEmail: t.contact_email, newEmail: email,
+        old: {
+          subject: `${name}: VFL contact email changed`,
+          body: `Hi${first(t.contact_name)},\n\nJust to let you know, the contact email for ${name} in the VFL team portal has changed from ${t.contact_email} to ${email}.\n\nFrom now on, ${email} signs in to manage the team and squad. This address can't sign in to the team any more.\n\nIf you weren't expecting this, reply to this email and we'll sort it out.\n\nThanks!`,
+        },
+        new: {
+          subject: `${name}: you're now the VFL team contact`,
+          body: `Hi${first(patch.contact_name)},\n\nYou're now the contact for ${name} in the ${S.season.name} VFX Football League. Manage the team details, logo and squad here:\n\n${portalUrl()}\n\nSign in with ${email}: you'll get a link and a code by email, no password needed.\n\nThanks!`,
+        },
+      });
+    }
   });
+}
+
+function editAgentEmail(a) {
+  dialog(html`
+    <form class="form" novalidate>
+      <div class="player-dialog__head"><h2>Change ${a.full_name}'s email</h2><button class="dialog-close" type="button" data-close aria-label="Close">×</button></div>
+      <p class="muted">Now: <strong>${a.email}</strong></p>
+      <div class="field"><label for="fa-email">New email</label><input id="fa-email" name="email" type="email" required autocomplete="off"></div>
+      <p class="form-note">They'll sign in with the new address from now on, and the old one won't reach their profile. Teams that marked them as interested will see the new address.</p>
+      <div class="form-status" data-status role="status"></div>
+      <div class="btn-row">
+        <button class="btn" type="submit">Change email</button>
+        <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+      </div>
+    </form>`, async (fd) => {
+    const email = String(fd.get("email") || "").trim().toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Error("Enter a valid email address.");
+    if (email === a.email) throw new Error("That's already their email.");
+    const taken = () => new Error(`${email} already has a free-agent profile this season.`);
+    if (S.agents.some((x) => x.email === email)) throw taken();
+    const { error } = await S.sb.from("free_agents").update({ email }).eq("id", a.id);
+    if (error) throw /free_agents_one_per_season/.test(`${error.message} ${error.details || ""}`) ? taken() : error;
+    toast(`${a.full_name}'s email changed.`);
+    await openSeason(S.season.id);
+    const url = `${portalUrl()}?view=agent`;
+    return () => emailChanged({
+      what: `${a.full_name}'s free-agent profile`,
+      oldEmail: a.email, newEmail: email,
+      old: {
+        subject: "Your VFL free-agent profile has a new email",
+        body: `Hi${first(a.full_name)},\n\nJust to let you know, your ${S.season.name} VFL free-agent profile has moved from ${a.email} to ${email}.\n\nFrom now on, sign in with ${email} to see your profile and any offers:\n\n${url}\n\nTeams that have marked you as interested will see the new address. This address can't sign in to your profile any more.\n\nIf you didn't ask for this, reply to this email and we'll sort it out.\n\nThanks!`,
+      },
+      new: {
+        subject: "Your VFL free-agent profile",
+        body: `Hi${first(a.full_name)},\n\nYour ${S.season.name} VFL free-agent profile is now under this address. Sign in here to see it and any offers:\n\n${url}\n\nSign in with ${email}: you'll get a link and a code by email, no password needed.\n\nThanks!`,
+      },
+    });
+  });
+}
+
+const first = (name) => (name ? " " + String(name).trim().split(/\s+/)[0] : "");
+const mailtoHref = (to, m) => `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`;
+
+// After an email change: the system sends nothing, so give the organiser a
+// message for the old address (and one for the new), like a team invite.
+function emailChanged(c) {
+  const block = (label, to, m, key) => html`
+    <div class="email-change__msg" data-email-msg="${key}">
+      <p class="mono dim email-change__to">${label}: ${to}</p>
+      <pre class="invite-msg">${m.body}</pre>
+      <div class="btn-row">
+        <a class="btn btn--sm" href="${mailtoHref(to, m)}" data-mailto>Open in my email app</a>
+        <button class="btn btn--ghost btn--sm" type="button" data-copy="${m.body}">Copy message</button>
+      </div>
+    </div>`;
+  dialog(html`
+    <form class="form email-change">
+      <div class="player-dialog__head"><h2>Email changed</h2><button class="dialog-close" type="button" data-close aria-label="Close">×</button></div>
+      <p><span class="pill pill--ok">Saved</span> ${c.what} is now <strong>${c.newEmail}</strong>.
+        <strong>No email has been sent.</strong> Let the old address know (and the new one, if they don't already):</p>
+      ${raw(block("To the old address", c.oldEmail, c.old, "old"))}
+      ${raw(block("To the new address", c.newEmail, c.new, "new"))}
+      <div class="form-status" data-status role="status"></div>
+      <div class="btn-row"><button class="btn btn--ghost" type="submit">Done</button></div>
+    </form>`, async () => {});
 }
 
 function markPaid(t, input) {
@@ -628,6 +713,8 @@ function wire() {
       toast(`${a.full_name}'s profile removed.`);
       return openSeason(S.season.id);
     }
+    const fae = t.closest("[data-agent-email]");
+    if (fae) return editAgentEmail(S.agents.find((x) => x.id === fae.dataset.agentEmail));
     const ed = t.closest("[data-edit-team]");
     if (ed) return editTeam(S.teams.find((x) => x.id === ed.dataset.editTeam));
     if (t.closest("[data-copy]")) {
