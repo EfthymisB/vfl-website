@@ -176,6 +176,23 @@ eleventyNavigation: Home
         </div>
       </div>
     </section>
+    {% if sponsors.list | length %}
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <div>
+            <div class="eyebrow">Supported by</div>
+            <h2>Our sponsors</h2>
+          </div>
+          <a class="btn btn--ghost btn--sm" href="/sponsors/">Become a sponsor</a>
+        </div>
+        <div data-reveal>
+          {% set sponsorWhere = "home" %}
+          {% include "partials/sponsor-logos.njk" %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
     <section class="section">
       <div class="wrap">
         <div class="cta" data-reveal>

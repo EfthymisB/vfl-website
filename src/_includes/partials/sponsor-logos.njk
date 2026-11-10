@@ -1,0 +1,15 @@
+{#- Sponsor logo row. Set `sponsorWhere` (home / footer) before including it,
+    so the analytics event says where the click came from. -#}
+<ul class="sponsor-logos{% if sponsorWhere == 'footer' %} sponsor-logos--small{% endif %}">
+  {%- for s in sponsors.list %}
+  <li>
+    <a class="sponsor-logo" href="{{ s.url or '/sponsors/' }}"
+       {%- if s.url %} target="_blank" rel="sponsored noopener"{% endif %}
+       data-umami-event="Sponsor click" data-umami-event-sponsor="{{ s.name }}" data-umami-event-where="{{ sponsorWhere }}"
+       title="{{ s.name }}{% if s.role %} · {{ s.role }}{% endif %}">
+      {%- if s.logo %}<img src="{{ s.logo }}" alt="{{ s.name }}" loading="lazy" decoding="async">
+      {%- else %}<span class="sponsor-logo__name">{{ s.name }}</span>{% endif -%}
+    </a>
+  </li>
+  {%- endfor %}
+</ul>

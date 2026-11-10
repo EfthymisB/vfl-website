@@ -18,6 +18,7 @@
         <li><a href="/rules/">Rules and venues</a></li>
         <li><a href="/free-agents/">Free agents</a></li>
         <li><a href="/portal/">Team portal</a></li>
+        <li><a href="/sponsors/">Sponsors</a></li>
       </ul>
     </div>
 
@@ -32,6 +33,14 @@
       </ul>
     </div>
   </div>
+
+  {% if sponsors.list | length %}
+  <div class="wrap site-footer__sponsors">
+    <h4>Supported by</h4>
+    {% set sponsorWhere = "footer" %}
+    {% include "partials/sponsor-logos.njk" %}
+  </div>
+  {% endif %}
 
   <div class="wrap">
     <div class="site-footer__legal">
