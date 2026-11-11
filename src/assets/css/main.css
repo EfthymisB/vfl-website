@@ -977,6 +977,29 @@ table.data td:nth-child(2) {
   color: var(--text);
   font-weight: 500;
 }
+/* Team names: initials on phones, so the table fits without scrolling sideways */
+table.data .tname-short {
+  display: none;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+@media (max-width: 34rem) {
+  table.data {
+    min-width: 0;
+  }
+  table.data .tname-long {
+    display: none;
+  }
+  table.data .tname-short {
+    display: inline;
+  }
+  table.data th,
+  table.data td {
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+  }
+}
 
 /* ------------------------------------------------------------------ teams */
 .team-list {

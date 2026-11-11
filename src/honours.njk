@@ -144,7 +144,11 @@ lede: Every champion, every final table, and whoever's currently allowed to be s
                         <td>{{ r.pos }}</td>
                         <td>
                           <img src="{{ teams.all[r.team].logo }}" alt="{{ teams.all[r.team].name }}" class="team-logo" width="30" height="30"></td>
-                          <td>{{ teams.all[r.team].short }}</td>
+                          {#- full short name on wide screens, initials on phones (CSS swaps them) -#}
+                          <td>
+                            <span class="tname-long">{{ teams.all[r.team].short }}</span>
+                            <abbr class="tname-short" title="{{ teams.all[r.team].short }}">{{ teams.all[r.team].initials }}</abbr>
+                          </td>
                           <td>{{ r.p }}</td>
                           <td>{{ r.w }}</td>
                           <td>{{ r.d }}</td>
