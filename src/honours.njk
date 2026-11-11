@@ -126,6 +126,7 @@ lede: Every champion, every final table, and whoever's currently allowed to be s
                     <tr>
                       <th scope="col">#</th>
                       <th scope="col">Team</th>
+                      <th scope="col"></th>
                       <th scope="col">P</th>
                       <th scope="col">W</th>
                       <th scope="col">D</th>
@@ -143,7 +144,7 @@ lede: Every champion, every final table, and whoever's currently allowed to be s
                         <td>{{ r.pos }}</td>
                         <td>
                           <img src="{{ teams.all[r.team].logo }}" alt="{{ teams.all[r.team].name }}" class="team-logo" width="30" height="30"></td>
-                          <td>{{ teams.all[r.team].name }}</td>
+                          <td>{{ teams.all[r.team].short }}</td>
                           <td>{{ r.p }}</td>
                           <td>{{ r.w }}</td>
                           <td>{{ r.d }}</td>
