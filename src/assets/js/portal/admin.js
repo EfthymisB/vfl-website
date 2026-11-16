@@ -381,7 +381,7 @@ function teamTable() {
               <tr>
                 <td class="admin-table__logo">${logo ? raw(html`<a href="${logo}" target="_blank" rel="noopener" title="Open logo"><img src="${logo}" alt="" width="36" height="36" loading="lazy"></a>`) : raw(html`<span class="logo-ph">${initials(t.name)}</span>`)}</td>
                 <td><strong>${t.name}</strong>${t.short_name || (t.studio && t.studio !== t.name) ? raw(html`<br><span class="dim">${[t.short_name, t.studio && t.studio !== t.name ? t.studio : ""].filter(Boolean).join(" · ")}</span>`) : ""}${t.team_notes ? raw(html`<span class="team-note" title="${t.team_notes}">${t.team_notes.slice(0, 70)}${t.team_notes.length > 70 ? "…" : ""}</span>`) : ""}${t.admin_notes ? raw(html`<br><span class="note" title="${t.admin_notes}">📝 ${t.admin_notes.slice(0, 40)}${t.admin_notes.length > 40 ? "…" : ""}</span>`) : ""}</td>
-                <td><span class="admin-kits">${raw(shirtSvg(t.kit_primary, { size: 30, label: `Primary: ${kitLabel(t.kit_primary) || "not set"}` }))}${raw(shirtSvg(t.kit_secondary, { size: 30, label: `Secondary: ${kitLabel(t.kit_secondary) || "not set"}` }))}</span></td>
+                <td><span class="admin-kits">${raw(shirtSvg(t.kit_primary, { size: 44, onLight: true, label: `Primary: ${kitLabel(t.kit_primary) || "not set"}` }))}${raw(shirtSvg(t.kit_secondary, { size: 44, onLight: true, label: `Secondary: ${kitLabel(t.kit_secondary) || "not set"}` }))}</span></td>
                 <td>${t.contact_name || raw(`<span class="dim">—</span>`)}<br><span class="dim mono-sm">${t.contact_email}</span></td>
                 <td>
                   ${S.ro

@@ -431,21 +431,23 @@ export const kitLabel = (kit) => (kit && kit.length ? kit.map(colourName).join("
 
 // A small shirt drawn in the kit's colours: 1st colour is the shirt, 2nd the
 // sleeves, 3rd the collar and cuffs. Outlined so white and black both show up
-// on the dark page.
-export function shirtSvg(kit, { size = 64, label = "" } = {}) {
+// on the dark page. `onLight` draws a dark outline instead, for a shirt shown
+// on a light tile (the board), where dark kits read better.
+export function shirtSvg(kit, { size = 64, label = "", onLight = false } = {}) {
   const empty = !kit || !kit.length;
   const [c1, c2 = c1, c3 = c2] = empty ? [] : kit;
-  const line = "rgba(255,255,255,0.32)";
+  const line = onLight ? "#14161c" : "rgba(255,255,255,0.32)";
+  const width = onLight ? 1.6 : 0.9;
   const title = label ? `<title>${esc(label)}</title>` : "";
   if (empty) {
     return `<svg class="shirt shirt--empty" viewBox="0 0 64 64" width="${size}" height="${size}" role="img" aria-label="${esc(label || "No colours chosen")}">${title}
       <path d="M21 11 L9 18 L14 29 L21 25 Z M43 11 L55 18 L50 29 L43 25 Z M21 11 L27 8 C29 11 35 11 37 8 L43 11 L43 56 C36 58 28 58 21 56 Z"
-        fill="none" stroke="${line}" stroke-width="1.2" stroke-dasharray="3 2.5" stroke-linejoin="round"/></svg>`;
+        fill="none" stroke="${onLight ? "rgba(20,22,28,0.4)" : line}" stroke-width="${onLight ? 1.5 : 1.2}" stroke-dasharray="3 2.5" stroke-linejoin="round"/></svg>`;
   }
   return `<svg class="shirt" viewBox="0 0 64 64" width="${size}" height="${size}" role="img" aria-label="${esc(label || kitLabel(kit))}">${title}
-    <path d="M21 11 L9 18 L14 29 L21 25 Z" fill="${c2}" stroke="${line}" stroke-width="0.9" stroke-linejoin="round"/>
-    <path d="M43 11 L55 18 L50 29 L43 25 Z" fill="${c2}" stroke="${line}" stroke-width="0.9" stroke-linejoin="round"/>
-    <path d="M21 11 L27 8 C29 11 35 11 37 8 L43 11 L43 56 C36 58 28 58 21 56 Z" fill="${c1}" stroke="${line}" stroke-width="0.9" stroke-linejoin="round"/>
+    <path d="M21 11 L9 18 L14 29 L21 25 Z" fill="${c2}" stroke="${line}" stroke-width="${width}" stroke-linejoin="round"/>
+    <path d="M43 11 L55 18 L50 29 L43 25 Z" fill="${c2}" stroke="${line}" stroke-width="${width}" stroke-linejoin="round"/>
+    <path d="M21 11 L27 8 C29 11 35 11 37 8 L43 11 L43 56 C36 58 28 58 21 56 Z" fill="${c1}" stroke="${line}" stroke-width="${width}" stroke-linejoin="round"/>
     <path d="M27 8 C29 11.5 35 11.5 37 8" fill="none" stroke="${c3}" stroke-width="2.6" stroke-linecap="round"/>
     <path d="M9.6 19.3 L13.4 27.7 M54.4 19.3 L50.6 27.7" fill="none" stroke="${c3}" stroke-width="2.6" stroke-linecap="round"/>
   </svg>`;
