@@ -46,7 +46,15 @@ startPage(root, joining ? {
 // ---------------------------------------------------------------- state
 let S = null;
 
+// The season's dates and fee (portal.njk) are for teams: shown on a team's page
+// only, never on the sign-in, no-team or free-agent views.
+function showRegInfo(on) {
+  const info = document.querySelector(".reg-info");
+  if (info) info.hidden = !on;
+}
+
 async function load(sb, user) {
+  showRegInfo(false);
   root.innerHTML = `<div class="portal-loading" aria-busy="true">Loading your team…</div>`;
   try {
     const email = (user.email || "").toLowerCase();
@@ -218,6 +226,7 @@ function render() {
   const can = editable();
   const dis = can ? "" : "disabled";
   const sameStudio = !!t.studio && t.studio === t.name;
+  showRegInfo(true);
 
   root.innerHTML = html`
     ${raw(bar())}
@@ -746,7 +755,7 @@ function openPlayer(player, fromAgent = null) {
 function wireCommon() {
   root.onclick = async (e) => {
     const t = e.target;
-    if (t.closest("[data-signout]")) { await signOut(S.sb); return; }
+    if (t.closest("[data-signout]")) { showRegInfo(false); await signOut(S.sb); return; }
 
     const tog = t.closest("[data-kit-toggle]");
     if (tog && !tog.disabled) {

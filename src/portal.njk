@@ -18,10 +18,11 @@ eleventyExcludeFromCollections: true
 <section class="section section--portal">
   <div
     class="wrap">
-    {#- Key dates and fee: edit site.json -> registration. -#}
+    {#- Key dates and fee: edit site.json -> registration.
+        Hidden until a team's page loads (portal.js), so only signed-in teams see it. -#}
     {% set reg = site.registration %}
     {% if reg and reg.show %}
-      <div class="panel panel--accent reg-info">
+      <div class="panel panel--accent reg-info" hidden>
         <h2 class="reg-info__title">Season {{ reg.season }}: what you need to know</h2>
         <ol class="reg-dates">
           <li>
