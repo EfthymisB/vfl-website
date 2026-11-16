@@ -2639,7 +2639,22 @@ a.sponsor-logo:focus-visible {
 .squad__actions {
   grid-area: actions;
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 0.4rem;
+}
+/* organisers only: ticked once the player is entered on Sofascore */
+.squad__sofa {
+  gap: 0.4rem;
+  margin-right: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.squad__sofa:has(input:checked) {
+  color: var(--accent);
 }
 @media (max-width: 34rem) {
   .squad__row {
