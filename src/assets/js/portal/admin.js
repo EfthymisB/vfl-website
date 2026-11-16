@@ -375,6 +375,7 @@ function teamTable() {
             const caps = sq.filter((p) => p.is_captain).length;
             const gks = sq.filter((p) => p.position === "goalkeeper").length;
             const pics = sq.filter((p) => p.photo_path).length;
+            const onSofa = sq.filter((p) => p.on_sofascore).length;
             const logo = logoUrl(S.sb, t.logo_path);
             return raw(html`
               <tr>
@@ -390,7 +391,8 @@ function teamTable() {
                 </td>
                 <td>${sq.length} player${sq.length === 1 ? "" : "s"}<br>
                   <span class="${caps === 1 ? "ok" : "warn"}">${caps === 1 ? "Captain ✓" : caps ? "2+ captains" : "No captain"}</span>
-                  <span class="dim nowrap">· ${gks} GK</span>${sq.length ? raw(html`<br><span class="dim nowrap">${pics}/${sq.length} photos</span>`) : ""}</td>
+                  <span class="dim nowrap">· ${gks} GK</span>${sq.length ? raw(html`<br><span class="dim nowrap">${pics}/${sq.length} photos</span>
+                  <br><span class="${onSofa === sq.length ? "ok" : "dim"} nowrap" data-sofa-count>${onSofa}/${sq.length} on Sofascore</span>`) : ""}</td>
                 <td>${t.signed_off_at ? raw(html`<span class="ok">✓ ${fmtDate(t.signed_off_at)}</span>`) : raw(`<span class="dim">Not yet</span>`)}</td>
                 <td class="admin-table__actions">
                   <a class="btn btn--ghost btn--sm" href="/portal/?team=${t.id}">Open</a>
@@ -594,6 +596,8 @@ function exportPlayers() {
     { label: "Preferred foot", get: (p) => footLabel(p.preferred_foot) },
     { label: "Photo file", get: (p) => names[p.id] || "" },
     { label: "Joined as", get: (p) => (p.joined_as === "loan" ? `Loan from ${p.loan_from || "another team"}` : p.joined_as === "free_agent" ? "Free agent" : "") },
+    { label: "On Sofascore", get: (p) => (p.on_sofascore ? "Yes" : "") },
+    { label: "Added to Sofascore", get: (p) => (p.on_sofascore && p.sofascore_at ? p.sofascore_at.slice(0, 10) : "") },
   ];
   download(`vfl-${S.season.id}-players.csv`, toCsv(cols, rows));
   toast(`Exported ${rows.length} players.`);

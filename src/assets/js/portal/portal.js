@@ -455,11 +455,22 @@ function teamPicker() {
     </div>`;
 }
 
+// Organisers tick players off as they enter them on Sofascore; read-only
+// organisers see the result. Team contacts don't see it at all.
+function sofascoreMark(p) {
+  if (S.isAdmin) {
+    const title = p.on_sofascore ? `Added to Sofascore${p.sofascore_at ? ` on ${fmtDate(p.sofascore_at)}` : ""}` : "Tick once this player is on Sofascore";
+    return html`<label class="check check--sm squad__sofa" title="${title}"><input type="checkbox" data-sofascore="${p.id}" ${p.on_sofascore ? "checked" : ""}><span>Sofascore</span></label>`;
+  }
+  if (S.asViewer && p.on_sofascore) return html`<span class="pill pill--ok" title="Added to Sofascore">On Sofascore</span>`;
+  return "";
+}
+
 function squadList() {
   const can = editable();
   return html`
     <ul class="squad" role="list">
-      ${S.players.map((p) => raw(html`
+      ${S.players.map((p) => { const sofa = sofascoreMark(p); return raw(html`
         <li class="squad__row">
           <span class="squad__num">${p.shirt_number ?? "–"}</span>
           <span class="squad__pic">${S.photos[p.photo_path]
@@ -477,12 +488,13 @@ function squadList() {
             <span>${p.height_cm ? `${p.height_cm} cm` : raw(`<span class="dim">no height</span>`)}</span>
             ${p.preferred_foot ? raw(html`<span>${footLabel(p.preferred_foot)} foot</span>`) : ""}
           </span>
-          ${can ? raw(html`
+          ${can || sofa ? raw(html`
             <span class="squad__actions">
-              <button class="btn btn--ghost btn--sm" type="button" data-edit="${p.id}">Edit</button>
-              <button class="btn btn--ghost btn--sm btn--danger" type="button" data-delete="${p.id}" aria-label="Remove ${p.full_name}">Remove</button>
+              ${raw(sofa)}
+              ${can ? raw(html`<button class="btn btn--ghost btn--sm" type="button" data-edit="${p.id}">Edit</button>
+              <button class="btn btn--ghost btn--sm btn--danger" type="button" data-delete="${p.id}" aria-label="Remove ${p.full_name}">Remove</button>`) : ""}
             </span>`) : ""}
-        </li>`))}
+        </li>`); })}
     </ul>`;
 }
 
@@ -783,6 +795,18 @@ function wireCommon() {
 
   root.onchange = async (e) => {
     if (e.target.matches("[data-pick]")) return openTeam(e.target.value);
+    if (e.target.matches("[data-sofascore]")) {
+      const box = e.target, on = box.checked;
+      const p = S.players.find((x) => x.id === box.dataset.sofascore);
+      box.disabled = true;
+      const { error } = await S.sb.from("players").update({ on_sofascore: on }).eq("id", p.id);
+      box.disabled = false;
+      if (error) { box.checked = !on; return toast(friendly(error), "err"); }
+      p.on_sofascore = on;
+      p.sofascore_at = on ? new Date().toISOString() : null;
+      box.closest("[title]").title = on ? `Added to Sofascore on ${fmtDate(p.sofascore_at)}` : "Tick once this player is on Sofascore";
+      return toast(on ? `${p.full_name} marked as on Sofascore.` : `${p.full_name} is no longer marked as on Sofascore.`);
+    }
     if (e.target.matches("[data-kit-custom]")) {
       addKitColour(e.target.dataset.kitCustom, normHex(e.target.value));
       return;
