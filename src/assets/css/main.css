@@ -649,6 +649,78 @@ body::after {
   margin: 0;
 }
 
+/* --- art beside a page title (heroArt in front matter) ------------------- */
+.page-hero__grid {
+  display: grid;
+  gap: 1.5rem;
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .page-hero__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
+  }
+  .page-hero--art {
+    padding-block: 1.5rem;
+  }
+}
+.hero-art {
+  margin: 0;
+  position: relative;
+  max-width: 34rem;
+  /* the video's frame is the page colour; soften its edges into the page */
+  -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 62%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 62%, transparent 100%);
+}
+.hero-art__video,
+.hero-art__still {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.hero-art__video + .hero-art__still {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-art__video {
+    display: none;
+  }
+  .hero-art__video + .hero-art__still {
+    display: block;
+  }
+}
+
+/* --- 404 slate ------------------------------------------------------------ */
+.slate-404 {
+  display: block;
+  width: min(100%, 44rem);
+  height: auto;
+  margin: 1.25rem auto 1.75rem;
+  border-radius: var(--radius);
+}
+
+/* --- graded film still ---------------------------------------------------- */
+.plate {
+  margin: 0 0 clamp(2.5rem, 6vw, 4rem);
+}
+.plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.plate figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
 /* ------------------------------------------------------------------ stats */
 .stat-strip {
   display: grid;

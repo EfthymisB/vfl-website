@@ -1,11 +1,27 @@
 ---
 layout: layouts/base.njk
 ---
-<section class="page-hero">
-  <div class="wrap">
-    {% if eyebrow %}<div class="eyebrow">{{ eyebrow }}</div>{% endif %}
-    <h1>{{ title }}</h1>
-    {% if lede %}<p>{{ lede }}</p>{% endif %}
+{#- heroArt (front matter, optional): an animation or picture beside the title.
+    { video: "/assets/video/x" (x.webm + x.mp4), poster, still (shown instead when motion is reduced), alt } -#}
+<section class="page-hero{% if heroArt %} page-hero--art{% endif %}">
+  <div class="wrap{% if heroArt %} page-hero__grid{% endif %}">
+    <div>
+      {% if eyebrow %}<div class="eyebrow">{{ eyebrow }}</div>{% endif %}
+      <h1>{{ title }}</h1>
+      {% if lede %}<p>{{ lede }}</p>{% endif %}
+    </div>
+    {% if heroArt %}
+      <figure class="hero-art">
+        {% if heroArt.video %}
+          <video class="hero-art__video" autoplay muted loop playsinline preload="auto" poster="{{ heroArt.poster }}"
+            aria-hidden="true" width="1080" height="810">
+            <source src="{{ heroArt.video }}.webm" type="video/webm">
+            <source src="{{ heroArt.video }}.mp4" type="video/mp4">
+          </video>
+        {% endif %}
+        <img class="hero-art__still" src="{{ heroArt.still }}" alt="{{ heroArt.alt }}" width="720" height="540" decoding="async">
+      </figure>
+    {% endif %}
   </div>
 </section>
 
