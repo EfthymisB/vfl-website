@@ -2,8 +2,8 @@
 title: "Put your name on the VFL in 2027"
 date: 2026-11-10
 summary: Ten studio teams, well over a hundred players and a whole season of football, socials and silverware. We're looking for sponsors for 2027.
-tags: ["Announcement"]
-hero: /assets/img/sponsor_2027/main.jpg
+tags: ["Sponsors"]
+hero: /assets/img/visuals/vfl-plate-floodlit-1200.webp
 heroAlt: In-game action footage by Reece Horsfield.
 heroCaption: Photo by Reece Horsfield
 linkedin: |
@@ -36,19 +36,26 @@ The league is made up of teams from studios across London's visual effects and A
 {% team "ctv", true  %}
 </td>
 <td>
+{% team "cs", true %}
+</td>
+</tr>
+
+<tr>
+<td>
 {% team "control chaos", true %}
 </td>
 <td>
 {% team "dneg", true %}
 </td>
-<tr>
-
 <td>
 {% team "escape", true %}
 </td>
 <td>
 {% team "etc", true %}
 </td>
+</tr>
+
+<tr>
 <td>
 {% team "framestore", true %}
 </td>
@@ -58,7 +65,6 @@ The league is made up of teams from studios across London's visual effects and A
 <td>
 {% team "oou", true  %}
 </td>
-</tr>
 </tr>
 </table>
 
