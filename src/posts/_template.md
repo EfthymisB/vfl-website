@@ -185,6 +185,17 @@ To override the name shown, pass a second argument:
 ```
 {% team "ilm", "ILM Example" %}
 
+###
+
+**Linked to the studio's website** — add `true` at the end. The link comes from the team's
+`url` in `src/_data/teams.json` and opens in a new tab. Without `true` nothing is linked.
+A team with no `url` yet just shows without a link (the build log warns you).
+
+```
+{% raw %}{% team "framestore", true %} · {% team "ilm", "ILM Example", true %} · {% logo "dneg", true %}{% endraw %}
+```
+{% team "framestore", true %} · {% team "ilm", "ILM Example", true %} · {% logo "dneg", true %}
+
 ## On phones
 
 Every layout class collapses to full width below roughly 670px. Floats stop floating,

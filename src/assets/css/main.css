@@ -2039,6 +2039,16 @@ a.sponsor-logo:focus-visible {
   margin-left: 0.35em;
   font-weight: 600;
 }
+/* linked to the studio's site: {% team "ilm", true %}. Coloured like any
+   other link; only the name is underlined, not the badge. */
+a.team-chip--link {
+  text-decoration: none;
+}
+a.team-chip--link .team-chip__name {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
 
 /* --- scoreline: {% score "ilm", 3, 0, "etc" %} ---------------------------- */
 .scoreline {

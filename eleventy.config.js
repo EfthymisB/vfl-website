@@ -23,6 +23,8 @@ export default function (eleventyConfig) {
   // ------------------------------------------------------------ team tags
   // {% team "ilm" %}                     logo + name, inline in a sentence
   // {% logo "ilm" %}                     just the badge
+  // {% team "ilm", true %} / {% logo "ilm", true %}   linked to the studio's site ("url" in teams.json)
+  // {% team "ilm", "Label", true %}      custom label, linked
   // {% score "ilm", 3, 0, "etc" %}       badge NAME 3 – 0 NAME badge
   // {% score "ilm", 3, 0, "etc", false %}  badges and the score only
   //
@@ -74,15 +76,36 @@ export default function (eleventyConfig) {
     return `<img class="team-logo" src="${esc(t.logo)}" alt="" width="24" height="24" loading="lazy" decoding="async">`;
   }
 
-  eleventyConfig.addShortcode("logo", (name) => {
+  // The chip, optionally linked to the studio's website (teams.json "url").
+  // A team without a url just renders unlinked, with a warning in the build log.
+  function chip(t, inner, link, labelled) {
+    if (link && !t.url) {
+      console.warn(`[team] ${t.short || t.name} has no "url" in teams.json, so it isn't linked.`);
+    }
+    if (!link || !t.url) {
+      return `<span class="team-chip" title="${esc(t.name)}">${inner}</span>`;
+    }
+    if (!/^https?:\/\//i.test(t.url)) {
+      throw new Error(`teams.json: "url" for ${t.short || t.name} must start with https:// (got "${t.url}").`);
+    }
+    // A badge on its own has no text, so the link needs a name for screen readers.
+    const aria = labelled ? "" : ` aria-label="${esc(t.short || t.name)} website (opens in a new tab)"`;
+    return `<a class="team-chip team-chip--link" href="${esc(t.url)}" target="_blank" rel="noopener" title="${esc(t.name)}"${aria}` +
+      ` data-umami-event="Studio link" data-umami-event-team="${esc(t.short || t.name)}">${inner}</a>`;
+  }
+
+  // {% logo "ilm" %} · {% logo "ilm", true %} (linked)
+  eleventyConfig.addShortcode("logo", (name, link = false) => {
     const t = findTeam(name);
-    return `<span class="team-chip" title="${esc(t.name)}">${badge(t)}</span>`;
+    return chip(t, badge(t), link === true, false);
   });
 
-  eleventyConfig.addShortcode("team", (name, label) => {
+  // {% team "ilm" %} · {% team "ilm", "Label" %} · {% team "ilm", true %} · {% team "ilm", "Label", true %}
+  eleventyConfig.addShortcode("team", (name, label, link = false) => {
+    if (typeof label === "boolean") [label, link] = [undefined, label];
     const t = findTeam(name);
     const text = label || t.short || t.name;
-    return `<span class="team-chip" title="${esc(t.name)}">${badge(t)}<span class="team-chip__name">${esc(text)}</span></span>`;
+    return chip(t, `${badge(t)}<span class="team-chip__name">${esc(text)}</span>`, link === true, true);
   });
 
   eleventyConfig.addShortcode("score", (home, homeScore, awayScore, away, showNames = true) => {
