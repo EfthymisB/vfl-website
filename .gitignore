@@ -7,3 +7,10 @@ Thumbs.db
 .cache/
 supabase/
 CLAUDE.md
+
+# rendered intro videos (design/render-intro.mjs)
+design/renders/
+
+# social graphics made by design/media/make.py
+design/media/out/
+design/media/contact.jpg
