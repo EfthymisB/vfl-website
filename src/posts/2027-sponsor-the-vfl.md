@@ -24,8 +24,45 @@ Season 2027 kicks off in February, and we're looking for sponsors to come along 
 
 The league is made up of teams from studios across London's visual effects and Animation industry. In 2026 that was:
 
-{% logo "oou" %} {% logo "bk" %} {% logo "escape" %} {% logo "dneg" %} {% logo "framestore" %}
-{% logo "ctv" %} {% logo "control chaos" %} {% logo "absolute" %} {% logo "ilm" %} {% logo "etc" %} {% logo "cs" %}
+<table>
+<tr>
+<td>
+{% team "absolute", true %}
+</td>
+<td>
+{% team "bk", true %}
+</td>
+<td>
+{% team "ctv", true  %}
+</td>
+<td>
+{% team "control chaos", true %}
+</td>
+<td>
+{% team "dneg", true %}
+</td>
+<tr>
+
+<td>
+{% team "escape", true %}
+</td>
+<td>
+{% team "etc", true %}
+</td>
+<td>
+{% team "framestore", true %}
+</td>
+<td>
+{% team "ilm", true %}
+</td>
+<td>
+{% team "oou", true  %}
+</td>
+</tr>
+</tr>
+</table>
+
+<i>More about [Teams](/teams/)</i>
 
 And it's not just the artists. Squads are full of production staff, pipeline and R&D people,
 IT, recruiters and the odd head of department who still thinks they've got the legs. That's well over
@@ -42,6 +79,7 @@ on this site, and match photos and banter on [Instagram]({{ site.social.instagra
   one of the season awards. (The Golden Sieve is available. Nobody else wants it either.)
 - **Host the big nights.** Back the season launch or the end-of-season awards night, and be the
   name on everyone's lips (and on the bar tab).
+  <br><i>Check the [2026 Awards](/news/2026-awards-night)</i>
 - **Get seen online.** Your logo and link on this website, from the home page to the footer, plus
   shout-outs on our Instagram and LinkedIn through the season.
 - **Meet the people you want to hire.** If you're recruiting in the industry, there's no better
