@@ -3,7 +3,6 @@ title: "Put your name on the VFL in 2027"
 date: 2026-11-10
 summary: Ten studio teams, well over a hundred players and a whole season of football, socials and silverware. We're looking for sponsors for 2027.
 tags: ["Announcement"]
-draft: true
 hero: /assets/img/sponsor_2027/main.jpg
 heroAlt: In-game action footage by Reece Horsfield.
 heroCaption: Photo by Reece Horsfield
