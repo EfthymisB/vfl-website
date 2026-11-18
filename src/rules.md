@@ -103,14 +103,15 @@ All the league match rules apply, except:
 2. Always get the injured player treated first. Ideally someone goes with them.
 3. Once that's done, both teams should try to carry on. As with disputes (rule 3.2), the captains, reps and referee step aside to decide whether to carry on, call it a forfeit or reschedule.
 
-## Player of the match {id=potm}
+## At the Final Whistle {id=afterGame}
 
-1. At the end of each match, both teams pick a player of the match for their own side and for the opposition. The winning team's player of the match gets 2 points and the losing team's gets 1. In a draw, both get 1. The points count towards player of the season, along with goals and the rest.
-2. After the match, both teams send their goalscorers, assists and player of the match to the league's social media and Sofascore reps. Use names as they appear on the team sheet, no nicknames.
+1. At the end of each match, each team selects a Player of the Match from the opposing team.
+2. Both teams take a group photo together.
+3. Both teams submit their goalscorers, assists, and Player of the Match to the league's social media team and Sofascore representatives. Players must be listed using their full names as they appear on the team sheet, not nicknames.
 
 </div>
 
-<p class="form-note" style="margin-top:2.5rem">Questions about the rules? Email <a href="mailto:{{ site.email }}">{{ site.email }}</a>. Last updated 8 November 2026.</p>
+<p class="form-note" style="margin-top:2.5rem">Questions about the rules? Email <a href="mailto:{{ site.email }}">{{ site.email }}</a>. Last updated 18 November 2026.</p>
 
 </div>
 </section>
