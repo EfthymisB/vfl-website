@@ -86,26 +86,34 @@ lede: Every champion, every final table, and whoever's currently allowed to be s
         </div>
         <div class="card-grid">
           {% for knockout in honours.knockouts %}
-            <div class="card" data-reveal>
+            <div class="card knockout" data-reveal>
               {% set koIcon = knockout.slug | honourIcon %}
               <div class="honour-card__head">
                 {%- if koIcon %}<img src="{{ koIcon }}" alt="" class="honour-icon honour-icon--lg" width="56" height="56">{% endif -%}
-                <span class="card__num">{{ knockout.name }}</span>
+                <div>
+                  <h3 class="knockout__name">{{ knockout.name }}</h3>
+                  <p class="knockout__blurb">{{ knockout.blurb }}</p>
+                </div>
               </div>
-              {% for edition in knockout.editions %}
-                <h3 style="margin-bottom:.35rem">{{ edition.season }} ·
-                  <span style="color:var(--acid)">{{ teams.all[edition.winner].name }}</span>
-                </h3>
-                <p style="margin-bottom:.6rem">
-                  Beat {{ teams.all[edition.runnerUp].name }}
-                  {{ edition.score }} in the final,
-                  {{ edition.date | readableDate }}.
-                </p>
-                {% if edition.note %}
-                  <p class="dim" style="font-size:.88rem">{{ edition.note }}</p>
-                {% endif %}
-              {% endfor %}
-              <p class="muted" style="margin-top:1rem;font-size:.9rem">{{ knockout.blurb }}</p>
+              {#- Newest first, whatever order they're in honours.json. -#}
+              <ol class="knockout__editions">
+                {% for edition in knockout.editions | sort(true, false, "season") %}
+                  {% set winner = teams.all[edition.winner] %}
+                  <li class="knockout__edition">
+                    <span class="knockout__season">{{ edition.season }}</span>
+                    <div>
+                      <div class="knockout__winner">
+                        {% if winner.logo %}<img src="{{ winner.logo }}" alt="" class="honour__logo" width="32" height="32" loading="lazy">{% endif %}
+                        <span>{{ winner.name }}</span>
+                      </div>
+                      <p class="knockout__final">
+                        Beat {{ teams.all[edition.runnerUp].name }} {{ edition.score }} in the final{% if edition.date %} · {{ edition.date | readableDate }}{% endif %}
+                      </p>
+                      {% if edition.note %}<p class="knockout__note">{{ edition.note }}</p>{% endif %}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ol>
             </div>
           {% endfor %}
         </div>
