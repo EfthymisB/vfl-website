@@ -149,7 +149,7 @@
           "season": "2025",
           "status": "complete",
           "champion": "0008",
-          "runnerUp": "0009",
+          "runnerUp": "0002",
           "third": "0004",
           "played": 6,
           "teams": 7,
@@ -238,7 +238,7 @@
           "season": "2024",
           "status": "complete",
           "champion": "0008",
-          "runnerUp": "0009",
+          "runnerUp": "0002",
           "third": "0001",
           "played": 9,
           "teams": 10,
@@ -468,6 +468,14 @@
           "score": "2 - 1",
           "date": "2025-08-12",
           "note": "ETC came through a 6-0 semi-final against 1920 to lift the first VFL Cup."
+        },
+        {
+          "season": "2024",
+          "winner": "0002",
+          "runnerUp": "0003",
+          "score": "1 - 0",
+          "date": "2024-08-12",
+          "note": "The Kites, VFL Euros Cup winners represneting Portugal. Runners up fell to The Owls who were representing France"
         }
       ]
     },
@@ -483,6 +491,14 @@
           "score": "3 - 0",
           "date": "2026-02-26",
           "note": "Champions beat cup holders to open the 2026 season."
+        },
+        {
+          "season": "2025",
+          "winner": "0002",
+          "runnerUp": "0008",
+          "score": "1 - 6",
+          "date": "2025-02-07",
+          "note": "The League winners suffered a thumping to our Euro cup winners in The Film & TV Chairty shield."
         }
       ]
     }

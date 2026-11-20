@@ -1270,6 +1270,66 @@ table.data .tname-short {
 .honour-card__head .card__num {
   margin-bottom: 0;
 }
+.honour-card__head .knockout__name {
+  margin: 0 0 0.25rem;
+}
+.knockout__blurb {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.knockout .honour-card__head {
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+/* Cup and Shield finals, newest first: season | winner, final, note. */
+.knockout__editions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.knockout__edition {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+}
+.knockout__edition:last-child {
+  padding-bottom: 0;
+}
+.knockout__season {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--dim);
+  padding-top: 0.3rem;
+}
+.knockout__winner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+.knockout__winner img {
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+}
+.knockout__final {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.knockout__note {
+  margin: 0.35rem 0 0;
+  color: var(--dim);
+  font-size: 0.85rem;
+}
 .trophy-card--icon {
   padding-right: calc(clamp(3.5rem, 12vw, 6rem) + clamp(2rem, 6vw, 4rem));
 }
