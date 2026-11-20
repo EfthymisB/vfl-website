@@ -3,7 +3,7 @@
 <ul class="sponsor-logos{% if sponsorWhere == 'footer' %} sponsor-logos--small{% endif %}">
   {%- for s in sponsors.list %}
   <li>
-    <a class="sponsor-logo" href="{{ s.url or '/sponsors/' }}"
+    <a class="sponsor-logo{% if s.background == 'dark' %} sponsor-logo--dark{% endif %}" href="{{ s.url or '/sponsors/' }}"
        {%- if s.url %} target="_blank" rel="sponsored noopener"{% endif %}
        data-umami-event="Sponsor click" data-umami-event-sponsor="{{ s.name }}" data-umami-event-where="{{ sponsorWhere }}"
        title="{{ s.name }}{% if s.role %} · {{ s.role }}{% endif %}">

@@ -8,7 +8,9 @@ lede: Every champion, every final table, and whoever's currently allowed to be s
 
 <section class="section">
   <div class="wrap">
-    <div class="trophy-card" data-reveal>
+    {% set titleIcon = honours.titleHolder.competition | honourIcon %}
+    <div class="trophy-card{% if titleIcon %} trophy-card--icon{% endif %}" data-reveal>
+      {% if titleIcon %}<img src="{{ titleIcon }}" alt="" class="trophy-card__icon" width="96" height="96">{% endif %}
       {% set title_holder_team = teams.all[honours.titleHolder.team_id] %}
       <div class="trophy-card__label">First time champions · {{ honours.titleHolder.competition }}
         {{ honours.titleHolder.season }}</div>
@@ -32,7 +34,10 @@ lede: Every champion, every final table, and whoever's currently allowed to be s
       </div>
       {% for comp in honours.competitions %}
         <div class="stack" style="margin-bottom:3rem" data-reveal>
-          <h3 style="margin-bottom:.2rem">{{ comp.name }}</h3>
+          {% set compIcon = comp.slug | honourIcon %}
+          <h3 class="honour-heading" style="margin-bottom:.2rem">
+            {%- if compIcon %}<img src="{{ compIcon }}" alt="" class="honour-icon" width="40" height="40">{% endif -%}
+            {{ comp.name }}</h3>
           <p class="muted" style="margin-bottom:1rem">{{ comp.blurb }}</p>
           {% for season in comp.seasons %}
             <div class="honour">
@@ -82,7 +87,11 @@ lede: Every champion, every final table, and whoever's currently allowed to be s
         <div class="card-grid">
           {% for knockout in honours.knockouts %}
             <div class="card" data-reveal>
-              <span class="card__num">{{ knockout.name }}</span>
+              {% set koIcon = knockout.slug | honourIcon %}
+              <div class="honour-card__head">
+                {%- if koIcon %}<img src="{{ koIcon }}" alt="" class="honour-icon honour-icon--lg" width="56" height="56">{% endif -%}
+                <span class="card__num">{{ knockout.name }}</span>
+              </div>
               {% for edition in knockout.editions %}
                 <h3 style="margin-bottom:.35rem">{{ edition.season }} ·
                   <span style="color:var(--acid)">{{ teams.all[edition.winner].name }}</span>

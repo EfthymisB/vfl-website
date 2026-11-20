@@ -3,8 +3,8 @@ layout: layouts/page.njk
 permalink: /sponsors/
 title: Sponsors
 eyebrow: Partners
-lede: The VFL is run by volunteers and kept as cheap as we can make it. Sponsors help us do more, and put your name in front of London's VFX, animation and post community.
-description: Sponsor the VFX Football League, a London 8-a-side league for people who work in visual effects, animation and post-production.
+lede: The VFL is run by volunteers and kept as cheap as we can make it. Sponsors help us do more, and put your name in front of London's VFX and Animation community.
+description: Sponsor the VFX Football League, a London 8-a-side league for people who work in Visual Effects and Animation.
 ---
 
 {%- set teamCount = 0 -%}
@@ -34,9 +34,9 @@ description: Sponsor the VFX Football League, a London 8-a-side league for peopl
               {% endif -%}
               {%- endset %}
               {% if s.url %}
-                <a class="sponsor-logo sponsor-logo--large" href="{{ s.url }}" target="_blank" rel="sponsored noopener" data-umami-event="Sponsor click" data-umami-event-sponsor="{{ s.name }}" data-umami-event-where="sponsors page">{{ tile | safe }}</a>
+                <a class="sponsor-logo sponsor-logo--large{% if s.background == 'dark' %} sponsor-logo--dark{% endif %}" href="{{ s.url }}" target="_blank" rel="sponsored noopener" data-umami-event="Sponsor click" data-umami-event-sponsor="{{ s.name }}" data-umami-event-where="sponsors page">{{ tile | safe }}</a>
               {% else %}
-                <div class="sponsor-logo sponsor-logo--large">{{ tile | safe }}</div>
+                <div class="sponsor-logo sponsor-logo--large{% if s.background == 'dark' %} sponsor-logo--dark{% endif %}">{{ tile | safe }}</div>
               {% endif %}
               {% if s.role %}
                 <span class="card__num">{{ s.role }}</span>
@@ -61,8 +61,8 @@ description: Sponsor the VFX Football League, a London 8-a-side league for peopl
       <div class="prose" data-reveal>
         <h2>Why sponsor the VFL</h2>
         <p>
-          The league brings together people from across London's visual effects, animation and post-production
-                    studios{% if teamCount > 0 %}: {{ teamCount }} studio teams in {{ site.currentSeason }}
+          The league brings together people from across London's Visual Effects and Animation
+                              studios{% if teamCount > 0 %}: {{ teamCount }} studio teams in {{ site.currentSeason }}
           {% endif %}. Artists, production, pipeline, R&amp;D, IT, recruiters and the people who keep the lights on, playing every
           week and following the results, the news and our socials.
         </p>

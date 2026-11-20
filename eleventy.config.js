@@ -140,6 +140,34 @@ export default function (eleventyConfig) {
 
   eleventyConfig.addFilter("limit", (arr, n) => (arr || []).slice(0, n));
 
+  // ---------------------------------------------------------------- honours
+  // A competition's icon: src/assets/img/honours/<slug>.svg (drawn by
+  // design/visuals/honours_icons.py). Takes a slug or a name ("Division 1" ->
+  // division-1). "" when there's no icon, so templates can skip it.
+  const honourSlug = (s) =>
+    String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  eleventyConfig.addFilter("honourIcon", (s) => {
+    const slug = honourSlug(s);
+    return slug && fs.existsSync(`src/assets/img/honours/${slug}.svg`)
+      ? `/assets/img/honours/${slug}.svg`
+      : "";
+  });
+
+  // Everything a team has won, oldest first: [{ name, slug, season }].
+  // League titles count once the season isn't in progress.
+  eleventyConfig.addFilter("teamHonours", (honours, id) => {
+    const won = [];
+    for (const c of honours?.competitions || [])
+      for (const s of c.seasons || [])
+        if (s.champion === id && s.status !== "in-progress")
+          won.push({ name: c.name, slug: c.slug || honourSlug(c.name), season: s.season });
+    for (const k of honours?.knockouts || [])
+      for (const e of k.editions || [])
+        if (e.winner === id)
+          won.push({ name: k.name, slug: k.slug || honourSlug(k.name), season: e.season });
+    return won.sort((a, b) => String(a.season).localeCompare(String(b.season)));
+  });
+
   eleventyConfig.addFilter("excerpt", (post) => {
     if (post.data && post.data.summary) return post.data.summary;
     const text = String(post.templateContent || "").replace(/<[^>]+>/g, " ");
