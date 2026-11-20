@@ -1,0 +1,13 @@
+{#- What team `tid` has won, as icons with the season (from honours.json). Used on /teams/. -#}
+{%- set won = honours | teamHonours(tid) %}
+{%- if won | length %}
+<span class="team__honours">
+  {%- for h in won %}
+  {%- set icon = h.slug | honourIcon %}
+  <span class="team__honour" title="{{ h.name }} · {{ h.season }}">
+    {%- if icon %}<img src="{{ icon }}" alt="" width="20" height="20">{% endif -%}
+    <span class="visually-hidden">{{ h.name }} winners, </span>{{ h.season }}
+  </span>
+  {%- endfor %}
+</span>
+{%- endif %}

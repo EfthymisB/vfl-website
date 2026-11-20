@@ -27,6 +27,7 @@ lede: Sides that have taken part in a VFL competition. Team pages, squads and pl
             <span>
               <span class="team__name">{{ teams.all[tid].short }}</span>
               <span class="team__seasons">{{ teams.all[tid].seasons | join("·") }}</span>
+              {%- include "partials/team-honours.njk" %}
             </span>
           </li>
         {% endfor %}
@@ -53,6 +54,7 @@ lede: Sides that have taken part in a VFL competition. Team pages, squads and pl
               <span>
                 <span class="team__name">{{ teams.all[tid].short }}</span>
                 <span class="team__seasons">{{ teams.all[tid].seasons | join("·") }}</span>
+                {%- include "partials/team-honours.njk" %}
               </span>
             </li>
           {% endfor %}

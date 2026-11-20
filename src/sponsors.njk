@@ -34,9 +34,9 @@ description: Sponsor the VFX Football League, a London 8-a-side league for peopl
               {% endif -%}
               {%- endset %}
               {% if s.url %}
-                <a class="sponsor-logo sponsor-logo--large" href="{{ s.url }}" target="_blank" rel="sponsored noopener" data-umami-event="Sponsor click" data-umami-event-sponsor="{{ s.name }}" data-umami-event-where="sponsors page">{{ tile | safe }}</a>
+                <a class="sponsor-logo sponsor-logo--large{% if s.background == 'dark' %} sponsor-logo--dark{% endif %}" href="{{ s.url }}" target="_blank" rel="sponsored noopener" data-umami-event="Sponsor click" data-umami-event-sponsor="{{ s.name }}" data-umami-event-where="sponsors page">{{ tile | safe }}</a>
               {% else %}
-                <div class="sponsor-logo sponsor-logo--large">{{ tile | safe }}</div>
+                <div class="sponsor-logo sponsor-logo--large{% if s.background == 'dark' %} sponsor-logo--dark{% endif %}">{{ tile | safe }}</div>
               {% endif %}
               {% if s.role %}
                 <span class="card__num">{{ s.role }}</span>

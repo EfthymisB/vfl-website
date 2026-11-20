@@ -668,8 +668,16 @@ body::after {
   position: relative;
   max-width: 34rem;
   /* the video's frame is the page colour; soften its edges into the page */
-  -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 62%, transparent 100%);
-  mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 62%, transparent 100%);
+  -webkit-mask-image: radial-gradient(
+    ellipse 72% 70% at 50% 50%,
+    #000 62%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 72% 70% at 50% 50%,
+    #000 62%,
+    transparent 100%
+  );
 }
 .hero-art__video,
 .hero-art__still {
@@ -1237,6 +1245,64 @@ table.data .tname-short {
   margin: 0;
 }
 
+/* Honours icons: src/assets/img/honours/<slug>.svg, drawn by
+   design/visuals/honours_icons.py. Used on /honours/ and /teams/. */
+.honour-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.honour-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+}
+.honour-icon--lg {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.honour-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+.honour-card__head .card__num {
+  margin-bottom: 0;
+}
+.trophy-card--icon {
+  padding-right: calc(clamp(3.5rem, 12vw, 6rem) + clamp(2rem, 6vw, 4rem));
+}
+.trophy-card__icon {
+  position: absolute;
+  right: clamp(1.25rem, 4vw, 2.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(3.5rem, 12vw, 6rem);
+  height: auto;
+  filter: drop-shadow(0 0 1.5rem rgba(167, 139, 255, 0.35));
+}
+.team__honours {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  margin-top: 0.4rem;
+  margin-left: 0.2rem;
+}
+.team__honour {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.team__honour img {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
 /* ------------------------------------------------------------------- news */
 .post-list {
   list-style: none;
@@ -1687,7 +1753,8 @@ table.data .tname-short {
 }
 
 /* ---------------------------------------------------------------- sponsors */
-/* Logos sit on white tiles: most sponsor logos are made for light backgrounds. */
+/* Logos sit on white tiles: most sponsor logos are made for light backgrounds.
+   "background": "dark" in sponsors.json puts a logo with white text on a black tile. */
 .sponsor-logos,
 .site-footer ul.sponsor-logos {
   list-style: none;
@@ -1728,6 +1795,12 @@ a.sponsor-logo:focus-visible {
   font-weight: 700;
   text-align: center;
   line-height: 1.2;
+}
+.sponsor-logo--dark {
+  background: #000;
+}
+.sponsor-logo--dark .sponsor-logo__name {
+  color: #fff;
 }
 .sponsor-logos--small .sponsor-logo {
   width: 7rem;
