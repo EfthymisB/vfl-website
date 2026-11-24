@@ -245,7 +245,7 @@ function render() {
         </div>
       </div>
       ${raw(phasePanel())}
-      ${S.agents.length ? raw(agentTable()) : raw(`<p class="muted empty">Nobody has signed up yet. Players join from the free agents page; share it in studio channels.</p>`)}
+      ${S.agents.length ? raw(agentCards()) : raw(`<p class="muted empty">Nobody has signed up yet. Players join from the free agents page; share it in studio channels.</p>`)}
     </section>
 
     ${S.ro ? "" : raw(html`
@@ -345,44 +345,45 @@ function agentStatus(a) {
   return { label: "In the pool", kind: "" };
 }
 
-function agentTable() {
+// One card per profile (the same card as the captains' pool), two to a row on
+// wide screens. A table needed seven columns and scrolled sideways.
+function agentCards() {
+  const phaseLabel = { phase1: "Phase 1", phase2: "Phase 2", phase3: "Phase 3" };
   return html`
-    <div class="table-scroll">
-      <table class="admin-table admin-table--agents">
-        <thead><tr>
-          <th scope="col">Player</th>
-          <th scope="col">Plays</th>
-          <th scope="col">Current team</th>
-          <th scope="col">Contact</th>
-          <th scope="col">Status</th>
-          <th scope="col">Teams</th>
-          <th scope="col"><span class="visually-hidden">Actions</span></th>
-        </tr></thead>
-        <tbody>
-          ${S.agents.map((a) => {
-            const st = agentStatus(a);
-            const int = S.interest.filter((i) => i.agent_id === a.id);
-            const offers = a.status === "available" ? int.filter((i) => i.offered_at) : [];
-            return raw(html`
-              <tr data-agent-row="${a.id}">
-                <td><strong>${a.full_name}</strong><br><span class="dim nowrap">since ${fmtDate(a.created_at)}</span>
-                  ${a.about ? raw(html`<span class="team-note">${a.about}</span>`) : ""}</td>
-                <td>${positionsLong(a.positions)}<br><span class="dim">${styleLabel(a.play_style)} · ${availabilityLabel(a.availability)}${a.availability_note ? ` · ${a.availability_note}` : ""}</span></td>
-                <td>${a.current_team_id ? raw(html`${teamName(a.current_team_id)} <span class="pill pill--loan">Loan</span>`) : a.current_team_other || raw(`<span class="dim">None</span>`)}
-                  ${a.previous_teams ? raw(html`<br><span class="dim">Before: ${a.previous_teams}</span>`) : ""}</td>
-                <td><a href="mailto:${a.email}">${a.email}</a>${a.phone ? raw(html`<br><a href="tel:${a.phone}" class="nowrap">${a.phone}</a>`) : ""}
-                  ${S.ro ? "" : raw(html`<br><button class="text-btn" type="button" data-agent-email="${a.id}" aria-label="Change ${a.full_name}'s email">Change email</button>`)}</td>
-                <td><span class="pill ${st.kind ? `pill--${st.kind}` : ""}">${st.pill || st.label}</span>${st.team ? raw(html`<br><strong class="agent-joined">${st.team}</strong>`) : ""}${st.note ? raw(html`<br><span class="dim nowrap">${st.note}</span>`) : ""}</td>
-                <td class="nowrap">${int.length} interested${offers.length ? raw(html`<br><span class="dim">${offers.length} offer${offers.length === 1 ? "" : "s"} open</span>`) : ""}
-                  ${int.length ? raw(html`<span class="team-note team-note--list">${int.map((i) => teamName(i.team_id)).join(", ")}</span>`) : ""}</td>
-                <td class="nowrap">${S.ro ? "" : raw(html`<div class="admin-table__actions--stack">
-                  ${a.status === "signed" && !st.inSquad ? raw(html`<button class="btn btn--ghost btn--sm" type="button" data-agent-release="${a.id}">Return to pool</button>`) : ""}
-                  <button class="btn btn--ghost btn--sm btn--danger" type="button" data-agent-remove="${a.id}" aria-label="Remove ${a.full_name}">Remove</button></div>`)}
-                </td>
-              </tr>`);
-          })}
-        </tbody>
-      </table>
+    <div class="agents board-agents">
+      ${S.agents.map((a) => {
+        const st = agentStatus(a);
+        const int = S.interest.filter((i) => i.agent_id === a.id);
+        const offers = a.status === "available" ? int.filter((i) => i.offered_at) : [];
+        return raw(html`
+          <article class="agent board-agent ${a.status === "signed" ? "is-signed" : ""}" data-agent-row="${a.id}">
+            <header class="agent__head">
+              <span class="agent__avatar">${initials(a.full_name)}</span>
+              <div class="agent__who">
+                <h3 class="agent__name">${a.full_name}</h3>
+                <div class="agent__pos">${positionsLong(a.positions)}</div>
+              </div>
+              <span class="pill ${st.kind ? `pill--${st.kind}` : ""}">${st.pill || st.label}</span>
+            </header>
+            <dl class="agent__facts">
+              ${st.team ? raw(html`<div><dt>Joined</dt><dd><strong class="agent-joined">${st.team}</strong>${a.signed_phase ? ` · ${phaseLabel[a.signed_phase]}` : ""}<br><span class="dim">${st.note}</span></dd></div>`) : ""}
+              <div><dt>Plays</dt><dd>${styleLabel(a.play_style)} · ${availabilityLabel(a.availability)}${a.availability_note ? raw(html`<br><span class="dim">${a.availability_note}</span>`) : ""}</dd></div>
+              <div><dt>Current team</dt><dd>${a.current_team_id ? raw(html`${teamName(a.current_team_id)} <span class="pill pill--loan">Loan</span>`) : a.current_team_other || raw(`<span class="dim">None</span>`)}</dd></div>
+              ${a.previous_teams ? raw(html`<div><dt>Previously</dt><dd>${a.previous_teams}</dd></div>`) : ""}
+              <div><dt>Contact</dt><dd><a href="mailto:${a.email}">${a.email}</a>${a.phone ? raw(html`<br><a href="tel:${a.phone}" class="nowrap">${a.phone}</a>`) : ""}
+                ${S.ro ? "" : raw(html`<br><button class="text-btn" type="button" data-agent-email="${a.id}" aria-label="Change ${a.full_name}'s email">Change email</button>`)}</dd></div>
+              <div><dt>Teams</dt><dd>${int.length} interested${offers.length ? ` · ${offers.length} offer${offers.length === 1 ? "" : "s"} open` : ""}
+                ${int.length ? raw(html`<br><span class="dim">${int.map((i) => teamName(i.team_id)).join(", ")}</span>`) : ""}</dd></div>
+            </dl>
+            ${a.about ? raw(html`<p class="agent__about">${a.about}</p>`) : ""}
+            <footer class="agent__foot">
+              <span class="dim agent__interest">Signed up ${fmtDate(a.created_at)}</span>
+              ${S.ro ? "" : raw(html`<span class="agent__actions">
+                ${a.status === "signed" && !st.inSquad ? raw(html`<button class="btn btn--ghost btn--sm" type="button" data-agent-release="${a.id}">Return to pool</button>`) : ""}
+                <button class="btn btn--ghost btn--sm btn--danger" type="button" data-agent-remove="${a.id}" aria-label="Remove ${a.full_name}">Remove</button></span>`)}
+            </footer>
+          </article>`);
+      })}
     </div>`;
 }
 

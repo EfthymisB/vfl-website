@@ -3894,6 +3894,46 @@ fieldset.field legend {
   border-color: rgba(61, 232, 255, 0.4);
   background: rgba(61, 232, 255, 0.07);
 }
+/* /free-agents/: who can sign in each phase, and how many (a card's two facts). */
+.phases {
+  margin-top: 1.25rem;
+}
+.phase-facts {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.phase-facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+/* the phase the pool is in now (free-agents.js, from the database) */
+.phases .card.is-current {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0 2.5rem rgba(167, 139, 255, 0.16);
+}
+.phase-note.is-current {
+  padding: 0.6rem 0 0.6rem 0.9rem;
+  border-left: 3px solid var(--accent);
+}
+.phase-now {
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+.phase-facts dd {
+  margin: 0.1rem 0 0;
+  color: var(--text);
+  font-weight: 600;
+}
+
 /* Free-agent pool phases: the team's banner (portal) and the board's panel. */
 .fa-phase {
   margin: 0 0 1.25rem;
@@ -4062,11 +4102,16 @@ fieldset.field legend {
 .captcha-resend[open] summary {
   margin-bottom: 0.5rem;
 }
-.admin-table .team-note--list::before {
-  content: "Teams: ";
+/* Free agents on the board: the pool's cards, with the status pill on the right. */
+.board-agent .agent__head > .pill {
+  white-space: nowrap;
+  align-self: start;
 }
-.admin-table--agents td {
-  vertical-align: top;
+.board-agent.is-signed {
+  border-color: rgba(167, 139, 255, 0.3);
+}
+.board-agent .text-btn {
+  margin-top: 0.15rem;
 }
 /* a pill squeezed by its column wraps word by word and turns into a circle */
 .admin-table .pill {
@@ -4100,12 +4145,6 @@ fieldset.field legend {
 .text-btn:hover,
 .text-btn:focus-visible {
   color: var(--accent);
-}
-.admin-table__actions--stack {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.4rem;
 }
 /* side-by-side fields: an error or extra input in one shouldn't push the other's input down */
 .field--2 > .field,

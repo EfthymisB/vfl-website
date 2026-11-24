@@ -11,14 +11,16 @@ heroArt:
   still: /assets/img/visuals/vfl-free-agents-board.svg
   alt: "A tactics board: seven players in a 3-2-2, with passes going to an empty eighth place marked Free agent."
 ---
+
 <section class="section">
   <div class="wrap">
     <div class="prose" data-reveal>
       <h2>Who it's for</h2>
       <p>
-        Anyone in the industry, aged 18 or over, who wants a season of football and doesn't have a side to play for: your old
-        team has folded or isn't entering, you've moved studio, or your team has so many players you'd spend
-        the season on the bench. Meanwhile, some teams are always one keeper or two defenders short.
+        Anyone in the industry, aged 18 or over, who wants a season of football and doesn't have a side to
+        play for: your old team has folded or isn't entering, you've moved studio, or your team has so many
+        players you'd spend the season on the bench. Meanwhile, some teams are always one keeper or two
+        defenders short.
       </p>
       <p>
         <strong>Is your studio's team already in the league?</strong> Talk to their captain first. If they
@@ -41,7 +43,6 @@ heroArt:
         <h2>Four steps</h2>
       </div>
     </div>
-
     <div class="card-grid card-grid--4">
       <div class="card" data-reveal>
         <span class="card__num">Step 01</span>
@@ -64,7 +65,6 @@ heroArt:
         <p>Accept the offer you want and you're on that team's squad for the season. The other offers close.</p>
       </div>
     </div>
-
     <div class="btn-row" style="margin-top:2rem" data-reveal>
       <a class="btn" href="/portal/?join=free-agent" data-umami-event="Free agents: join clicked">Join the free-agent pool</a>
       <a class="btn btn--ghost" href="/portal/?view=agent" data-umami-event="Free agents: check offers clicked">Already signed up? Check your offers</a>
@@ -76,8 +76,10 @@ heroArt:
     comes from site.json (registration.minSquadSize); the Phase 2 cap of four is
     the board's default: change it here too if the organisers change it there. -#}
 {% set squadSize = site.registration.minSquadSize or 13 %}
-<section class="section" id="phases">
-  <div class="wrap wrap--narrow">
+{#- free-agents.js asks the database which phase the pool is in and highlights it.
+    If it can't reach it (or the portal isn't set up), nothing is highlighted. -#}
+<section class="section" id="phases" data-supabase-url="{{ site.portal.supabaseUrl }}" data-supabase-key="{{ site.portal.supabaseKey }}">
+  <div class="wrap">
     <div class="section-head" data-reveal>
       <div>
         <div class="eyebrow">When teams can sign</div>
@@ -86,22 +88,50 @@ heroArt:
     </div>
     <div class="prose" data-reveal>
       <p>
-        So the teams that need players most get first pick, signings happen in stages. The organisers
-        announce when each one starts. You can sign up at any point until the pool closes, and your page
-        always shows where things are.
+        Signings happen in stages, so the teams that need players most get first pick. The organisers
+        announce when each phase starts, and your page always shows where things are.
       </p>
-      <ol>
-        <li><strong>Before it opens.</strong> Sign up and get your profile ready. Captains can look, but
-          nobody can make offers yet.</li>
-        <li><strong>Phase 1: teams that are short.</strong> Only teams with fewer than {{ squadSize }} players
-          can sign free agents. If more players accept a team's offers than it has room for, the team can
-          release someone. If that's you, you go straight back into the pool and other teams can sign you.</li>
-        <li><strong>Phase 2: every team.</strong> Any team can sign up to four more free agents. If a team
-          has used its four, it can't take your acceptance until Phase 3.</li>
-        <li><strong>Phase 3: whoever's left.</strong> Any team can sign anyone still in the pool.</li>
-        <li><strong>Closed.</strong> Signings are done for the season, and sign-up opens again before the
-          next one.</li>
-      </ol>
+      <p class="phase-note" data-phase="not_open">
+        <strong>Before Phase 1</strong>, you can already sign up. Captains can look at your profile, but
+        nobody can make you an offer yet.
+      </p>
+    </div>
+
+    <div class="card-grid card-grid--3 phases">
+      <div class="card" data-phase="phase1" data-reveal>
+        <span class="card__num">Phase 1</span>
+        <h3>Teams that are short</h3>
+        <dl class="phase-facts">
+          <div><dt>Who can sign</dt><dd>Teams with fewer than {{ squadSize }} players</dd></div>
+          <div><dt>How many</dt><dd>Enough to reach {{ squadSize }}</dd></div>
+        </dl>
+        <p>If more players accept than a team has room for, it can release someone. If that's you, you go straight back into the pool for the other teams.</p>
+      </div>
+      <div class="card" data-phase="phase2" data-reveal>
+        <span class="card__num">Phase 2</span>
+        <h3>Every team</h3>
+        <dl class="phase-facts">
+          <div><dt>Who can sign</dt><dd>All teams</dd></div>
+          <div><dt>How many</dt><dd>Up to four each</dd></div>
+        </dl>
+        <p>Once a team has signed four, it can't take another acceptance until Phase 3.</p>
+      </div>
+      <div class="card" data-phase="phase3" data-reveal>
+        <span class="card__num">Phase 3</span>
+        <h3>Whoever's left</h3>
+        <dl class="phase-facts">
+          <div><dt>Who can sign</dt><dd>All teams</dd></div>
+          <div><dt>How many</dt><dd>No limit</dd></div>
+        </dl>
+        <p>Any team can sign anyone still in the pool.</p>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:1.5rem" data-reveal>
+      <p class="phase-note" data-phase="closed">
+        <strong>Once the pool closes</strong>, signings are done for the season. Sign-up opens again before
+        the next one.
+      </p>
     </div>
   </div>
 </section>
@@ -130,3 +160,5 @@ heroArt:
     </div>
   </div>
 </section>
+
+<script type="module" src="/assets/js/free-agents.js"></script>
