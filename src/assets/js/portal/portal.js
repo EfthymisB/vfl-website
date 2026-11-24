@@ -115,14 +115,16 @@ async function openTeam(id) {
   // The free-agent pool is for the current season's teams only.
   const isCurrent = S.seasons.find((s) => s.id === S.team.season_id)?.is_current;
   if (isCurrent) {
-    const [pool, loans] = await Promise.all([
+    const [pool, loans, state] = await Promise.all([
       sb.rpc("fa_pool", { p_team: id }),
       sb.rpc("fa_loaned_out", { p_team: id }),
+      sb.rpc("fa_status", { p_team: id }),
     ]);
     S.pool = pool.error ? [] : pool.data || [];
     S.loanedOut = loans.error ? [] : loans.data || [];
+    S.faState = state.error ? null : (state.data || [])[0] || null;
   } else {
-    S.pool = []; S.loanedOut = [];
+    S.pool = []; S.loanedOut = []; S.faState = null;
   }
   S.poolOn = !!isCurrent;
   S.photos = await photoUrls(sb, players.map((x) => x.photo_path));
@@ -358,8 +360,22 @@ function render() {
 }
 
 // ---------------------------------------------------------------- free agents
+// Phase 1: send a signing back to the pool (out of the squad too, if added).
+async function releaseAgent(btn) {
+  const a = S.pool.find((x) => x.id === btn.dataset.faRelease);
+  if (!a) return;
+  const player = S.players.find((p) => p.free_agent_id === a.id);
+  if (!confirm(`Release ${a.full_name}? They go back into the pool for every team${player ? " and come out of your squad" : ""}. You'd need to offer them a place again to get them back.`)) return;
+  btn.disabled = true;
+  const { error } = await S.sb.rpc("fa_release", { p_team: S.team.id, p_agent: a.id });
+  if (error) { btn.disabled = false; return toast(friendly(error), "err"); }
+  if (player?.photo_path) await removePhotos(S.sb, [player.photo_path]).catch(() => {});
+  toast(`${a.full_name} is back in the pool. Let them know.`);
+  return openTeam(S.team.id);
+}
+
 function poolHtml() {
-  return poolSection({ pool: S.pool, filter: S.faFilter, players: S.players, locked: !editable(), readOnly: S.asViewer });
+  return poolSection({ pool: S.pool, filter: S.faFilter, players: S.players, locked: !editable(), readOnly: S.asViewer, state: S.faState });
 }
 
 function signingsBanner() {
@@ -379,8 +395,12 @@ function redrawPool() {
 }
 
 async function reloadPool() {
-  const { data, error } = await S.sb.rpc("fa_pool", { p_team: S.team.id });
+  const [{ data, error }, state] = await Promise.all([
+    S.sb.rpc("fa_pool", { p_team: S.team.id }),
+    S.sb.rpc("fa_status", { p_team: S.team.id }),
+  ]);
   if (!error) S.pool = data || [];
+  if (!state.error) S.faState = (state.data || [])[0] || null;
   // a new signing changes the squad panel and sign-off too
   if (pendingSignings(S.pool, S.players).length) return openTeam(S.team.id);
   redrawPool();
@@ -782,6 +802,8 @@ function wireCommon() {
     if (t.closest("[data-add]")) return openPlayer(null);
     const faAdd = t.closest("[data-fa-add]");
     if (faAdd) return openPlayer(null, S.pool.find((a) => a.id === faAdd.dataset.faAdd));
+    const faRelease = t.closest("[data-fa-release]");
+    if (faRelease) return releaseAgent(faRelease);
     const faFilter = t.closest("[data-fa-filter]");
     if (faFilter) { S.faFilter = faFilter.dataset.faFilter; redrawPool(); root.querySelector(`[data-fa-filter="${S.faFilter}"]`)?.focus(); return; }
     if (await poolAction(t, { sb: S.sb, teamId: S.team?.id, pool: S.pool, reload: async (agentId) => {
