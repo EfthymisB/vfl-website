@@ -84,6 +84,8 @@ We don't sell your data or use it for marketing. These services handle it for us
 provide their service:
 
 - **Supabase** stores the portal's data, team logos and player photos, in their London data centre.
+  The [free agents page](/free-agents/) also asks it which phase the pool is in. That request carries
+  nothing about you and sets no cookie, but like any server, Supabase sees your IP address.
 - **Resend** sends the sign-in emails.
 - **Cloudflare Turnstile** checks that sign-ins come from a person, not a bot.
 - **Web3Forms** passes contact-form messages to our inbox, which is a **Gmail** account.
