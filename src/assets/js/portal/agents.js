@@ -100,9 +100,26 @@ export async function agentPage(ctx) {
 
   function render() {
     const a = A.profile;
+    const phase = A.season.fa_phase || "not_open";
+    // closed and not signed up: nothing to fill in
+    if (!a && phase === "closed") {
+      root.innerHTML = html`
+        ${raw(A.bar())}
+        <div class="panel portal-auth">
+          <div class="eyebrow eyebrow--plain">${A.season.name} · Free agents</div>
+          <h2>The pool is closed for this season</h2>
+          <p class="muted">Every signing for ${A.season.name} is done. Sign-up opens again before next season: keep an eye on the site.</p>
+        </div>`;
+      return;
+    }
     root.innerHTML = html`
       ${raw(A.bar())}
       ${A.season.locked ? raw(html`<div class="portal-flag portal-flag--lock"><strong>Locked</strong> The ${A.season.name} squads are locked, so offers can't be accepted right now. Contact the organisers if you need to.</div>`) : ""}
+      ${!A.season.locked && a && a.status !== "signed" && (phase === "not_open" || phase === "closed")
+        ? raw(html`<div class="portal-flag"><strong>${phaseInfo(phase).label}</strong> ${phase === "closed"
+            ? "The pool is closed for this season, so offers can't be accepted any more."
+            : "Teams can see your profile, but they can't make offers until the organisers open the pool."}</div>`)
+        : ""}
       ${a ? raw(hero()) : raw(intro())}
       ${a ? raw(teamsPanel()) : ""}
       <section class="panel" id="fa-profile">
@@ -392,12 +409,49 @@ export async function agentPage(ctx) {
 // =============================================================================
 // The pool, on a team's page
 // =============================================================================
+// The pool's phases (seasons.fa_phase). Organisers move them on from the board.
+export const FA_PHASES = [
+  { value: "not_open", label: "Not open yet", hint: "Players can sign up. Teams can look through the pool, but can't sign anyone yet." },
+  { value: "phase1", label: "Phase 1", hint: "Teams with fewer than {target} players get first pick. If too many accept, a team can release one back to the pool." },
+  { value: "phase2", label: "Phase 2", hint: "Every team can sign up to {cap} more free agents." },
+  { value: "phase3", label: "Phase 3", hint: "Every team can sign anyone left in the pool." },
+  { value: "closed", label: "Closed", hint: "No more signings or sign-ups this season." },
+];
+export function phaseInfo(phase, target = 13, cap = 4) {
+  const p = FA_PHASES.find((x) => x.value === phase) || FA_PHASES[0];
+  return { ...p, hint: p.hint.replace("{target}", target).replace("{cap}", cap) };
+}
+
+// The phase, and where this team stands in it, at the top of its pool panel.
+function phaseBanner(st, readOnly) {
+  if (!st) return "";
+  const p = phaseInfo(st.phase, st.target, st.cap);
+  const facts = [];
+  if (st.phase === "phase1" || st.phase === "not_open") facts.push(`Squad: ${st.squad} of ${st.target}`);
+  if (st.phase === "phase2") facts.push(`Phase 2 signings: ${st.phase2_signed} of ${st.cap}`);
+  return html`
+    <div class="fa-phase ${st.can_sign ? "is-open" : ""}">
+      <div class="fa-phase__head">
+        <span class="pill ${st.can_sign ? "pill--ok" : ""}">${p.label}</span>
+        ${facts.length ? raw(html`<span class="fa-phase__facts">${facts.join(" · ")}</span>`) : ""}
+      </div>
+      <p class="fa-phase__hint">${p.hint}</p>
+      ${!st.can_sign && st.reason && !["not_open", "closed"].includes(st.phase)
+        ? raw(html`<p class="fa-phase__why"><strong>${readOnly ? "This team can't sign anyone right now." : "You can't sign anyone right now."}</strong> ${st.reason}</p>`)
+        : ""}
+    </div>`;
+}
+
 // Players who accepted this team's offer but aren't in the squad yet.
 export const pendingSignings = (pool, players) =>
   (pool || []).filter((a) => a.signed_here && !players.some((p) => p.free_agent_id === a.id));
 
 export function poolSection(P) {
-  // P: { pool, filter, players, locked, readOnly, sb }
+  // P: { pool, filter, players, locked, readOnly, state, sb }
+  // state: fa_status() for this team. No state = the old, open behaviour.
+  // canLook: the phase lets this team sign (interest); canSign: and the squads aren't locked (offers)
+  P = { ...P, canLook: P.state ? P.state.phase_ok : true, canSign: P.state ? P.state.can_sign : !P.locked,
+        canRelease: P.state?.phase === "phase1" && !P.locked };
   const all = P.pool || [];
   const counts = Object.fromEntries(FA_POSITIONS.map((p) => [p.value, all.filter((a) => a.status === "available" && a.positions.includes(p.value)).length]));
   const available = all.filter((a) => a.status === "available").length;
@@ -412,6 +466,7 @@ export function poolSection(P) {
         <a class="form-note" href="/free-agents/" target="_blank" rel="noopener">How it works</a>
       </div>
       <p class="muted">Players looking for a team this season. Mark one as interested to see their email and phone; they'll see your team on their page too. Once you've agreed, offer them a place. When they accept, add them to your squad.</p>
+      ${raw(phaseBanner(P.state, P.readOnly))}
       ${all.length ? raw(html`
         <div class="fa-filter" role="group" aria-label="Filter by position">
           <button type="button" class="chip" data-fa-filter="" aria-pressed="${!P.filter}">All <span>${available}</span></button>
@@ -439,18 +494,22 @@ function agentCard(a, P) {
       : a.offered_at ? html`<span class="pill pill--accent">Offer sent</span>`
       : a.interested ? html`<span class="pill">Interested</span>` : "";
   } else if (a.signed_here) {
+    // Phase 1 only: a team that ended up with too many can send one back
+    const release = P.canRelease && a.signed_phase === "phase1"
+      ? html`<button class="btn btn--ghost btn--sm" type="button" data-fa-release="${a.id}">Release</button>` : "";
     actions = inSquad
-      ? html`<span class="pill pill--ok">In your squad</span>`
-      : html`<span class="pill pill--ok">Joined your team</span><button class="btn btn--sm" type="button" data-fa-add="${a.id}">Add to squad</button>`;
+      ? html`<span class="pill pill--ok">In your squad</span>${raw(release)}`
+      : html`<span class="pill pill--ok">Joined your team</span>${raw(release)}<button class="btn btn--sm" type="button" data-fa-add="${a.id}">Add to squad</button>`;
   } else if (gone) {
     actions = html`<span class="pill">Joined another team</span>`;
   } else if (!a.interested) {
-    actions = html`<button class="btn btn--sm" type="button" data-fa-interest="${a.id}" data-on="1">Interested</button>`;
+    // not allowed to sign right now: look, don't touch (the banner says why)
+    actions = P.canLook ? html`<button class="btn btn--sm" type="button" data-fa-interest="${a.id}" data-on="1">Interested</button>` : "";
   } else {
     actions = html`
       ${a.offered_at
         ? raw(html`<span class="pill pill--accent">Offer sent</span><button class="btn btn--ghost btn--sm" type="button" data-fa-offer="${a.id}" data-on="0">Withdraw offer</button>`)
-        : raw(html`<button class="btn btn--sm" type="button" data-fa-offer="${a.id}" data-on="1" ${P.locked ? "disabled" : ""}>Offer a place</button>`)}
+        : P.canLook ? raw(html`<button class="btn btn--sm" type="button" data-fa-offer="${a.id}" data-on="1" ${P.canSign ? "" : "disabled"}>Offer a place</button>`) : ""}
       <button class="btn btn--ghost btn--sm" type="button" data-fa-interest="${a.id}" data-on="0">Not interested</button>`;
   }
 
@@ -466,7 +525,7 @@ function agentCard(a, P) {
       </header>
       <dl class="agent__facts">
         <div><dt>Availability</dt><dd>${availabilityLabel(a.availability)}${a.availability_note ? ` · ${a.availability_note}` : ""}</dd></div>
-        <div><dt>Current team</dt><dd>${a.current_team || raw(`<span class="dim">None</span>`)}${a.is_loan ? raw(` <span class="pill">Loan</span>`) : ""}</dd></div>
+        <div><dt>Current team</dt><dd>${a.current_team || raw(`<span class="dim">None</span>`)}${a.is_loan ? raw(html` <span class="pill" title="${a.current_team} is in the league, so signing this player would be a loan from them.">Loan only</span>`) : ""}</dd></div>
         ${a.previous_teams ? raw(html`<div><dt>Previously</dt><dd>${a.previous_teams}</dd></div>`) : ""}
       </dl>
       ${a.about ? raw(html`<p class="agent__about">${a.about}</p>`) : ""}

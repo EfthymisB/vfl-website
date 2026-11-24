@@ -21,6 +21,10 @@ heroArt:
         the season on the bench. Meanwhile, some teams are always one keeper or two defenders short.
       </p>
       <p>
+        <strong>Is your studio's team already in the league?</strong> Talk to their captain first. If they
+        tell you the squad is full, sign up here as a free agent.
+      </p>
+      <p>
         You join <strong>one</strong> team, for the <strong>whole season</strong>. If your current team is in
         the league too, the move is a <strong>loan</strong>: you play for your new team this season and you're
         shown on both teams' pages as on loan.
@@ -64,6 +68,40 @@ heroArt:
     <div class="btn-row" style="margin-top:2rem" data-reveal>
       <a class="btn" href="/portal/?join=free-agent" data-umami-event="Free agents: join clicked">Join the free-agent pool</a>
       <a class="btn btn--ghost" href="/portal/?view=agent" data-umami-event="Free agents: check offers clicked">Already signed up? Check your offers</a>
+    </div>
+  </div>
+</section>
+
+{#- The phases are set on the organisers' board (seasons.fa_phase). The squad size
+    comes from site.json (registration.minSquadSize); the Phase 2 cap of four is
+    the board's default: change it here too if the organisers change it there. -#}
+{% set squadSize = site.registration.minSquadSize or 13 %}
+<section class="section" id="phases">
+  <div class="wrap wrap--narrow">
+    <div class="section-head" data-reveal>
+      <div>
+        <div class="eyebrow">When teams can sign</div>
+        <h2>The pool opens in phases</h2>
+      </div>
+    </div>
+    <div class="prose" data-reveal>
+      <p>
+        So the teams that need players most get first pick, signings happen in stages. The organisers
+        announce when each one starts. You can sign up at any point until the pool closes, and your page
+        always shows where things are.
+      </p>
+      <ol>
+        <li><strong>Before it opens.</strong> Sign up and get your profile ready. Captains can look, but
+          nobody can make offers yet.</li>
+        <li><strong>Phase 1: teams that are short.</strong> Only teams with fewer than {{ squadSize }} players
+          can sign free agents. If more players accept a team's offers than it has room for, the team can
+          release someone. If that's you, you go straight back into the pool and other teams can sign you.</li>
+        <li><strong>Phase 2: every team.</strong> Any team can sign up to four more free agents. If a team
+          has used its four, it can't take your acceptance until Phase 3.</li>
+        <li><strong>Phase 3: whoever's left.</strong> Any team can sign anyone still in the pool.</li>
+        <li><strong>Closed.</strong> Signings are done for the season, and sign-up opens again before the
+          next one.</li>
+      </ol>
     </div>
   </div>
 </section>

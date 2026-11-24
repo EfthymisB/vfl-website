@@ -5,7 +5,7 @@ import {
   logoUrl, initials, toCsv, download, kitLabel, shirtSvg,
   footLabel, photoUrls, removePhotos, makeZip, safeFileName, fmtBytes,
 } from "./lib.js";
-import { positionsLong, availabilityLabel, styleLabel } from "./agents.js";
+import { positionsLong, availabilityLabel, styleLabel, FA_PHASES, phaseInfo } from "./agents.js";
 
 const root = document.getElementById("admin");
 
@@ -59,6 +59,10 @@ async function openSeason(id) {
     if (e4) throw e4;
     interest = data;
   }
+  // where each team stands in the pool's phases (squad size, Phase 2 signings)
+  const { data: faBoard, error: e5 } = await sb.rpc("fa_board", { p_season: id });
+  if (e5) throw e5;
+  S.faBoard = faBoard || [];
   S.season = S.seasons.find((s) => s.id === id);
   S.teams = teams;
   S.players = players;
@@ -240,6 +244,7 @@ function render() {
           <button class="btn btn--ghost btn--sm" type="button" data-export="agents" ${S.agents.length ? "" : "disabled"}>Export free agents CSV</button>
         </div>
       </div>
+      ${raw(phasePanel())}
       ${S.agents.length ? raw(agentTable()) : raw(`<p class="muted empty">Nobody has signed up yet. Players join from the free agents page; share it in studio channels.</p>`)}
     </section>
 
@@ -279,6 +284,54 @@ function render() {
 
 // ---------------------------------------------------------------- free agents
 const teamName = (id) => S.teams.find((t) => t.id === id)?.name || "";
+
+// The pool's phases: which one it's in, the two numbers that drive them, and
+// where every team stands. Organisers move it on by hand.
+function phasePanel() {
+  const s = S.season;
+  const phase = s.fa_phase || "not_open";
+  const target = s.fa_squad_target ?? 13, cap = s.fa_phase2_cap ?? 4;
+  const left = S.agents.filter((a) => a.status === "available").length;
+  const under = S.faBoard.filter((r) => r.squad < target).length;
+  const nudge = phase === "phase1"
+    ? (under ? `${under} team${under === 1 ? " is" : "s are"} still under ${target} players.` : `Every team has ${target} or more players: time for Phase 2.`)
+    : (phase === "phase2" || phase === "phase3") && !left ? "Nobody's left in the pool: you can close it."
+    : phase === "phase2" ? `${left} player${left === 1 ? "" : "s"} still in the pool. If any are left once teams are done, open Phase 3.`
+    : "";
+  return html`
+    <div class="fa-phases" data-fa-phases>
+      <div class="fa-phases__head">
+        <h3 class="fa-phases__title">Pool phase</h3>
+        <span class="dim">${phaseInfo(phase, target, cap).hint}</span>
+      </div>
+      <div class="fa-phases__steps" role="group" aria-label="Pool phase">
+        ${FA_PHASES.map((p, i) => raw(html`
+          <button type="button" class="fa-phases__step" data-fa-phase="${p.value}" aria-pressed="${p.value === phase}" ${S.ro || !s.is_current ? "disabled" : ""}>
+            <span class="fa-phases__n">${i}</span>${p.label}</button>`))}
+      </div>
+      ${nudge ? raw(html`<p class="fa-phases__nudge">${nudge}</p>`) : ""}
+      <form class="fa-phases__numbers" data-form="fa-numbers">
+        <label>Phase 1 is for teams under <input type="number" name="target" min="1" max="40" value="${target}" ${S.ro ? "disabled" : ""}> players</label>
+        <label>Phase 2 cap <input type="number" name="cap" min="0" max="20" value="${cap}" ${S.ro ? "disabled" : ""}> signings per team</label>
+        ${S.ro ? "" : raw(`<button class="btn btn--ghost btn--sm" type="submit">Save</button>`)}
+      </form>
+      ${S.faBoard.length ? raw(html`
+        <div class="table-scroll">
+          <table class="fa-phases__table">
+            <thead><tr><th scope="col">Team</th><th scope="col">Squad</th><th scope="col">Phase 2 signings</th><th scope="col">Can sign now</th></tr></thead>
+            <tbody>
+              ${S.faBoard.map((r) => raw(html`
+                <tr>
+                  <td>${teamName(r.team_id)}</td>
+                  <td class="${r.squad < target ? "" : "dim"}">${r.squad}${r.squad < target ? raw(html` <span class="dim">/ ${target}</span>`) : ""}</td>
+                  <td>${r.phase2_signed} <span class="dim">/ ${cap}</span></td>
+                  <td>${r.can_sign ? raw(`<span class="pill pill--ok">Yes</span>`) : raw(html`<span class="pill">No</span>`)}</td>
+                </tr>`))}
+            </tbody>
+          </table>
+        </div>`) : ""}
+    </div>`;
+}
 
 function agentStatus(a) {
   if (a.status === "signed") {
@@ -699,6 +752,21 @@ function wire() {
       toast(`${email} no longer has access.`);
       return redrawViewers();
     }
+    const ph = t.closest("[data-fa-phase]");
+    if (ph) {
+      const s = S.season;
+      const to = ph.dataset.faPhase;
+      if (to === s.fa_phase) return;
+      const p = phaseInfo(to, s.fa_squad_target, s.fa_phase2_cap);
+      if (!confirm(`Move the ${s.name} free-agent pool to "${p.label}"?
+
+${p.hint}`)) return;
+      const { error } = await S.sb.from("seasons").update({ fa_phase: to }).eq("id", s.id);
+      if (error) return toast(friendly(error), "err");
+      s.fa_phase = to;
+      toast(`The pool is now: ${p.label}.`);
+      return openSeason(s.id);
+    }
     const rel = t.closest("[data-agent-release]");
     if (rel) {
       const a = S.agents.find((x) => x.id === rel.dataset.agentRelease);
@@ -772,6 +840,16 @@ function wire() {
     const btn = form.querySelector("[type=submit]");
     btn.disabled = true;
     try {
+      if (kind === "fa-numbers") {
+        const target = Number(fd.get("target")), cap = Number(fd.get("cap"));
+        if (!Number.isInteger(target) || target < 1 || target > 40) throw new Error("The Phase 1 squad size must be a whole number from 1 to 40.");
+        if (!Number.isInteger(cap) || cap < 0 || cap > 20) throw new Error("The Phase 2 cap must be a whole number from 0 to 20.");
+        const { error } = await S.sb.from("seasons").update({ fa_squad_target: target, fa_phase2_cap: cap }).eq("id", S.season.id);
+        if (error) throw error;
+        Object.assign(S.season, { fa_squad_target: target, fa_phase2_cap: cap });
+        toast("Pool numbers saved.");
+        return await openSeason(S.season.id);
+      }
       if (kind === "invite") {
         const name = String(fd.get("name") || "").trim();
         const email = String(fd.get("email") || "").trim().toLowerCase();
