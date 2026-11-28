@@ -6,8 +6,9 @@ import {
   logoUrl, LOGO_TYPES, LOGO_MAX, initials,
   KIT_COLOURS, KIT_MAX, KIT_ROLES, normHex, colourName, kitLabel, shirtSvg,
   FEET, footLabel, shrinkPhoto, photoUrls, uploadPhoto, removePhotos, fmtBytes, isRetryableUpload,
+  flagImg, departmentLabel, departmentOptions,
 } from "./lib.js";
-import { agentPage, poolSection, poolAction, pendingSignings, loanedOutBlock, joinedBadge } from "./agents.js";
+import { agentPage, poolSection, poolAction, pendingSignings, loanedOutBlock, joinedBadge, squadPosition } from "./agents.js";
 
 const root = document.getElementById("portal");
 
@@ -512,10 +513,11 @@ function squadList() {
           </span>
           <span class="squad__meta">
             <span>${positionLabel(p.position)}</span>
-            <span>${countryName(p.nationality)}</span>
+            <span class="nowrap">${raw(flagImg(p.nationality))}${countryName(p.nationality)}</span>
             <span>${fmtDate(p.date_of_birth)} <span class="dim">(${ageOn(p.date_of_birth)})</span></span>
             <span>${p.height_cm ? `${p.height_cm} cm` : raw(`<span class="dim">no height</span>`)}</span>
             ${p.preferred_foot ? raw(html`<span>${footLabel(p.preferred_foot)} foot</span>`) : ""}
+            ${p.department ? raw(html`<span>${departmentLabel(p.department)}</span>`) : ""}
           </span>
           ${can || sofa ? raw(html`
             <span class="squad__actions">
@@ -561,10 +563,16 @@ function signOffBlock() {
 // ---------------------------------------------------------------- player dialog
 function openPlayer(player, fromAgent = null) {
   const dlg = root.querySelector("[data-dialog]");
-  // A free agent who accepted: start from what they told us.
-  const agentPos = fromAgent && (fromAgent.positions.find((v) => positions.some((x) => x.value === v)) || positions[0].value);
-  const p = player || { full_name: fromAgent?.full_name || "", date_of_birth: "", shirt_number: "", position: agentPos || positions[0].value, nationality: "", height_cm: "",
-    is_captain: !fromAgent && !S.players.some((x) => x.is_captain) };
+  // A free agent who accepted: start from their profile. The position comes from
+  // what they play (keeper only: Goalkeeper; no keeper: Forward; both: the captain picks).
+  const a = fromAgent;
+  const p = player || {
+    full_name: a?.full_name || "", date_of_birth: a?.date_of_birth || "", shirt_number: "",
+    position: a ? squadPosition(a.positions) : positions[0].value, nationality: a?.nationality || "",
+    height_cm: a?.height_cm ?? "", preferred_foot: a?.preferred_foot || "", department: a?.department || "",
+    is_captain: !a && !S.players.some((x) => x.is_captain),
+  };
+  const missing = a ? [!a.date_of_birth && "date of birth", !a.nationality && "nationality"].filter(Boolean) : [];
   const otherCaptain = S.players.find((x) => x.is_captain && x.id !== p.id);
   const currentPhoto = p.photo_path ? S.photos[p.photo_path] : "";
   // photo edits in this dialog: a shrunk new file waiting to upload, or a removal
@@ -576,7 +584,7 @@ function openPlayer(player, fromAgent = null) {
         <h2>${player ? "Edit player" : fromAgent ? "Add new signing" : "Add player"}</h2>
         <button class="dialog-close" type="button" data-close aria-label="Close">×</button>
       </div>
-      ${fromAgent ? raw(html`<p class="form-note dialog-note">${fromAgent.full_name} joins from the free-agent pool${fromAgent.is_loan ? `, on loan from ${fromAgent.current_team}` : ""}. Add their date of birth and nationality (ask them if you need to). They'll be marked as ${fromAgent.is_loan ? "a loan" : "a free agent"} in the squad.</p>`) : ""}
+      ${a ? raw(html`<p class="form-note dialog-note">${a.full_name} joins from the free-agent pool${a.is_loan ? `, on loan from ${a.current_team}` : ""}, and will be marked as ${a.is_loan ? "a loan" : "a free agent"} in the squad. We've filled in what they gave us: check it${p.position ? "" : ", choose their position (they play in goal and outfield)"} and add a shirt number.${missing.length ? ` Their profile has no ${missing.join(" or ")} yet: ask them.` : ""}</p>`) : ""}
       <div class="photo-pick">
         <div class="photo-pick__preview" data-photo-preview>${currentPhoto
           ? raw(html`<img src="${currentPhoto}" alt="">`)
@@ -614,6 +622,7 @@ function openPlayer(player, fromAgent = null) {
         <div class="field">
           <label for="p-pos">Position</label>
           <select id="p-pos" name="position" required>
+            ${p.position ? "" : raw(`<option value="" disabled selected>Choose…</option>`)}
             ${positions.map((x) => raw(html`<option value="${x.value}" ${x.value === p.position ? "selected" : ""}>${x.label}</option>`))}
           </select>
           <span class="field-err" data-err="position"></span>
@@ -637,6 +646,10 @@ function openPlayer(player, fromAgent = null) {
           <input id="p-h" name="height_cm" type="number" inputmode="numeric" min="120" max="230" value="${p.height_cm ?? ""}">
           <span class="field-err" data-err="height_cm"></span>
         </div>
+      </div>
+      <div class="field">
+        <label for="p-dept">Department <span class="opt">optional</span></label>
+        <select id="p-dept" name="department">${raw(departmentOptions(p.department))}</select>
       </div>
       <label class="check">
         <input type="checkbox" name="is_captain" ${p.is_captain ? "checked" : ""}>
@@ -687,6 +700,22 @@ function openPlayer(player, fromAgent = null) {
     chooseLabel.textContent = "Choose photo";
   };
   dlg.addEventListener("close", clearPreviewUrl, { once: true });
+  if (a?.photo_path && !player) {
+    note.textContent = "Getting the photo from their profile…";
+    photoUrls(S.sb, [a.photo_path])
+      .then((urls) => (urls[a.photo_path] ? fetch(urls[a.photo_path]) : null))
+      .then((res) => (res && res.ok ? res.blob() : null))
+      .then((blob) => {
+        if (!blob || photo.pending || !dlg.open) { note.textContent = "A head-and-shoulders shot works best. We shrink it before uploading."; return; }
+        photo.pending = blob;
+        photo.previewUrl = URL.createObjectURL(blob);
+        preview.innerHTML = html`<img src="${photo.previewUrl}" alt="">`;
+        note.textContent = "From their free-agent profile. It's added to your squad when you save.";
+        removeBtn.hidden = false;
+        chooseLabel.textContent = "Replace photo";
+      })
+      .catch(() => { note.textContent = "Couldn't get the photo from their profile. You can add one here instead."; });
+  }
 
   dlg.onclick = (e) => { if (e.target === dlg || e.target.closest("[data-close]")) dlg.close(); };
   form.onsubmit = async (e) => {
@@ -700,6 +729,7 @@ function openPlayer(player, fromAgent = null) {
       shirt_number: fd.get("shirt_number") === "" ? null : Number(fd.get("shirt_number")),
       height_cm: fd.get("height_cm") === "" ? null : Number(fd.get("height_cm")),
       preferred_foot: fd.get("preferred_foot") || null,
+      department: fd.get("department") || null,
       is_captain: fd.get("is_captain") === "on",
     };
     form.querySelectorAll("[data-err]").forEach((el) => (el.textContent = ""));
