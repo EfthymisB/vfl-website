@@ -25,7 +25,8 @@ you about the season. If your team marks a free agent as interested, that player
 your name and your email address, so they can get in touch.
 
 **Players.** The team contact enters each player's full name, date of birth, nationality and
-position, and optionally a shirt number, height, preferred foot and a photo. We use these to register the squad and to set
+position, and optionally a shirt number, height, preferred foot, department and a photo. We use
+these to register the squad and to set
 the team up on [Sofascore]({{ site.social.sofascore }}), which runs the league's fixtures, results
 and statistics.
 
@@ -39,15 +40,21 @@ email address and give us your name, the positions you play, how often you can p
 competitive you like it, and optionally a phone number, your current and previous teams, and a
 few words about yourself.
 
+For your squad place, you also give your date of birth and nationality, and optionally your
+preferred foot, height, department and a photo, so the team you join doesn't have to ask you
+again.
+
 **Who sees it.** Your profile is shown to the team contacts of this season's teams, so they can
 find players. Your email address and phone number are shown only to the teams that mark you as
-interested, and you can see which teams those are on your profile page. If you move to a new team
+interested, and you can see which teams those are on your profile page. Your date of birth,
+nationality, foot, height, department and photo are shown only to the team you join, when you
+accept its offer: teams looking through the pool don't see them. If you move to a new team
 on loan, your current team's contact can see your name and which team you've joined. The
 organisers see everything. We use it only to help you find a team; we rely on your agreement,
 which you give when you join and can withdraw by deleting your profile.
 
-When you join a team, that team's contact adds you to their squad, and from then on your details
-are handled like any other player's (above).
+When you join a team, that team's contact adds you to their squad (copying in those details and
+your photo), and from then on your details are handled like any other player's (above).
 
 **Control.** You can edit your profile, take a break from the pool or delete your profile at
 any time until you've joined a team.

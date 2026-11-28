@@ -1,5 +1,9 @@
 // VFL free-agent pool: the player's own page, and the pool panel on a team's page.
-import { html, raw, toast, friendly, fmtDate, initials, logoUrl } from "./lib.js";
+import {
+  html, raw, toast, friendly, fmtDate, initials, logoUrl, ageOn, adultMaxDob, countryOptions,
+  FEET, departmentOptions, shrinkPhoto, uploadPhoto, removePhotos, photoUrls, fmtBytes,
+  positions as squadPositions,
+} from "./lib.js";
 
 // ---------------------------------------------------------------- vocab
 export const FA_POSITIONS = [
@@ -39,6 +43,14 @@ function whatsappUrl(phone) {
   return /^\d{8,15}$/.test(d) ? `https://wa.me/${d}` : "";
 }
 
+// The squad position a free agent gets when a team adds them (portal.positions:
+// Forward / Goalkeeper): keeper only -> Goalkeeper; no keeper -> Forward; keeper
+// and outfield -> "" (the captain chooses).
+export function squadPosition(list = []) {
+  const v = !list.includes("goalkeeper") ? "forward" : list.length === 1 ? "goalkeeper" : "";
+  return squadPositions.some((p) => p.value === v) ? v : "";
+}
+
 export function validateAgent(a, { isNew }) {
   const errs = {};
   const name = (a.full_name || "").trim().replace(/\s+/g, " ");
@@ -49,6 +61,18 @@ export function validateAgent(a, { isNew }) {
   if (!a.availability) errs.availability = "Pick how often you can play.";
   if (!a.play_style) errs.play_style = "Pick one.";
   if (a.wantsOther && !a.current_team_other) errs.current_team_other = "Enter the team's name, or pick another option.";
+  if (!a.date_of_birth) errs.date_of_birth = "Enter your date of birth.";
+  else {
+    const d = new Date(a.date_of_birth + "T12:00:00");
+    if (isNaN(d)) errs.date_of_birth = "That isn't a valid date.";
+    else if (d.getFullYear() < 1920) errs.date_of_birth = "That date is too early.";
+    else if (ageOn(a.date_of_birth) < 18) errs.date_of_birth = "The league is for over-18s.";
+  }
+  if (!/^[A-Z]{2}(-[A-Z]{3})?$/.test(a.nationality || "")) errs.nationality = "Choose your nationality.";
+  if (a.height_cm != null) {
+    const h = Number(a.height_cm);
+    if (!Number.isInteger(h) || h < 120 || h > 230) errs.height_cm = "Height in cm, between 120 and 230.";
+  }
   if (isNew && !a.consent) errs.consent = "Tick this to join the pool.";
   return errs;
 }
@@ -58,7 +82,9 @@ export function validateAgent(a, { isNew }) {
 // =============================================================================
 // ctx: { root, sb, email, season, bar() -> html string }
 export async function agentPage(ctx) {
-  const A = { ...ctx, profile: null, seasonTeams: [], interest: [] };
+  const A = { ...ctx, profile: null, seasonTeams: [], interest: [], photoUrl: "" };
+  // photo edits on the form: a shrunk file waiting to upload, or a removal
+  const photo = { pending: null, previewUrl: "", remove: false };
   const { root } = A;
 
   if (!A.season) {
@@ -85,6 +111,9 @@ export async function agentPage(ctx) {
       A.profile = p.data[0] || null;
       A.seasonTeams = t.data || [];
       A.interest = A.profile ? (m.data || []) : [];
+      A.photoUrl = A.profile?.photo_path ? (await photoUrls(A.sb, [A.profile.photo_path]))[A.profile.photo_path] || "" : "";
+      if (photo.previewUrl) URL.revokeObjectURL(photo.previewUrl);
+      Object.assign(photo, { pending: null, previewUrl: "", remove: false });
       render();
     } catch (err) {
       root.innerHTML = html`
@@ -119,6 +148,9 @@ export async function agentPage(ctx) {
         ? raw(html`<div class="portal-flag"><strong>${phaseInfo(phase).label}</strong> ${phase === "closed"
             ? "The pool is closed for this season, so offers can't be accepted any more."
             : "Teams can see your profile, but they can't make offers until the organisers open the pool."}</div>`)
+        : ""}
+      ${a && a.status !== "signed" && (!a.date_of_birth || !a.nationality)
+        ? raw(`<div class="portal-flag portal-flag--new"><strong>New</strong> Add your date of birth and nationality below: the team you join needs them for your squad place.</div>`)
         : ""}
       ${a ? raw(hero()) : raw(intro())}
       ${a ? raw(teamsPanel()) : ""}
@@ -288,6 +320,57 @@ export async function agentPage(ctx) {
           </div>
         </div>
 
+        <fieldset class="field fa-details">
+          <legend>For your squad place</legend>
+          <p class="form-note">When you join a team, these fill in your place in their squad, which the organisers put on Sofascore. Only that team and the organisers see them: teams looking through the pool don't.</p>
+          <div class="field--2">
+            <div class="field">
+              <label for="fa-dob">Date of birth</label>
+              <input id="fa-dob" name="date_of_birth" type="date" required value="${a.date_of_birth || ""}" min="1920-01-01" max="${adultMaxDob()}">
+              <span class="field-err" data-err="date_of_birth"></span>
+            </div>
+            <div class="field">
+              <label for="fa-nat">Nationality</label>
+              <select id="fa-nat" name="nationality" required>${raw(countryOptions(a.nationality))}</select>
+              <span class="field-err" data-err="nationality"></span>
+            </div>
+          </div>
+          <div class="field--3">
+            <div class="field">
+              <label for="fa-foot">Preferred foot <span class="opt">optional</span></label>
+              <select id="fa-foot" name="preferred_foot">
+                <option value="">Not given</option>
+                ${FEET.map((x) => raw(html`<option value="${x.value}" ${x.value === a.preferred_foot ? "selected" : ""}>${x.label}</option>`))}
+              </select>
+            </div>
+            <div class="field">
+              <label for="fa-h">Height (cm) <span class="opt">optional</span></label>
+              <input id="fa-h" name="height_cm" type="number" inputmode="numeric" min="120" max="230" value="${a.height_cm ?? ""}">
+              <span class="field-err" data-err="height_cm"></span>
+            </div>
+            <div class="field">
+              <label for="fa-dept">Department <span class="opt">optional</span></label>
+              <select id="fa-dept" name="department">${raw(departmentOptions(a.department))}</select>
+            </div>
+          </div>
+          <div class="photo-pick">
+            <div class="photo-pick__preview" data-fa-photo-preview>${A.photoUrl
+              ? raw(html`<img src="${A.photoUrl}" alt="">`)
+              : raw(html`<span>${a.full_name ? initials(a.full_name) : "+"}</span>`)}</div>
+            <div class="photo-pick__body">
+              <span class="photo-pick__label">Photo <span class="opt">optional</span></span>
+              <div class="btn-row">
+                <label class="btn btn--ghost btn--sm">
+                  <input type="file" accept="image/*" data-fa-photo-input hidden>
+                  <span data-fa-photo-choose>${A.photoUrl ? "Replace photo" : "Choose photo"}</span>
+                </label>
+                <button type="button" class="btn btn--ghost btn--sm btn--danger" data-fa-photo-remove ${A.photoUrl ? "" : "hidden"}>Remove</button>
+              </div>
+              <span class="form-note" data-fa-photo-note>For Sofascore: a head-and-shoulders shot works best. We shrink it before uploading.</span>
+            </div>
+          </div>
+        </fieldset>
+
         <div class="field">
           <label for="fa-about">About you <span class="opt">optional</span></label>
           <textarea id="fa-about" name="about" rows="3" maxlength="500" placeholder="Anything a captain should know: experience, fitness, which studio you're at…">${a.about || ""}</textarea>
@@ -297,7 +380,7 @@ export async function agentPage(ctx) {
         ${isNew ? raw(html`
           <label class="check">
             <input type="checkbox" name="consent">
-            <span>I'm 18 or over. Show my profile to the team captains in this season's league. My email and phone go only to teams that mark me as interested. <a href="/privacy/" target="_blank" rel="noopener">How we use this</a>.</span>
+            <span>I'm 18 or over. Show my profile to the team captains in this season's league. My email and phone go only to teams that mark me as interested, and my squad details and photo only to the team I join (and on to Sofascore). <a href="/privacy/" target="_blank" rel="noopener">How we use this</a>.</span>
           </label>
           <span class="field-err" data-err="consent"></span>`) : ""}
 
@@ -313,7 +396,28 @@ export async function agentPage(ctx) {
         if (c) c.textContent = `${e.target.value.length} / 500`;
       }
     };
-    root.onchange = (e) => {
+    root.onchange = async (e) => {
+      if (e.target.matches("[data-fa-photo-input]")) {
+        const file = e.target.files[0];
+        e.target.value = "";
+        if (!file) return;
+        const note = root.querySelector("[data-fa-photo-note]");
+        note.textContent = "Shrinking…";
+        note.classList.remove("is-err");
+        try {
+          const out = await shrinkPhoto(file);
+          if (photo.previewUrl) URL.revokeObjectURL(photo.previewUrl);
+          Object.assign(photo, { pending: out.blob, previewUrl: URL.createObjectURL(out.blob), remove: false });
+          root.querySelector("[data-fa-photo-preview]").innerHTML = html`<img src="${photo.previewUrl}" alt="">`;
+          note.textContent = `Ready: ${out.width}×${out.height}, ${fmtBytes(out.size)}. Uploads when you save.`;
+          root.querySelector("[data-fa-photo-remove]").hidden = false;
+          root.querySelector("[data-fa-photo-choose]").textContent = "Replace photo";
+        } catch (err) {
+          note.textContent = friendly(err);
+          note.classList.add("is-err");
+        }
+        return;
+      }
       if (e.target.id === "fa-current") {
         const other = root.querySelector("[data-fa-other]");
         other.hidden = e.target.value !== "__other";
@@ -338,6 +442,11 @@ export async function agentPage(ctx) {
         current_team_other: sel === "__other" ? (String(fd.get("current_team_other") || "").trim() || null) : null,
         previous_teams: String(fd.get("previous_teams") || "").trim() || null,
         about: String(fd.get("about") || "").trim() || null,
+        date_of_birth: fd.get("date_of_birth") || null,
+        nationality: fd.get("nationality") || null,
+        preferred_foot: fd.get("preferred_foot") || null,
+        height_cm: fd.get("height_cm") === "" || fd.get("height_cm") == null ? null : Number(fd.get("height_cm")),
+        department: fd.get("department") || null,
       };
       const isNew = !A.profile;
       form.querySelectorAll("[data-err]").forEach((el) => (el.textContent = ""));
@@ -353,12 +462,34 @@ export async function agentPage(ctx) {
       btn.disabled = true;
       const status = form.querySelector("[data-status]");
       try {
+        const oldPhoto = A.profile?.photo_path || null;
+        if (photo.remove) row.photo_path = null;
         const q = isNew
           ? A.sb.from("free_agents").insert({ ...row, season_id: A.season.id })
           : A.sb.from("free_agents").update(row).eq("id", A.profile.id);
         const { error } = await q;
         if (error) throw error;
-        toast(isNew ? "You're in the pool. Teams can see your profile now." : "Profile saved.");
+        if (photo.remove && oldPhoto) await removePhotos(A.sb, [oldPhoto]).catch(() => {});
+        // The photo goes in this profile's own folder, so it needs the profile first.
+        let photoFailed = false;
+        if (photo.pending) {
+          btn.textContent = "Uploading photo…";
+          try {
+            let id = A.profile?.id;
+            if (!id) {
+              const r = await A.sb.from("free_agents").select("id").eq("season_id", A.season.id).eq("email", A.email);
+              id = r.data?.[0]?.id;
+            }
+            const path = await uploadPhoto(A.sb, `agents/${id}`, photo.pending);
+            const { error: e2 } = await A.sb.from("free_agents").update({ photo_path: path }).eq("id", id);
+            if (e2) { await removePhotos(A.sb, [path]).catch(() => {}); throw e2; }
+            if (oldPhoto) await removePhotos(A.sb, [oldPhoto]).catch(() => {});
+          } catch {
+            photoFailed = true;
+          }
+        }
+        if (photoFailed) toast(`${isNew ? "You're in the pool" : "Profile saved"}, but the photo didn't upload. Try adding it again in a few minutes.`, "err");
+        else toast(isNew ? "You're in the pool. Teams can see your profile now." : "Profile saved.");
         await load();
         if (isNew) root.querySelector("#fa-teams")?.scrollIntoView({ block: "start" });
       } catch (err) {
@@ -393,8 +524,19 @@ export async function agentPage(ctx) {
         toast(st.dataset.faStatus === "withdrawn" ? "You're taking a break. Teams can't see you." : "You're back in the pool.");
         return load();
       }
+      if (t.closest("[data-fa-photo-remove]")) {
+        if (photo.previewUrl) URL.revokeObjectURL(photo.previewUrl);
+        Object.assign(photo, { pending: null, previewUrl: "", remove: !!A.profile?.photo_path });
+        root.querySelector("[data-fa-photo-preview]").innerHTML = html`<span>${A.profile ? initials(A.profile.full_name) : "+"}</span>`;
+        root.querySelector("[data-fa-photo-note]").textContent = photo.remove ? "Photo will be removed when you save." : "For Sofascore: a head-and-shoulders shot works best. We shrink it before uploading.";
+        root.querySelector("[data-fa-photo-remove]").hidden = true;
+        root.querySelector("[data-fa-photo-choose]").textContent = "Choose photo";
+        return;
+      }
       if (t.closest("[data-fa-delete]")) {
         if (!confirm("Delete your free-agent profile? Teams that were interested will lose your details.")) return;
+        // the photo first: the folder's rules need the profile to still exist
+        if (A.profile.photo_path) await removePhotos(A.sb, [A.profile.photo_path]).catch(() => {});
         const { error } = await A.sb.from("free_agents").delete().eq("id", A.profile.id);
         if (error) return toast(friendly(error), "err");
         toast("Profile deleted.");

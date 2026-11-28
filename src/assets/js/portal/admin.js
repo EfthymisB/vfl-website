@@ -3,7 +3,7 @@ import {
   startPage, signOut, html, raw, toast, friendly, config,
   fmtDate, fmtDateTime, countryName, positionLabel,
   logoUrl, initials, toCsv, download, kitLabel, shirtSvg,
-  footLabel, photoUrls, removePhotos, makeZip, safeFileName, fmtBytes,
+  footLabel, photoUrls, removePhotos, makeZip, safeFileName, fmtBytes, departmentLabel, DEPARTMENTS, flagImg,
 } from "./lib.js";
 import { positionsLong, availabilityLabel, styleLabel, FA_PHASES, phaseInfo } from "./agents.js";
 
@@ -199,6 +199,9 @@ function stats() {
 
 function render() {
   const s = S.season;
+  // Keep each fold as the organiser left it across re-renders; first time, the defaults.
+  const was = Object.fromEntries([...root.querySelectorAll("details.admin-more[id]")].map((d) => [d.id, d.open]));
+  const open = (id, byDefault = false) => ((was[id] ?? byDefault) ? "open" : "");
   root.innerHTML = html`
     ${raw(bar())}
     ${S.ro ? raw(readOnlyFlag()) : ""}
@@ -224,9 +227,9 @@ function render() {
       ${stats().map(([l, v]) => raw(html`<div class="stat"><div class="stat__num">${v}</div><div class="stat__label">${l}</div></div>`))}
     </div>
 
-    <section class="panel">
+    <details class="panel admin-more" id="board-teams" ${open("board-teams", true)}>
+      <summary>Teams <span class="count">${S.teams.length}</span></summary>
       <div class="portal-section-head">
-        <h2 class="portal-h">Teams</h2>
         <div class="btn-row">
           <button class="btn btn--ghost btn--sm" type="button" data-export="teams" ${S.teams.length ? "" : "disabled"}>Export teams CSV</button>
           <button class="btn btn--ghost btn--sm" type="button" data-photos-zip ${S.players.some((p) => p.photo_path) ? "" : "disabled"}>Download photos (.zip)</button>
@@ -234,11 +237,22 @@ function render() {
         </div>
       </div>
       ${S.teams.length ? raw(teamTable()) : raw(`<p class="muted empty">No teams invited for this season yet.</p>`)}
-    </section>
+    </details>
 
-    <section class="panel" id="board-free-agents">
+    <details class="panel admin-more" id="board-departments" ${open("board-departments")}>
+      <summary>Players by department</summary>
       <div class="portal-section-head">
-        <h2 class="portal-h">Free agents <span class="count">${S.agents.length}</span></h2>
+        <div class="btn-row">
+          <button class="btn btn--ghost btn--sm" type="button" data-dept-toggle ${S.players.length ? "" : "disabled"}>Expand all</button>
+          <button class="btn btn--ghost btn--sm" type="button" data-export="departments" ${S.players.length ? "" : "disabled"}>Export departments CSV</button>
+        </div>
+      </div>
+      ${S.players.length ? raw(departmentGroups()) : raw(`<p class="muted empty">No players yet.</p>`)}
+    </details>
+
+    <details class="panel admin-more" id="board-free-agents" ${open("board-free-agents", true)}>
+      <summary>Free agents <span class="count">${S.agents.length}</span></summary>
+      <div class="portal-section-head">
         <div class="btn-row">
           <a class="btn btn--ghost btn--sm" href="/free-agents/" target="_blank" rel="noopener">Public page</a>
           <button class="btn btn--ghost btn--sm" type="button" data-export="agents" ${S.agents.length ? "" : "disabled"}>Export free agents CSV</button>
@@ -246,12 +260,12 @@ function render() {
       </div>
       ${raw(phasePanel())}
       ${S.agents.length ? raw(agentCards()) : raw(`<p class="muted empty">Nobody has signed up yet. Players join from the free agents page; share it in studio channels.</p>`)}
-    </section>
+    </details>
 
     ${S.ro ? "" : raw(html`
-    <section class="panel">
+    <details class="panel admin-more" id="board-add-team" ${open("board-add-team")}>
+      <summary>Add a team</summary>
       <form class="form" data-form="invite">
-        <h2 class="portal-h">Add a team</h2>
         <p class="muted">Adds the team and lets that email address sign in to the portal. <strong>It doesn't email them</strong> — you'll get a message to send them yourself.</p>
         <div class="field--3">
           <div class="field"><label for="i-name">Team name</label><input id="i-name" name="name" required maxlength="80" placeholder="FC Studio London"></div>
@@ -261,7 +275,7 @@ function render() {
         <div class="btn-row"><button class="btn btn--sm" type="submit">Add team</button></div>
         <div data-invite-result></div>
       </form>
-    </section>`)}
+    </details>`)}
 
     ${raw(viewersPanel())}
 
@@ -400,6 +414,12 @@ function exportAgents() {
     { label: "Current team", get: (a) => (a.current_team_id ? teamName(a.current_team_id) : a.current_team_other || "") },
     { label: "Loan", get: (a) => (a.current_team_id ? "Yes" : "") },
     { label: "Previous teams", get: (a) => a.previous_teams || "" },
+    { label: "Date of birth", get: (a) => a.date_of_birth || "" },
+    { label: "Nationality", get: (a) => countryName(a.nationality) },
+    { label: "Preferred foot", get: (a) => footLabel(a.preferred_foot) },
+    { label: "Height (cm)", get: (a) => a.height_cm ?? "" },
+    { label: "Department", get: (a) => departmentLabel(a.department) },
+    { label: "Photo", get: (a) => (a.photo_path ? "Yes" : "") },
     { label: "About", get: (a) => a.about || "" },
     { label: "Status", get: (a) => agentStatus(a).label },
     { label: "Teams interested", get: (a) => S.interest.filter((i) => i.agent_id === a.id).map((i) => teamName(i.team_id)).join("; ") },
@@ -627,6 +647,55 @@ function markPaid(t, input) {
 }
 
 // ---------------------------------------------------------------- csv
+// Squad players grouped by department (list order, then "Not given"), teammates together.
+function byDepartment() {
+  const team = (p) => S.teams.find((t) => t.id === p.team_id)?.name || "";
+  const groups = [...DEPARTMENTS, { value: null, label: "Not given" }].map((d) => ({
+    ...d,
+    players: S.players.filter((p) => (p.department || null) === d.value)
+      .sort((a, b) => team(a).localeCompare(team(b)) || a.full_name.localeCompare(b.full_name)),
+  }));
+  return { team, groups: groups.filter((g) => g.players.length) };
+}
+
+function departmentGroups() {
+  const { team, groups } = byDepartment();
+  return groups.map((g) => html`
+    <details class="dept">
+      <summary>${g.label} <span class="count">${g.players.length}</span></summary>
+      <div class="table-scroll">
+        <table class="fa-phases__table">
+          <thead><tr><th scope="col">Team</th><th scope="col">Player</th><th scope="col">Position</th><th scope="col">Nationality</th></tr></thead>
+          <tbody>
+            ${g.players.map((p) => raw(html`<tr>
+              <td>${team(p)}</td>
+              <td>${p.full_name}${p.is_captain ? raw(` <span class="pill pill--accent" title="Captain">C</span>`) : ""}${p.joined_as ? raw(html` <span class="pill pill--loan">${p.joined_as === "loan" ? "Loan" : "Free agent"}</span>`) : ""}</td>
+              <td>${positionLabel(p.position)}</td>
+              <td>${raw(flagImg(p.nationality))}${countryName(p.nationality)}</td>
+            </tr>`))}
+          </tbody>
+        </table>
+      </div>
+    </details>`).join("");
+}
+
+function exportDepartments() {
+  const { team, groups } = byDepartment();
+  const cols = [
+    { label: "Season", get: () => S.season.id },
+    { label: "Department", get: (p) => p._dept },
+    { label: "Team", get: team },
+    { label: "Player", get: "full_name" },
+    { label: "Position", get: (p) => positionLabel(p.position) },
+    { label: "Nationality", get: (p) => countryName(p.nationality) },
+    { label: "Captain", get: (p) => (p.is_captain ? "Yes" : "") },
+    { label: "Joined as", get: (p) => (p.joined_as === "loan" ? `Loan from ${p.loan_from || "another team"}` : p.joined_as === "free_agent" ? "Free agent" : "") },
+  ];
+  const rows = groups.flatMap((g) => g.players.map((p) => ({ ...p, _dept: g.label })));
+  download(`vfl-${S.season.id}-players-by-department.csv`, toCsv(cols, rows));
+  toast(`Exported ${rows.length} players.`);
+}
+
 function exportPlayers() {
   const names = photoFileNames();
   const byId = Object.fromEntries(S.teams.map((t) => [t.id, t]));
@@ -648,6 +717,7 @@ function exportPlayers() {
     { label: "Height (cm)", get: (p) => p.height_cm ?? "" },
     { label: "Captain", get: (p) => (p.is_captain ? "Yes" : "") },
     { label: "Preferred foot", get: (p) => footLabel(p.preferred_foot) },
+    { label: "Department", get: (p) => departmentLabel(p.department) },
     { label: "Photo file", get: (p) => names[p.id] || "" },
     { label: "Joined as", get: (p) => (p.joined_as === "loan" ? `Loan from ${p.loan_from || "another team"}` : p.joined_as === "free_agent" ? "Free agent" : "") },
     { label: "On Sofascore", get: (p) => (p.on_sofascore ? "Yes" : "") },
@@ -738,7 +808,16 @@ function wire() {
     const zipBtn = t.closest("[data-photos-zip]");
     if (zipBtn) return downloadPhotos(zipBtn);
     const exp = t.closest("[data-export]");
-    if (exp) return exp.dataset.export === "players" ? exportPlayers() : exp.dataset.export === "agents" ? exportAgents() : exportTeams();
+    if (exp) return exp.dataset.export === "players" ? exportPlayers() : exp.dataset.export === "agents" ? exportAgents() : exp.dataset.export === "departments" ? exportDepartments() : exportTeams();
+    const deptToggle = t.closest("[data-dept-toggle]");
+    if (deptToggle) {
+      // any closed: open them all; all open: close them all
+      const folds = [...root.querySelectorAll("#board-departments details.dept")];
+      const expand = folds.some((d) => !d.open);
+      folds.forEach((d) => (d.open = expand));
+      deptToggle.textContent = expand ? "Collapse all" : "Expand all";
+      return;
+    }
     const view = t.closest("[data-view-team]");
     if (view) return viewTeam(S.teams.find((x) => x.id === view.dataset.viewTeam));
     // Everything below changes data: never for viewers (the database refuses anyway).
@@ -781,6 +860,7 @@ ${p.hint}`)) return;
     if (rm) {
       const a = S.agents.find((x) => x.id === rm.dataset.agentRemove);
       if (!confirm(`Remove ${a.full_name}'s free-agent profile? Use this for spam or if they ask. It can't be undone.`)) return;
+      if (a.photo_path) await removePhotos(S.sb, [a.photo_path]).catch(() => {});
       const { error } = await S.sb.from("free_agents").delete().eq("id", a.id);
       if (error) return toast(friendly(error), "err");
       toast(`${a.full_name}'s profile removed.`);
@@ -907,7 +987,7 @@ ${p.hint}`)) return;
         if (String(fd.get("confirm") || "").trim() !== S.season.id) throw new Error(`Type ${S.season.id} exactly to confirm.`);
         // Files first, through the Storage API (deleting rows in SQL would
         // leave the files behind), then the player records.
-        await removePhotos(S.sb, S.players.map((p) => p.photo_path));
+        await removePhotos(S.sb, [...S.players.map((p) => p.photo_path), ...S.agents.map((a) => a.photo_path)]);
         const { data, error } = await S.sb.rpc("purge_season_players", { p_season: S.season.id });
         if (error) throw error;
         toast(`Deleted ${data} players${S.agents.length ? ` and ${S.agents.length} free agents` : ""} from ${S.season.name}.`);

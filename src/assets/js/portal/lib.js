@@ -130,6 +130,40 @@ export function countryOptions(selected) {
     `<optgroup label="All countries">${rest.map(opt).join("")}</optgroup>`;
 }
 
+// Flags as small images: Windows shows flag emoji as letters, and has none for
+// the home nations. flag-icons (pinned) from jsDelivr, which the portal already uses.
+const FLAG_BASE = "https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/4x3/";
+export function flagImg(code) {
+  if (!/^[A-Z]{2}(-[A-Z]{3})?$/.test(code || "")) return "";
+  return `<img class="flag" src="${FLAG_BASE}${code.toLowerCase()}.svg" alt="" width="20" height="15" loading="lazy">`;
+}
+
+// ---------------------------------------------------------------- departments
+// The values match the database check (schema.sql *_department_values): A–Z, Other last.
+export const DEPARTMENTS = [
+  { value: "animation", label: "Animation" },
+  { value: "art", label: "Art Dept/Concept" },
+  { value: "comp", label: "Comp/2D" },
+  { value: "crowd", label: "Crowd" },
+  { value: "editorial", label: "Editorial" },
+  { value: "finance", label: "Finance" },
+  { value: "fx", label: "FX/CFX" },
+  { value: "generalist", label: "Generalist/Modelling/Texturing/Environment/3D" },
+  { value: "hr", label: "HR/Recruitment/Office" },
+  { value: "layout", label: "Layout/Previs" },
+  { value: "lighting", label: "Lighting/Lookdev" },
+  { value: "matchmove", label: "Matchmove" },
+  { value: "pipeline", label: "Pipeline/R&D/Systems/IT/Data" },
+  { value: "production", label: "Production" },
+  { value: "rigging", label: "Rigging" },
+  { value: "roto", label: "Roto/Paint" },
+  { value: "other", label: "Other" },
+];
+export const departmentLabel = (v) => DEPARTMENTS.find((d) => d.value === v)?.label || "";
+export const departmentOptions = (selected) =>
+  `<option value="">Not given</option>` +
+  DEPARTMENTS.map((d) => `<option value="${d.value}"${d.value === selected ? " selected" : ""}>${esc(d.label)}</option>`).join("");
+
 export const positions = config.positions || [
   { value: "forward", label: "Forward" }, { value: "goalkeeper", label: "Goalkeeper" },
 ];
@@ -556,11 +590,12 @@ export function isRetryableUpload(err) {
   return !/row-level security|exceeded|too large|mime|not allowed|Bucket not found/i.test(String(err?.message || ""));
 }
 
-export async function uploadPhoto(sb, teamId, blob, { onRetry } = {}) {
+// folder: a team id (squad photos), or "agents/<agent id>" (a free agent's own).
+export async function uploadPhoto(sb, folder, blob, { onRetry } = {}) {
   let lastErr;
   for (let attempt = 1; attempt <= PHOTO_UPLOAD.tries; attempt++) {
     const id = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    const path = `${teamId}/${id}.jpg`;
+    const path = `${folder}/${id}.jpg`;
     try {
       const { error } = await withTimeout(
         sb.storage.from(PHOTO_BUCKET).upload(path, blob, { contentType: "image/jpeg", upsert: false }),
